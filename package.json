@@ -8,6 +8,9 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "seed": "node scripts/seed-data.js",
+    "seed:rss": "node scripts/seed-rss-feeds.js",
+    "ai:test": "node scripts/test-ai.js",
+    "crawl": "node scripts/run-crawl.js",
     "test": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --forceExit",
     "test:watch": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --watch"
   },
