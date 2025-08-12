@@ -2,6 +2,40 @@
 
 A comprehensive news aggregation and AI enhancement system built with Node.js, Supabase, and Gemini AI.
 
+## Quick Start
+
+1. Clone the repository:
+   ```bash
+   git clone <your-repo-url>
+   cd insight-feeder-backend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your actual values
+   ```
+
+4. Set up the database:
+   - Create a Supabase project
+   - Run the SQL migration from `migrations/-- Migration: 0001_init.txt` in your Supabase SQL Editor
+   - Or use the manual setup instructions in `MANUAL_SETUP.md`
+
+5. Seed the database (optional):
+   ```bash
+   npm run seed
+   ```
+
+6. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
 ## Features
 
 - **RSS/Atom Feed Parsing**: Automatically crawl and parse news feeds
