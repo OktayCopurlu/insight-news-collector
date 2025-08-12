@@ -1,0 +1,110 @@
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
+
+import { createContextLogger } from './config/logger.js';
+import { generalRateLimit } from './middleware/rateLimiter.js';
+import { optionalAuth } from './middleware/auth.js';
+
+// Import routes
+import feedsRouter from './routes/feeds.js';
+import articlesRouter from './routes/articles.js';
+import sourcesRouter from './routes/sources.js';
+
+dotenv.config();
+
+const app = express();
+const logger = createContextLogger('App');
+
+// Security middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+}));
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+// Body parsing middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Rate limiting
+app.use(generalRateLimit);
+
+// Optional authentication for all routes
+app.use(optionalAuth);
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({
+    success: true,
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    version: process.env.npm_package_version || '1.0.0'
+  });
+});
+
+// API routes
+app.use('/api/feeds', feedsRouter);
+app.use('/api/articles', articlesRouter);
+app.use('/api/sources', sourcesRouter);
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Insight Feeder API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      feeds: '/api/feeds',
+      articles: '/api/articles',
+      sources: '/api/sources'
+    },
+    documentation: 'https://github.com/your-repo/insight-feeder'
+  });
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'Endpoint not found',
+    path: req.originalUrl,
+    method: req.method
+  });
+});
+
+// Global error handler
+app.use((error, req, res, next) => {
+  logger.error('Unhandled error', {
+    error: error.message,
+    stack: error.stack,
+    path: req.path,
+    method: req.method
+  });
+
+  res.status(500).json({
+    success: false,
+    error: 'Internal server error',
+    ...(process.env.NODE_ENV === 'development' && { 
+      details: error.message,
+      stack: error.stack 
+    })
+  });
+});
+
+export default app;
