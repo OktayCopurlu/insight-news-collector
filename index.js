@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 // Test database connection before starting server
 const startServer = async () => {
   try {
-    logger.info('Skipping database connection test - starting server directly');
+    logger.info('Starting Insight Feeder server...');
     
     // Start the server
     const server = app.listen(PORT, () => {
@@ -22,28 +22,17 @@ const startServer = async () => {
         environment: process.env.NODE_ENV || 'development'
       });
       
-      // Test database connection after server starts
-    // Test database connection after server starts (non-blocking)
-    setTimeout(async () => {
-      logger.info('Testing database connection...');
-      const isConnected = await testConnection();
-      if (!isConnected) {
-        logger.warn('Database connection failed. Please check your Supabase configuration.');
-        logger.info('If tables are missing, please run the SQL migration manually in Supabase SQL Editor.');
-      } else {
-        logger.info('Database connection successful');
-      }
-    }, 1000);
-    
+      // Test database connection after server starts (non-blocking)
       setTimeout(async () => {
         logger.info('Testing database connection...');
         const isConnected = await testConnection();
-        if (isConnected) {
-          logger.info('Database connection verified');
+        if (!isConnected) {
+          logger.warn('Database connection failed. Please check your Supabase configuration.');
+          logger.info('If tables are missing, please run the SQL migration manually in Supabase SQL Editor.');
         } else {
-          logger.warn('Database connection failed - check your Supabase configuration');
+          logger.info('Database connection successful');
         }
-      }, 2000);
+      }, 1000);
     });
     
     // Start cron jobs
@@ -80,4 +69,3 @@ startServer().then(server => {
   logger.error('Failed to start application', { error: error.message });
   process.exit(1);
 });
-  
