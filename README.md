@@ -5,28 +5,33 @@ A comprehensive news aggregation and AI enhancement system built with Node.js, S
 ## Quick Start
 
 1. Clone the repository:
+
    ```bash
    git clone <your-repo-url>
    cd insight-feeder-backend
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Set up environment variables:
+
    ```bash
    cp .env.example .env
    # Edit .env with your actual values
    ```
 
 4. Set up the database:
+
    - Create a Supabase project
    - Run the SQL migration from `migrations/-- Migration: 0001_init.txt` in your Supabase SQL Editor
    - Or use the manual setup instructions in `MANUAL_SETUP.md`
 
 5. Seed the database (optional):
+
    ```bash
    npm run seed
    ```
@@ -49,7 +54,7 @@ A comprehensive news aggregation and AI enhancement system built with Node.js, S
 
 ## Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - Supabase account and project
 - Google Gemini API key
 
@@ -57,11 +62,13 @@ A comprehensive news aggregation and AI enhancement system built with Node.js, S
 
 1. Clone the repository
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Copy the environment file and configure:
+
    ```bash
    cp .env.example .env
    ```
@@ -77,11 +84,13 @@ A comprehensive news aggregation and AI enhancement system built with Node.js, S
 ## Usage
 
 ### Development
+
 ```bash
 npm run dev
 ```
 
 ### Production
+
 ```bash
 npm start
 ```
@@ -89,9 +98,12 @@ npm start
 ## API Endpoints
 
 ### Health Check
-- `GET /health` - Server health status
+
+- `GET /health` - Server health status (includes cached DB status)
+- `GET /health/db` - Live database connectivity check (503 if disconnected)
 
 ### Sources
+
 - `GET /api/sources` - List all sources
 - `GET /api/sources/:id` - Get source by ID
 - `POST /api/sources` - Create new source
@@ -99,6 +111,7 @@ npm start
 - `GET /api/sources/:id/stats` - Get source statistics
 
 ### Feeds
+
 - `GET /api/feeds` - List all feeds
 - `GET /api/feeds/:id` - Get feed by ID
 - `POST /api/feeds` - Create new feed
@@ -108,6 +121,7 @@ npm start
 - `POST /api/feeds/validate` - Validate feed URL
 
 ### Articles
+
 - `GET /api/articles` - List articles with filtering and pagination
 - `GET /api/articles/:id` - Get article by ID
 - `GET /api/articles/ai/pending` - Get articles needing AI processing
@@ -134,7 +148,7 @@ Key environment variables:
 The system runs several automated tasks:
 
 - **Feed Crawling**: Every 5 minutes
-- **AI Processing**: Every 10 minutes  
+- **AI Processing**: Every 10 minutes
 - **Log Cleanup**: Daily at 2 AM UTC
 
 ## Architecture
@@ -203,3 +217,46 @@ The system uses a comprehensive PostgreSQL schema with:
 ## License
 
 MIT License
+
+## Testing
+
+### End-to-End (E2E) Tests
+
+This project includes a lightweight E2E test suite focused on verifying:
+
+1. API availability via the `/health` endpoint.
+2. Supabase database connectivity (simple query + connection test via internal helper).
+3. Optional manual live DB check via `/health/db` (not exercised automatically to keep suite fast).
+
+### Running Tests
+
+```bash
+npm test
+```
+
+The test runner uses Jest in ESM mode (`--experimental-vm-modules`).
+
+### Environment Requirements
+
+Database-related tests require the following environment variables (from `.env` or `.env.test`):
+
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY` (preferred) or `SUPABASE_ANON_KEY`
+
+If these variables are missing locally, the DB-specific tests are skipped (so you can still run the suite without credentials). In CI (when `CI` env var is set) missing variables will cause the run to fail early.
+
+### Adding More Tests
+
+Create additional test files under `tests/e2e/` (or a new `tests/unit/` directory) and they will be picked up automatically by Jest.
+
+If you add async services (cron jobs, external network calls), prefer mocking those in unit tests to keep E2E fast and deterministic.
+
+### Troubleshooting
+
+If Jest warns about open handles, run:
+
+```bash
+npm test -- --detectOpenHandles
+```
+
+This will help identify lingering async operations.
