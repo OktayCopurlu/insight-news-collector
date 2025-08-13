@@ -25,45 +25,20 @@ export const processArticle = async (articleData, sourceId) => {
       content_hash: articleData.content_hash,
     });
 
-    if (existingArticles.length > 0) {
-      logger.debug("Article already exists", {
-        articleId: existingArticles[0].id,
-        contentHash: articleData.content_hash,
-      });
-      // Ensure it has a score (populate if missing)
-      try {
-        const existingScore = await selectRecords("article_scores", {
-          article_id: existingArticles[0].id,
-        });
-        if (existingScore.length === 0) {
-          calculateArticleScore(existingArticles[0]).catch((e) =>
-            logger.warn("Score calc failed (existing)", {
-              articleId: existingArticles[0].id,
-              error: e.message,
-            })
-          );
-        }
-      } catch (e) {
-        logger.warn("Score presence check failed", {
-          articleId: existingArticles[0].id,
-          error: e.message,
-        });
-      }
-      return existingArticles[0];
-    }
+    if (existingArticles.length > 0) return existingArticles[0];
 
     // (Optional) enforce full text requirement before persisting
-    const requireFull =
-      (process.env.REQUIRE_FULLTEXT || "true").toLowerCase() === "true";
+    const requireFull = true; // strict: must have full text
     let preExtractedFullText = null;
-    if (requireFull && process.env.ENABLE_HTML_EXTRACTION === "true") {
+    // Always attempt extraction if enabled (even if not strictly required)
+    if (process.env.ENABLE_HTML_EXTRACTION === "true") {
       try {
         const extracted = await fetchAndExtract(
           articleData.canonical_url || articleData.url
         );
         preExtractedFullText = extracted?.text || null;
         const tooShort = extracted?.diagnostics?.tooShort;
-        if (!preExtractedFullText || tooShort) {
+        if (requireFull && (!preExtractedFullText || tooShort)) {
           logger.warn("Skipping article due to missing/short full text", {
             url: articleData.url,
             hasText: !!preExtractedFullText,
@@ -122,7 +97,22 @@ export const processArticle = async (articleData, sourceId) => {
         full_text: preExtractedFullText || null,
       });
     } catch (e) {
-      if (/full_text/.test(e.message || "")) {
+      if (/duplicate key value/.test(e.message || "")) {
+        // Race condition: another worker inserted first. Fetch existing and continue.
+        logger.debug("Duplicate detected on insert (race)", {
+          url: articleData.url,
+          contentHash: articleData.content_hash,
+        });
+        const raced = await selectRecords("articles", {
+          source_id: sourceId,
+          content_hash: articleData.content_hash,
+        });
+        if (raced.length) {
+          article = raced[0];
+        } else {
+          throw e; // fallback - shouldn't happen
+        }
+      } else if (/full_text/.test(e.message || "")) {
         logger.warn("Insert without full_text (column missing)", {
           url: articleData.url,
           error: e.message,
@@ -148,13 +138,15 @@ export const processArticle = async (articleData, sourceId) => {
       title: article.title?.substring(0, 50),
     });
 
-    // Process AI enhancement asynchronously (pass preExtractedFullText to avoid refetch)
-    processArticleAI(article, { preExtractedFullText }).catch((error) => {
+    // Synchronous AI generation (only once)
+    try {
+      await processArticleAI(article, { preExtractedFullText });
+    } catch (error) {
       logger.error("AI processing failed", {
         articleId: article.id,
         error: error.message,
       });
-    });
+    }
 
     // Calculate article score asynchronously
     calculateArticleScore(article).catch((e) =>
@@ -254,6 +246,20 @@ export const processArticleAI = async (article, options = {}) => {
             articleId: article.id,
             error: e.message,
           });
+        }
+        // Persist full_text if column exists and article row lacks it
+        try {
+          if (!article.full_text && fullText) {
+            await updateRecord("articles", article.id, { full_text: fullText });
+            article.full_text = fullText; // reflect locally
+          }
+        } catch (e) {
+          if (!/full_text/.test(e.message || "")) {
+            logger.warn("Failed to update full_text on article", {
+              articleId: article.id,
+              error: e.message,
+            });
+          }
         }
       }
     }
