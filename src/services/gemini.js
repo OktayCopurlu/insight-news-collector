@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from "dotenv";
 import { createContextLogger } from "../config/logger.js";
+import { logLLMEvent, hashPrompt } from "../utils/llmLogger.js";
 
 dotenv.config();
 
@@ -9,67 +10,144 @@ const logger = createContextLogger("GeminiService");
 const genAI = new GoogleGenerativeAI(process.env.LLM_API_KEY);
 
 export const generateAIContent = async (prompt, options = {}) => {
-  try {
-    const model = genAI.getGenerativeModel({
-      model: process.env.LLM_MODEL || "gemini-1.5-flash",
-      generationConfig: {
-        maxOutputTokens: parseInt(process.env.LLM_MAX_TOKENS) || 800,
-        temperature: options.temperature || 0.7,
-      },
-    });
-
-    logger.debug("Generating AI content", {
-      model: process.env.LLM_MODEL,
-      promptLength: prompt.length,
-    });
-
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-
-    logger.info("AI content generated successfully", {
-      responseLength: text.length,
-    });
-
-    return text;
-  } catch (error) {
-    logger.error("Failed to generate AI content", {
-      error: error.message,
-      promptLength: prompt.length,
-    });
-    throw error;
+  const requested =
+    options.maxOutputTokens || parseInt(process.env.LLM_MAX_TOKENS) || 800;
+  const HARD_CAP = parseInt(process.env.LLM_MAX_TOKENS_CAP || "2048");
+  const maxOutputTokens = Math.min(requested, HARD_CAP);
+  const temperature = options.temperature || 0.7;
+  const ATTEMPTS = options.attempts || 1;
+  let lastError;
+  for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
+    try {
+      const model = genAI.getGenerativeModel({
+        model: process.env.LLM_MODEL || "gemini-1.5-flash",
+        generationConfig: { maxOutputTokens, temperature },
+      });
+      logger.debug("Generating AI content", {
+        attempt,
+        maxOutputTokens,
+        temperature,
+        promptLength: prompt.length,
+      });
+      const start = Date.now();
+      const prompt_hash = hashPrompt(prompt);
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      const durationMs = Date.now() - start;
+      logger.info("AI content generated", {
+        attempt,
+        durationMs,
+        responseLength: text.length,
+      });
+      logLLMEvent({
+        label: "generation",
+        prompt_hash,
+        model: process.env.LLM_MODEL || "gemini-1.5-flash",
+        max_tokens: maxOutputTokens,
+        duration_ms: durationMs,
+        prompt,
+        response_raw: text,
+        meta: { attempt, maxOutputTokens, temperature },
+      });
+      return text;
+    } catch (error) {
+      lastError = error;
+      logger.warn("AI content generation attempt failed", {
+        attempt,
+        error: error.message,
+      });
+      if (attempt === ATTEMPTS) {
+        logger.error("All AI generation attempts failed");
+        throw error;
+      }
+      await new Promise((r) => setTimeout(r, 250 * attempt));
+    }
   }
+  throw lastError || new Error("Unknown AI generation failure");
 };
 
-export const enhanceArticle = async (article) => {
+export const enhanceArticle = async (article, opts = {}) => {
   try {
-    const prompt = `
-Analyze this news article and provide enhanced content in JSON format:
+    const detailBullets = opts.detailBullets || 8; // richer detail default now 8
+    const fullText = opts.fullText;
+    const MAX_FULL_TEXT = 8000; // hard cap tokens proxy (chars)
+    const safeFull = fullText
+      ? fullText.replace(/\s+/g, " ").slice(0, MAX_FULL_TEXT)
+      : null;
+    const contextBlock = safeFull
+      ? `FullText: ${safeFull}`
+      : `Snippet: ${article.snippet}`;
+    const mode = (process.env.AI_DETAILS_MODE || "bullets").toLowerCase();
+    let prompt;
+    if (mode === "narrative") {
+      const ctxLen = (safeFull || article.snippet || "").length;
+      let wordRange;
+      if (ctxLen < 1200) wordRange = "120-180";
+      else if (ctxLen < 4000) wordRange = "220-360";
+      else wordRange = "320-520";
+      prompt = `You are an assistant turning a news article into an enriched factual narrative. Use ONLY information present in the provided text. No speculation. Return STRICT JSON only.
 
 Title: ${article.title}
-Snippet: ${article.snippet}
 Language: ${article.language || "en"}
+${contextBlock}
 
-Please provide:
-1. An improved, engaging title (ai_title)
-2. A concise summary (ai_summary) - 2-3 sentences
-3. Key details and context (ai_details) - bullet points of important information
-4. Detected language code (ai_language)
+Requirements:
+1. ai_title: Improved, engaging, <= 90 characters, factual (no clickbait, no exaggeration).
+2. ai_summary: 2-3 sentences giving core who/what/when/why/impact.
+3. ai_details: ${wordRange} word narrative in 2-4 short paragraphs (neutral journalistic style, no bullets, lists, section headers, or leading labels). Each paragraph 2-5 sentences. Cover when available: background/context, key actors & actions, mechanisms/causes, concrete impacts/stakes, next steps/outlook.
+4. No sentence may repeat or trivially rephrase a prior sentence's core fact; each must add distinct information.
+5. Do NOT fabricate names, numbers, or timelines not present. Avoid speculative modal verbs (might, could) unless present. No bullet characters (•, -, *).
+6. ai_language: ISO 2-letter language code.
 
-Respond with valid JSON only:
-{
-  "ai_title": "Enhanced title here",
-  "ai_summary": "Brief summary here",
-  "ai_details": "• Key point 1\\n• Key point 2\\n• Key point 3",
-  "ai_language": "en"
-}
-`;
+Output STRICT minified JSON only (no markdown fences): {"ai_title":"...","ai_summary":"...","ai_details":"Paragraph1\n\nParagraph2","ai_language":"en"}`;
+    } else {
+      prompt = `Analyze this news article and provide enhanced content in STRICT JSON (no prose outside JSON). Use ONLY facts present in the provided text. If information is absent, omit it instead of guessing.
 
-    const response = await generateAIContent(prompt);
+Title: ${article.title}
+Language: ${article.language || "en"}
+${contextBlock}
+
+Requirements:
+1. ai_title: Improved, engaging, <= 90 characters, factual (no clickbait or hype words like "shocking").
+2. ai_summary: 2-3 sentences, neutral tone (no opinion), must reference concrete facts from the text.
+3. ai_details: ${detailBullets} bullet points using Unicode bullet • each. Cover (when available and factual): timeline, key actors, causes, mechanisms, implications/impact, risks/concerns, next steps/outlook, quantitative data. Each bullet <= 200 chars, no numbering, no duplication, no speculative language (avoid "might", "could" unless present in text). Do not invent data.
+4. ai_language: ISO 2-letter language code of the source text.
+
+Strict Output JSON only (minified, no markdown fences, no trailing commas): {"ai_title":"...","ai_summary":"...","ai_details":"• Bullet 1\n• Bullet 2","ai_language":"en"}`;
+    }
+
+    const response = await generateAIContent(prompt, {
+      maxOutputTokens: opts.maxOutputTokens,
+      temperature: mode === "narrative" ? 0.5 : opts.temperature || 0.7,
+      attempts: 2,
+    });
 
     try {
       const cleaned = cleanAIJSON(response);
       const parsed = JSON.parse(cleaned);
+      // Enforce minimum narrative length if mode narrative and short; optional future retry logic
+      if (mode === "narrative") {
+        const wc = (parsed.ai_details || "")
+          .split(/\s+/)
+          .filter(Boolean).length;
+        const minWords = 120; // lower band
+        if (wc < minWords) {
+          logger.warn("Narrative below minimum word count", {
+            wc,
+            minWords,
+            articleId: article.id,
+          });
+          logLLMEvent({
+            label: "narrative_short",
+            prompt_hash: generatePromptHash(prompt),
+            model: process.env.LLM_MODEL || "gemini-1.5-flash",
+            prompt,
+            response_raw: cleaned,
+            meta: { word_count: wc, minWords },
+          });
+        }
+      }
       return {
         ...parsed,
         model: process.env.LLM_MODEL || "gemini-1.5-flash",

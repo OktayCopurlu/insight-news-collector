@@ -5,8 +5,10 @@ import {
 } from "../config/database.js";
 import { supabase } from "../config/database.js";
 import { enhanceArticle, categorizeArticle } from "./gemini.js";
+import { fetchAndExtract } from "./htmlExtractor.js";
 import { createContextLogger } from "../config/logger.js";
 import { generateContentHash } from "../utils/helpers.js";
+import { logLLMEvent } from "../utils/llmLogger.js";
 
 const logger = createContextLogger("ArticleProcessor");
 
@@ -28,10 +30,83 @@ export const processArticle = async (articleData, sourceId) => {
         articleId: existingArticles[0].id,
         contentHash: articleData.content_hash,
       });
+      // Ensure it has a score (populate if missing)
+      try {
+        const existingScore = await selectRecords("article_scores", {
+          article_id: existingArticles[0].id,
+        });
+        if (existingScore.length === 0) {
+          calculateArticleScore(existingArticles[0]).catch((e) =>
+            logger.warn("Score calc failed (existing)", {
+              articleId: existingArticles[0].id,
+              error: e.message,
+            })
+          );
+        }
+      } catch (e) {
+        logger.warn("Score presence check failed", {
+          articleId: existingArticles[0].id,
+          error: e.message,
+        });
+      }
       return existingArticles[0];
     }
 
-    // Create new article
+    // (Optional) enforce full text requirement before persisting
+    const requireFull =
+      (process.env.REQUIRE_FULLTEXT || "true").toLowerCase() === "true";
+    let preExtractedFullText = null;
+    if (requireFull && process.env.ENABLE_HTML_EXTRACTION === "true") {
+      try {
+        const extracted = await fetchAndExtract(
+          articleData.canonical_url || articleData.url
+        );
+        preExtractedFullText = extracted?.text || null;
+        const tooShort = extracted?.diagnostics?.tooShort;
+        if (!preExtractedFullText || tooShort) {
+          logger.warn("Skipping article due to missing/short full text", {
+            url: articleData.url,
+            hasText: !!preExtractedFullText,
+            tooShort,
+          });
+          try {
+            logLLMEvent({
+              label: "fulltext_skip",
+              prompt_hash: generateContentHash(articleData.url).slice(0, 8),
+              model: "n/a",
+              prompt: "skip-meta",
+              response_raw: "",
+              meta: {
+                url: articleData.url,
+                reason: !preExtractedFullText ? "no_text" : "too_short",
+                too_short: tooShort || false,
+              },
+            });
+          } catch (_) {}
+          return null; // signal skipped
+        }
+      } catch (e) {
+        if (requireFull) {
+          logger.warn("Skipping article due to extraction error", {
+            url: articleData.url,
+            error: e.message,
+          });
+          try {
+            logLLMEvent({
+              label: "fulltext_skip",
+              prompt_hash: generateContentHash(articleData.url).slice(0, 8),
+              model: "n/a",
+              prompt: "skip-error",
+              response_raw: "",
+              meta: { url: articleData.url, reason: "error", error: e.message },
+            });
+          } catch (_) {}
+          return null;
+        }
+      }
+    }
+
+    // Create new article (only after passing fulltext requirement if enforced)
     const article = await insertRecord("articles", {
       source_id: sourceId,
       url: articleData.url,
@@ -42,6 +117,7 @@ export const processArticle = async (articleData, sourceId) => {
       published_at: articleData.published_at,
       content_hash: articleData.content_hash,
       fetched_at: new Date(),
+      full_text: preExtractedFullText || null,
     });
 
     logger.info("Article created", {
@@ -49,13 +125,21 @@ export const processArticle = async (articleData, sourceId) => {
       title: article.title?.substring(0, 50),
     });
 
-    // Process AI enhancement asynchronously
-    processArticleAI(article).catch((error) => {
+    // Process AI enhancement asynchronously (pass preExtractedFullText to avoid refetch)
+    processArticleAI(article, { preExtractedFullText }).catch((error) => {
       logger.error("AI processing failed", {
         articleId: article.id,
         error: error.message,
       });
     });
+
+    // Calculate article score asynchronously
+    calculateArticleScore(article).catch((e) =>
+      logger.warn("Score calc failed (new)", {
+        articleId: article.id,
+        error: e.message,
+      })
+    );
 
     return article;
   } catch (error) {
@@ -67,7 +151,7 @@ export const processArticle = async (articleData, sourceId) => {
   }
 };
 
-export const processArticleAI = async (article) => {
+export const processArticleAI = async (article, options = {}) => {
   try {
     logger.debug("Processing AI enhancement", { articleId: article.id });
 
@@ -82,8 +166,80 @@ export const processArticleAI = async (article) => {
       return existingAI[0];
     }
 
-    // Generate AI enhancement
-    const aiContent = await enhanceArticle(article);
+    // Optionally fetch full HTML content for richer AI context
+    let fullText = options.preExtractedFullText || null;
+    if (!fullText && process.env.ENABLE_HTML_EXTRACTION === "true") {
+      const extracted = await fetchAndExtract(
+        article.canonical_url || article.url
+      );
+      fullText = extracted?.text || null;
+      if (fullText) {
+        logger.debug("Full text extracted", {
+          articleId: article.id,
+          chars: fullText.length,
+          strategy: extracted?.diagnostics?.strategy,
+          tooShort: extracted?.diagnostics?.tooShort,
+        });
+        // Inline meta log for correlation without exposing full text
+        try {
+          const hash = generateContentHash(fullText).slice(0, 8);
+          logLLMEvent({
+            label: "fulltext_meta",
+            prompt_hash: hash,
+            model: "n/a",
+            prompt: "meta only",
+            response_raw: "",
+            meta: {
+              articleId: article.id,
+              full_text_chars: fullText.length,
+              strategy: extracted?.diagnostics?.strategy,
+              http_status: extracted?.diagnostics?.httpStatus,
+              content_type: extracted?.diagnostics?.contentType,
+              initial_html_chars: extracted?.diagnostics?.initialHtmlChars,
+              readability_chars: extracted?.diagnostics?.readabilityChars,
+              selectors_chars: extracted?.diagnostics?.selectorsChars,
+              jsonld_chars: extracted?.diagnostics?.jsonldChars,
+              meta_desc_chars: extracted?.diagnostics?.metaDescChars,
+              truncated: extracted?.diagnostics?.truncated,
+              too_short: extracted?.diagnostics?.tooShort,
+              paywall_suspect: extracted?.diagnostics?.paywallSuspect,
+            },
+          });
+          if (
+            (process.env.FULLTEXT_LOG_PREVIEW || "true").toLowerCase() ===
+            "true"
+          ) {
+            const maxPreview = parseInt(
+              process.env.FULLTEXT_LOG_PREVIEW_CHARS || "400"
+            );
+            const preview = fullText.slice(0, maxPreview);
+            logLLMEvent({
+              label: "fulltext_preview",
+              prompt_hash: hash,
+              model: "n/a",
+              prompt: "preview",
+              response_raw: preview,
+              meta: {
+                articleId: article.id,
+                preview_chars: preview.length,
+                total_chars: fullText.length,
+              },
+            });
+          }
+        } catch (e) {
+          logger.warn("Failed to log fulltext meta", {
+            articleId: article.id,
+            error: e.message,
+          });
+        }
+      }
+    }
+
+    // Generate AI enhancement with optional full text
+    const aiContent = await enhanceArticle(article, {
+      fullText,
+      detailBullets: 8,
+    });
 
     // Mark previous AI records as not current
     await updatePreviousAIRecords(article.id);

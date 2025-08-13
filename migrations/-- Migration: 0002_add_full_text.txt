@@ -1,0 +1,8 @@
+-- Migration: 0002_add_full_text.sql
+-- Purpose: Add full_text column to articles to persist extracted article body.
+-- Notes: Column kept out of v_articles_public view to avoid accidental public exposure / licensing risk.
+
+alter table articles add column if not exists full_text text;
+
+-- Optional: Comment for clarity
+comment on column articles.full_text is 'Raw extracted full article text (may be truncated according to extraction limits). Not exposed via public view.';
