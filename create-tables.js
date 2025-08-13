@@ -46,6 +46,7 @@ const createTables = async () => {
           canonical_url text,
           title text,
           snippet text,
+          full_text text, -- added to persist extracted full article body
           language text,
           published_at timestamptz,
           fetched_at timestamptz DEFAULT now(),
@@ -56,6 +57,8 @@ const createTables = async () => {
         CREATE INDEX IF NOT EXISTS idx_articles_pub ON articles(published_at DESC);
         CREATE INDEX IF NOT EXISTS idx_articles_source_hash ON articles(source_id, content_hash);
         ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
+        -- Ensure column present if table pre-existed without it
+        ALTER TABLE articles ADD COLUMN IF NOT EXISTS full_text text;
       `
     });
     

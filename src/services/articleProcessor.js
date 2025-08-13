@@ -107,18 +107,41 @@ export const processArticle = async (articleData, sourceId) => {
     }
 
     // Create new article (only after passing fulltext requirement if enforced)
-    const article = await insertRecord("articles", {
-      source_id: sourceId,
-      url: articleData.url,
-      canonical_url: articleData.canonical_url || articleData.url,
-      title: articleData.title,
-      snippet: articleData.snippet,
-      language: articleData.language,
-      published_at: articleData.published_at,
-      content_hash: articleData.content_hash,
-      fetched_at: new Date(),
-      full_text: preExtractedFullText || null,
-    });
+    let article;
+    try {
+      article = await insertRecord("articles", {
+        source_id: sourceId,
+        url: articleData.url,
+        canonical_url: articleData.canonical_url || articleData.url,
+        title: articleData.title,
+        snippet: articleData.snippet,
+        language: articleData.language,
+        published_at: articleData.published_at,
+        content_hash: articleData.content_hash,
+        fetched_at: new Date(),
+        full_text: preExtractedFullText || null,
+      });
+    } catch (e) {
+      if (/full_text/.test(e.message || "")) {
+        logger.warn("Insert without full_text (column missing)", {
+          url: articleData.url,
+          error: e.message,
+        });
+        article = await insertRecord("articles", {
+          source_id: sourceId,
+          url: articleData.url,
+          canonical_url: articleData.canonical_url || articleData.url,
+          title: articleData.title,
+          snippet: articleData.snippet,
+          language: articleData.language,
+          published_at: articleData.published_at,
+          content_hash: articleData.content_hash,
+          fetched_at: new Date(),
+        });
+      } else {
+        throw e;
+      }
+    }
 
     logger.info("Article created", {
       articleId: article.id,
