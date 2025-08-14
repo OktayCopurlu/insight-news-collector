@@ -13,6 +13,8 @@ import dotenv from "dotenv";
 import { supabase } from "../src/config/database.js";
 import { crawlAllFeeds } from "../src/services/feedCrawler.js";
 import { createContextLogger } from "../src/config/logger.js";
+import { selectRecords } from "../src/config/database.js";
+import { selectAttachBestImage } from "../src/services/mediaSelector.js";
 
 dotenv.config();
 const logger = createContextLogger("ResetData");
@@ -115,6 +117,45 @@ async function reset() {
   logger.info("Tables cleared. Re-crawling all enabled feeds...");
   const crawlResult = await crawlAllFeeds();
   logger.info("Re-crawl complete", crawlResult);
+
+  // Optional: backfill media thumbnails for recent articles so FE regains images post-reset
+  const mediaEnabled =
+    (process.env.MEDIA_ENABLED || "false").toLowerCase() === "true";
+  if (mediaEnabled) {
+    const hours = parseInt(
+      process.env.MEDIA_BACKFILL_ON_RESET_HOURS || "24",
+      10
+    );
+    const sinceIso = new Date(Date.now() - hours * 3600 * 1000).toISOString();
+    logger.info("Backfilling media after reset", { hours, sinceIso });
+    try {
+      const articles = await selectRecords("articles", {});
+      let attached = 0;
+      for (const a of articles) {
+        const publishedAt = a.published_at
+          ? new Date(a.published_at).toISOString()
+          : null;
+        const createdAt = a.created_at
+          ? new Date(a.created_at).toISOString()
+          : null;
+        const isRecent =
+          (publishedAt && publishedAt >= sinceIso) ||
+          (!publishedAt && createdAt && createdAt >= sinceIso);
+        if (!isRecent) continue;
+        try {
+          const res = await selectAttachBestImage(a);
+          if (res) attached++;
+        } catch (e) {
+          logger.warn("Media attach failed", { id: a.id, error: e.message });
+        }
+      }
+      logger.info("Media backfill complete", { attached });
+    } catch (e) {
+      logger.warn("Media backfill skipped due to error", { error: e.message });
+    }
+  } else {
+    logger.info("MEDIA_ENABLED is false; skipping media backfill.");
+  }
   logger.info("Reset finished.");
 }
 

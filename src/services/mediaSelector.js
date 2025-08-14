@@ -192,8 +192,9 @@ async function upsertMediaAsset(origin, url) {
 }
 
 export async function selectAttachBestImage(article, opts = {}) {
+  // Default ON so freshly ingested articles attach images without separate backfills
   const enabled =
-    (process.env.MEDIA_ENABLED || "false").toLowerCase() === "true";
+    (process.env.MEDIA_ENABLED || "true").toLowerCase() === "true";
   if (!enabled) return null;
 
   const allowHtmlMeta =
@@ -201,9 +202,9 @@ export async function selectAttachBestImage(article, opts = {}) {
   const allowFromRss =
     (process.env.MEDIA_FROM_RSS || "true").toLowerCase() === "true";
   const storageEnabled =
-    (process.env.MEDIA_STORAGE_ENABLED || "false").toLowerCase() === "true";
+    (process.env.MEDIA_STORAGE_ENABLED || "true").toLowerCase() === "true";
   const ogCardEnabled =
-    (process.env.MEDIA_FALLBACK_OGCARD_ENABLED || "false").toLowerCase() ===
+    (process.env.MEDIA_FALLBACK_OGCARD_ENABLED || "true").toLowerCase() ===
     "true";
   const aiEnabled =
     (process.env.MEDIA_AI_ENABLED || "false").toLowerCase() === "true";

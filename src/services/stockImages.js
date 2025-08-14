@@ -46,8 +46,9 @@ export function loadStockConfig() {
 }
 
 export function selectStockImage(article) {
+  // Default ON: safer UX during resets and sparse feeds; can be disabled in prod env
   const enabled =
-    (process.env.MEDIA_STOCK_ENABLED || "false").toLowerCase() === "true";
+    (process.env.MEDIA_STOCK_ENABLED || "true").toLowerCase() === "true";
   if (!enabled) return null;
   const cfg = loadStockConfig();
   const text = `${article.title || ""} ${article.snippet || ""}`;
