@@ -19,6 +19,8 @@
     "media:test": "node scripts/test-media-extract.js",
     "media:backfill": "MEDIA_ENABLED=true node scripts/backfill-media.js",
     "media:audit": "node scripts/run-audit-media.js",
+    "storage:verify": "node scripts/verify-storage.js",
+    "source:policy": "node scripts/source-policy-set.js",
     "test:fulltext": "node scripts/test-fulltext.js",
     "migrate": "node scripts/run-migrations.js",
     "test": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --forceExit",

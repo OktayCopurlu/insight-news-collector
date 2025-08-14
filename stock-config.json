@@ -1,6 +1,55 @@
 {
   "matchers": [
     {
+      "pattern": "\\b(politics|election|parliament|senate|minister|policy)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/230678/pexels-photo-230678.jpeg",
+        "https://images.pexels.com/photos/533189/pexels-photo-533189.jpeg"
+      ]
+    },
+    {
+      "pattern": "\\b(market|stocks?|economy|inflation|rates?|finance|bank)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/210607/pexels-photo-210607.jpeg",
+        "https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg"
+      ]
+    },
+    {
+      "pattern": "\\b(technology|software|ai|startup|internet|cyber|security)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg",
+        "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg"
+      ]
+    },
+    {
+      "pattern": "\\b(health|medicine|vaccine|hospital|wellness|fitness)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg",
+        "https://images.pexels.com/photos/4226769/pexels-photo-4226769.jpeg"
+      ]
+    },
+    {
+      "pattern": "\\b(climate|environment|weather|heatwave|storm|wildfire)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/52527/pexels-photo-52527.jpeg",
+        "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg"
+      ]
+    },
+    {
+      "pattern": "\\b(world|international|diplomacy|conflict|war|ceasefire)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/269790/pexels-photo-269790.jpeg",
+        "https://images.pexels.com/photos/1834399/pexels-photo-1834399.jpeg"
+      ]
+    },
+    {
+      "pattern": "\\b(culture|art|music|film|literature|festival)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg",
+        "https://images.pexels.com/photos/1763067/pexels-photo-1763067.jpeg"
+      ]
+    },
+    {
       "pattern": "\\b(racing|horse racing|sky sports racing|grand national|derby|cheltenham|flat race)\\b",
       "urls": [
         "https://images.pexels.com/photos/1540907/pexels-photo-1540907.jpeg",

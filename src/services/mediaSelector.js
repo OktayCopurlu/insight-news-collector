@@ -207,6 +207,10 @@ export async function selectAttachBestImage(article, opts = {}) {
     "true";
   const aiEnabled =
     (process.env.MEDIA_AI_ENABLED || "false").toLowerCase() === "true";
+  const aiAllowed = (process.env.MEDIA_AI_ALLOWED_CATEGORIES || "")
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
 
   const articleUrl = article.canonical_url || article.url;
 
@@ -285,56 +289,68 @@ export async function selectAttachBestImage(article, opts = {}) {
     }
     // Optional AI illustration fallback (before OG-card)
     if (aiEnabled && storageEnabled) {
-      try {
-        const ill = await generateIllustrationForArticle(article);
-        const id = generateContentHash(
-          "ai_illustration",
-          article.id,
-          ill.storagePath
-        );
-        let media;
+      // Only allow for generic categories if configured
+      const cat = String(article.category || "").toLowerCase();
+      const aiCategoryOk = aiAllowed.length === 0 || aiAllowed.includes(cat);
+      if (!aiCategoryOk) {
+        logger.debug("AI illustration disabled for category", {
+          category: cat,
+        });
+      }
+      if (!aiCategoryOk) {
+        // skip AI fallback
+      } else {
         try {
-          media = await insertRecord("media_assets", {
-            id,
-            origin: "ai_generated",
+          const ill = await generateIllustrationForArticle(article);
+          const id = generateContentHash(
+            "ai_illustration",
+            article.id,
+            ill.storagePath
+          );
+          let media;
+          try {
+            media = await insertRecord("media_assets", {
+              id,
+              origin: "ai_generated",
+              url: ill.publicUrl,
+              storage_path: ill.storagePath,
+              width: ill.width,
+              height: ill.height,
+              caption: ill.caption,
+              license: "internal",
+              hash: null,
+            });
+          } catch (e) {
+            if (!/duplicate key value/.test(e.message || "")) throw e;
+            const [existing] = await selectRecords("media_assets", { id });
+            media = existing;
+          }
+          try {
+            await insertRecord("article_media", {
+              article_id: article.id,
+              media_id: media.id,
+              role: "thumbnail",
+              position: 0,
+            });
+          } catch (e) {
+            if (!/duplicate key value/.test(e.message || "")) throw e;
+          }
+          logger.info("Attached AI illustration fallback", {
+            articleId: article.id,
             url: ill.publicUrl,
-            storage_path: ill.storagePath,
+          });
+          return {
+            media,
+            url: ill.publicUrl,
             width: ill.width,
             height: ill.height,
-            caption: ill.caption,
-            license: "internal",
-            hash: null,
-          });
+          };
         } catch (e) {
-          if (!/duplicate key value/.test(e.message || "")) throw e;
-          const [existing] = await selectRecords("media_assets", { id });
-          media = existing;
-        }
-        try {
-          await insertRecord("article_media", {
-            article_id: article.id,
-            media_id: media.id,
-            role: "thumbnail",
-            position: 0,
+          logger.warn("AI illustration generation failed", {
+            articleId: article.id,
+            error: e.message,
           });
-        } catch (e) {
-          if (!/duplicate key value/.test(e.message || "")) throw e;
         }
-        logger.info("Attached AI illustration fallback", {
-          articleId: article.id,
-          url: ill.publicUrl,
-        });
-        return {
-          media,
-          url: ill.publicUrl,
-          width: ill.width,
-          height: ill.height,
-        };
-      } catch (e) {
-        logger.warn("AI illustration generation failed", {
-          articleId: article.id,
-          error: e.message,
-        });
       }
     }
 

@@ -184,18 +184,47 @@ Stock fallback (optional):
 - `MEDIA_STOCK_ENABLED=false`
 - `STOCK_CONFIG_PATH=stock-config.json` (see `stock-config.example.json` for format)
 
+#### Recommended safe defaults (enable persistent)
+
+Set these in your `.env` for production-like behavior:
+
+- `MEDIA_ENABLED=true`
+- `MEDIA_STORAGE_ENABLED=true`
+- `MEDIA_FALLBACK_OGCARD_ENABLED=true`
+- `MEDIA_MIN_WIDTH=800`
+- `MEDIA_ACCEPTED_ASPECTS=16:9,4:3`
+- `MEDIA_VERIFY_HEAD=false`
+- Optionally: `MEDIA_STOCK_ENABLED=true` and `STOCK_CONFIG_PATH=./stock-config.json`
+
+Then verify storage is ready:
+
+```sh
+npm run storage:verify
+```
+
+If the printed probe URL returns 200 in a browser, your thumbnails are publicly readable.
+
+To explicitly allow/deny mirroring for a source:
+
+```sh
+# allow: sets sources.allowed_use = 'mirror_thumb'
+npm run source:policy -- <source_id_or_domain> allow
+
+# deny: sets sources.allowed_use = 'link+snippet'
+npm run source:policy -- <source_id_or_domain> deny
+```
+
 Policy:
 
 - `MEDIA_MIRROR_DEFAULT_ALLOW=false` — if source/article policy doesn’t explicitly allow mirroring, fall back to this default (false recommended)
 
-Utilities:
+AI illustration fallback (optional; generic categories only recommended):
 
-- AI illustration fallback (optional):
-
-  - `MEDIA_AI_ENABLED=false`
-  - `AI_IMAGE_PROVIDER=svg` (currently only SVG abstract generator is supported)
-  - `AI_IMAGE_WIDTH=1200` (defaults to OGCARD_WIDTH)
-  - `AI_IMAGE_HEIGHT=630` (defaults to OGCARD_HEIGHT)
+- `MEDIA_AI_ENABLED=false`
+- `MEDIA_AI_ALLOWED_CATEGORIES=general,business,technology,science,health,weather,opinion,education,finance`
+- `AI_IMAGE_PROVIDER=svg` (currently only SVG abstract generator is supported)
+- `AI_IMAGE_WIDTH=1200` (defaults to OGCARD_WIDTH)
+- `AI_IMAGE_HEIGHT=630` (defaults to OGCARD_HEIGHT)
 
 - `npm run media:test https://example.com/article`
 - `npm run media:backfill` — processes recent articles missing images
