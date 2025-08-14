@@ -2,6 +2,7 @@ import axios from "axios";
 import { JSDOM } from "jsdom";
 import { Readability } from "@mozilla/readability";
 import { createContextLogger } from "../config/logger.js";
+import { normalizeBcp47 } from "../utils/lang.js";
 
 const logger = createContextLogger("HtmlExtractor");
 
@@ -101,6 +102,32 @@ function pruneDOM(doc) {
   toRemove.forEach((n) => n.parentNode && n.parentNode.removeChild(n));
 }
 
+function extractPageLang(doc) {
+  try {
+    const rawLang =
+      doc.documentElement.getAttribute("lang") ||
+      doc.documentElement.getAttribute("xml:lang") ||
+      "";
+    const ogLocale =
+      doc
+        .querySelector('meta[property="og:locale"]')
+        ?.getAttribute("content") || "";
+    const httpLang =
+      doc
+        .querySelector('meta[http-equiv="content-language"]')
+        ?.getAttribute("content") || "";
+    const candidates = [rawLang, ogLocale, httpLang]
+      .map((s) => (s || "").trim())
+      .filter(Boolean);
+    for (const c of candidates) {
+      // og:locale uses underscores often (en_US)
+      const norm = normalizeBcp47(c.replace(/_/g, "-"));
+      if (norm) return norm;
+    }
+  } catch (_) {}
+  return null;
+}
+
 export async function fetchAndExtract(url) {
   const diagnostics = {
     url,
@@ -141,8 +168,9 @@ export async function fetchAndExtract(url) {
     const html = resp.data || "";
     diagnostics.initialHtmlChars = html.length;
 
-    const dom = new JSDOM(html, { url });
+  const dom = new JSDOM(html, { url });
     pruneDOM(dom.window.document);
+  const pageLang = extractPageLang(dom.window.document);
 
     // Strategy 1: Readability
     let bestText = "";
@@ -207,6 +235,7 @@ export async function fetchAndExtract(url) {
     return {
       text: bestText,
       title: (article && article.title) || dom.window.document.title || null,
+  language: pageLang || null,
       diagnostics,
     };
   } catch (err) {

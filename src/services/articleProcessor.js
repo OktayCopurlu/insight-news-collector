@@ -6,6 +6,7 @@ import {
 import { supabase } from "../config/database.js";
 import { enhanceArticle, categorizeArticle } from "./gemini.js";
 import { fetchAndExtract } from "./htmlExtractor.js";
+import { normalizeBcp47 } from "../utils/lang.js";
 import { createContextLogger } from "../config/logger.js";
 import { generateContentHash } from "../utils/helpers.js";
 import { logLLMEvent } from "../utils/llmLogger.js";
@@ -39,6 +40,29 @@ export const processArticle = async (articleData, sourceId) => {
           articleData.canonical_url || articleData.url
         );
         preExtractedFullText = extracted?.text || null;
+        // If page declares language, adopt when missing/auto or when strong mismatch suspected
+        if (extracted?.language) {
+          const normalized = normalizeBcp47(extracted.language);
+          if (normalized) {
+            const current = articleData.language || "";
+            const isAuto = !current || current === "auto";
+            const looksArabic = /[\u0600-\u06FF]/.test(preExtractedFullText || "");
+            // Turkish-specific letters only (exclude ö, ü as they appear in German)
+            const hasTrSpecific = /[ğĞşŞıİçÇ]/.test(preExtractedFullText || "");
+            const hasDeUmlaut = /[äÄöÖüÜß]/.test(preExtractedFullText || "");
+            const deWords = /( der | die | das | und | oder | aber | mit | von | für )/i.test(` ${preExtractedFullText || ""} `);
+            const mismatchArabic = looksArabic && current && !current.startsWith("ar");
+            const mismatchTurkish = hasTrSpecific && current && current !== "tr";
+            const mismatchGerman = hasDeUmlaut && deWords && current && current !== "de";
+            if (isAuto || mismatchArabic || mismatchTurkish) {
+              articleData.language = normalized;
+            }
+            // If page-declared lang is de and content signals German, prefer de
+            if (!isAuto && normalized === "de" && mismatchGerman) {
+              articleData.language = "de";
+            }
+          }
+        }
         const tooShort = extracted?.diagnostics?.tooShort;
         if (requireFull && (!preExtractedFullText || tooShort)) {
           logger.warn("Skipping article due to missing/short full text", {

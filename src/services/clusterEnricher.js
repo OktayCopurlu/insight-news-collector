@@ -6,6 +6,7 @@ import {
 } from "../config/database.js";
 import { generateAIContent } from "./gemini.js";
 import { createContextLogger } from "../config/logger.js";
+import { normalizeBcp47 } from "../utils/lang.js";
 
 const logger = createContextLogger("ClusterEnricher");
 
@@ -37,7 +38,7 @@ export async function enrichPendingClusters(lang = "en") {
           )
         ).filter(Boolean)
       : [];
-    let processed = 0;
+  let processed = 0;
     for (const c of clusters) {
       // Check if has current ai
       const ai = await selectRecords("cluster_ai", {
@@ -107,6 +108,109 @@ export async function enrichPendingClusters(lang = "en") {
     logger.error("Cluster enrich failed", { error: error.message });
     return { processed: 0, error: error.message };
   }
+}
+
+export async function enrichClustersAutoPivot() {
+  if (process.env.CLUSTER_ENRICH_ENABLED === "false") return { processed: 0 };
+  try {
+    // Fetch clusters lacking any current AI (any lang)
+    const allClusters = await selectRecords("clusters", {});
+    let processed = 0;
+    for (const c of allClusters) {
+      const existing = await selectRecords("cluster_ai", {
+        cluster_id: c.id,
+        is_current: true,
+      });
+      if (existing.length) continue; // already has a pivot
+
+      const lang = await selectDominantLanguageForCluster(c.id);
+      await generateAndInsertClusterAI(c, lang);
+      processed++;
+    }
+    return { processed };
+  } catch (error) {
+    logger.error("Auto-pivot cluster enrich failed", { error: error.message });
+    return { processed: 0, error: error.message };
+  }
+}
+
+async function selectDominantLanguageForCluster(clusterId) {
+  // Prefer languages in updates; fallback to articles
+  const upd = await selectRecords("cluster_updates", { cluster_id: clusterId });
+  const counts = new Map();
+  for (const u of upd) {
+    const l = normalizeBcp47(u.lang || "");
+    if (!l) continue;
+    counts.set(l, (counts.get(l) || 0) + 1);
+  }
+  if (!counts.size) {
+    const arts = await selectRecords("articles", { cluster_id: clusterId });
+    for (const a of arts) {
+      const l = normalizeBcp47(a.language || "");
+      if (!l) continue;
+      counts.set(l, (counts.get(l) || 0) + 1);
+    }
+  }
+  if (!counts.size) return "en";
+  // pick max; if tie, prefer en
+  let best = null;
+  let bestCount = -1;
+  for (const [l, n] of counts.entries()) {
+    if (n > bestCount || (n === bestCount && l === "en")) {
+      best = l;
+      bestCount = n;
+    }
+  }
+  return best || "en";
+}
+
+async function generateAndInsertClusterAI(c, lang) {
+  // Guard: if already exists for this lang as current, skip
+  const aiExisting = await selectRecords("cluster_ai", {
+    cluster_id: c.id,
+    is_current: true,
+    lang,
+  });
+  if (aiExisting.length) return;
+
+  const updates = await fetchClusterUpdates(c.id, 3);
+  let title;
+  let summary;
+  if ((process.env.CLUSTER_LLM_ENABLED || "false").toLowerCase() === "true") {
+    const prompt = buildClusterSummaryPrompt(c, updates, lang);
+    try {
+      const text = await generateAIContent(prompt, {
+        maxOutputTokens: 600,
+        temperature: 0.4,
+        attempts: 2,
+      });
+      const parsed = safeParseJSON(text);
+      title = parsed.ai_title || generateTitleFromUpdates(updates);
+      summary = parsed.ai_summary || generateSummaryFromUpdates(updates);
+    } catch (e) {
+      logger.warn("LLM cluster summary failed; using fallback", {
+        clusterId: c.id,
+        error: e.message,
+      });
+      title = generateTitleFromUpdates(updates);
+      summary = generateSummaryFromUpdates(updates);
+    }
+  } else {
+    title = generateTitleFromUpdates(updates);
+    summary = generateSummaryFromUpdates(updates);
+  }
+  try {
+    await updatePreviousClusterAI(c.id, lang);
+  } catch (_) {}
+  await insertRecord("cluster_ai", {
+    cluster_id: c.id,
+    lang,
+    ai_title: title,
+    ai_summary: summary,
+    ai_details: summary,
+    model: (process.env.LLM_MODEL || "stub"),
+    is_current: true,
+  });
 }
 
 async function fetchClusterUpdates(clusterId, limit = 5) {

@@ -4,6 +4,7 @@ import { createContextLogger } from "../config/logger.js";
 import { generateContentHash } from "../utils/helpers.js";
 import fs from "fs";
 import path from "path";
+import { normalizeBcp47 } from "../utils/lang.js";
 
 const logger = createContextLogger("FeedParser");
 
@@ -82,12 +83,21 @@ export const parseFeed = async (feedUrl, options = {}) => {
 
     const items = feed.items.map((item) => {
       const mediaCandidates = extractRssMediaCandidates(item);
+      // language: prefer explicit hints; else heuristic with confidence
+      let lang = item.isoLanguage || item.lang || null;
+      if (!lang) {
+        const dl = detectLanguageWithConfidence(
+          item.title,
+          item.contentSnippet || item.summary || item.description
+        );
+        lang = dl.confidence >= 0.25 ? dl.lang : "en";
+      }
       return {
         title: item.title || "",
         url: item.link || item.guid || "",
         snippet: item.contentSnippet || item.summary || item.description || "",
         published_at: item.pubDate ? new Date(item.pubDate) : new Date(),
-        language: detectLanguage(item.title, item.contentSnippet),
+        language: normalizeBcp47(lang),
         content_hash: generateContentHash(item.title, item.contentSnippet),
         media_candidates: mediaCandidates,
       };
@@ -109,7 +119,11 @@ export const parseFeed = async (feedUrl, options = {}) => {
           itemCount: items.length,
           etag: response.headers.etag,
           lastModified: response.headers["last-modified"],
-          sampleItems: items.slice(0, 5),
+          sampleItems: items.slice(0, 5).map((it) => ({
+            title: it.title,
+            language: it.language,
+            published_at: it.published_at,
+          })),
         };
         fs.writeFileSync(metaFile, JSON.stringify(meta, null, 2), "utf8");
       } catch (e) {
@@ -238,41 +252,61 @@ export const validateFeedUrl = async (feedUrl) => {
   }
 };
 
-const detectLanguage = (title = "", content = "") => {
-  const text = `${title} ${content}`.toLowerCase();
+const detectLanguageWithConfidence = (title = "", content = "") => {
+  const raw = `${title} ${content}`;
+  const text = raw.toLowerCase();
 
-  // Simple language detection based on common words
+  // Strong signals first: Arabic script and Turkish diacritics
+  const arabicChars = (raw.match(/[\u0600-\u06FF]/g) || []).length;
+  if (arabicChars >= 5) return { lang: "ar", confidence: 1.0 };
+
+  // Turkish-specific letters (exclude ö, ü which also appear in German)
+  const trSpecific = (raw.match(/[ğĞşŞıİçÇ]/g) || []).length;
+  if (trSpecific >= 1) return { lang: "tr", confidence: 0.95 };
+
+  // Function words heuristic; exclude highly ambiguous tokens to reduce false positives
   const patterns = {
     en: /\b(the|and|or|but|in|on|at|to|for|of|with|by)\b/g,
-    es: /\b(el|la|los|las|y|o|pero|en|con|por|para|de)\b/g,
-    fr: /\b(le|la|les|et|ou|mais|dans|sur|avec|par|pour|de)\b/g,
+    es: /\b(el|la|los|las|y|o|pero|en|con|por|para)\b/g, // exclude 'de'
+    fr: /\b(le|la|les|et|ou|mais|dans|sur|avec|par|pour)\b/g, // exclude 'de'
     de: /\b(der|die|das|und|oder|aber|in|auf|mit|von|für)\b/g,
-    it: /\b(il|la|lo|gli|le|e|o|ma|in|su|con|da|per|di)\b/g,
+    it: /\b(il|la|lo|gli|le|e|o|ma|in|su|con|per)\b/g, // exclude 'di'/'da'
+    tr: /\b(ve|ile|ama|fakat|için|olarak|üzerine|göre|daha|değil|ancak|bir)\b/g,
   };
 
+  const counts = {};
+  const deUmlauts = (raw.match(/[äÄöÖüÜß]/g) || []).length;
   let maxMatches = 0;
-  let detectedLang = "en";
-
+  let detected = "en";
   Object.entries(patterns).forEach(([lang, pattern]) => {
     const matches = (text.match(pattern) || []).length;
+    counts[lang] = matches;
     if (matches > maxMatches) {
       maxMatches = matches;
-      detectedLang = lang;
+      detected = lang;
     }
   });
-
-  return detectedLang;
+  // If German words are present and umlauts appear, favor de over tr when no Turkish-specific letters
+  if (detected !== "de" && trSpecific === 0 && counts["de"] >= 2 && deUmlauts >= 1) {
+    detected = "de";
+    maxMatches = Math.max(maxMatches, counts["de"] + 1);
+  }
+  const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
+  const confidence = Math.min(1, maxMatches / Math.max(3, total));
+  return { lang: detected, confidence };
 };
 
 export const extractFeedMetadata = async (feedUrl) => {
   try {
     const feed = await parser.parseURL(feedUrl);
 
-    return {
+      return {
       title: feed.title || "",
       description: feed.description || "",
       link: feed.link || "",
-      language: feed.language || detectLanguage(feed.title, feed.description),
+        language: normalizeBcp47(
+          feed.language || detectLanguageWithConfidence(feed.title, feed.description).lang
+        ),
       lastBuildDate: feed.lastBuildDate ? new Date(feed.lastBuildDate) : null,
       itemCount: feed.items?.length || 0,
     };

@@ -11,6 +11,8 @@
     "seed:rss": "node scripts/seed-rss-feeds.js",
     "ai:test": "node scripts/test-ai.js",
     "crawl": "node scripts/run-crawl.js",
+  "audit:ml": "node scripts/audit-multilang.js",
+  "lang:backfill": "node scripts/backfill-language-strong.js",
     "reset:data": "node scripts/reset-data.js",
     "cluster:enrich": "node scripts/run-cluster-enricher.js",
     "reprocess:ai": "AI_DETAILS_MODE=narrative node scripts/reprocess-ai.js",
