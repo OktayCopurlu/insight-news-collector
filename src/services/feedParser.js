@@ -12,6 +12,16 @@ const parser = new Parser({
   headers: {
     "User-Agent": process.env.FEED_USER_AGENT || "InsightFeeder/1.0",
   },
+  // Capture common media-related fields
+  customFields: {
+    item: [
+      ["media:content", "mediaContent", { keepArray: true }],
+      ["media:thumbnail", "mediaThumbnail", { keepArray: true }],
+      ["enclosure", "enclosures", { keepArray: true }],
+      ["content:encoded", "contentEncoded"],
+      ["image", "image"],
+    ],
+  },
 });
 
 export const parseFeed = async (feedUrl, options = {}) => {
@@ -70,14 +80,18 @@ export const parseFeed = async (feedUrl, options = {}) => {
       }
     }
 
-    const items = feed.items.map((item) => ({
-      title: item.title || "",
-      url: item.link || item.guid || "",
-      snippet: item.contentSnippet || item.summary || item.description || "",
-      published_at: item.pubDate ? new Date(item.pubDate) : new Date(),
-      language: detectLanguage(item.title, item.contentSnippet),
-      content_hash: generateContentHash(item.title, item.contentSnippet),
-    }));
+    const items = feed.items.map((item) => {
+      const mediaCandidates = extractRssMediaCandidates(item);
+      return {
+        title: item.title || "",
+        url: item.link || item.guid || "",
+        snippet: item.contentSnippet || item.summary || item.description || "",
+        published_at: item.pubDate ? new Date(item.pubDate) : new Date(),
+        language: detectLanguage(item.title, item.contentSnippet),
+        content_hash: generateContentHash(item.title, item.contentSnippet),
+        media_candidates: mediaCandidates,
+      };
+    });
 
     // Structured JSON log (metadata + normalized items only, no full raw) to aid debugging
     if ((process.env.RSS_LOG_ENABLED || "true").toLowerCase() === "true") {
@@ -132,6 +146,68 @@ export const parseFeed = async (feedUrl, options = {}) => {
     throw error;
   }
 };
+
+function extractRssMediaCandidates(item) {
+  const urls = [];
+  const add = (u) => {
+    if (!u) return;
+    try {
+      const url = new URL(u).href;
+      // basic filter: avoid svg/gif/data
+      if (/\.svg(\?|#|$)/i.test(url)) return;
+      if (/\.gif(\?|#|$)/i.test(url)) return;
+      if (/^data:/i.test(url)) return;
+      urls.push(url);
+    } catch (_) {}
+  };
+
+  // enclosures
+  if (Array.isArray(item.enclosures)) {
+    for (const e of item.enclosures) {
+      const type = (e?.type || e?.["@type"] || "").toLowerCase();
+      if (!type || type.startsWith("image/")) add(e?.url || e?.href);
+    }
+  } else if (item.enclosure) {
+    const e = item.enclosure;
+    const type = (e?.type || "").toLowerCase();
+    if (!type || type.startsWith("image/")) add(e?.url);
+  }
+
+  // media:content
+  const mcs = item.mediaContent || item["media:content"];
+  if (Array.isArray(mcs)) {
+    for (const mc of mcs) {
+      if (typeof mc === "string") add(mc);
+      else add(mc?.url || mc?.href || mc?.$?.url);
+    }
+  } else if (mcs) {
+    const mc = mcs;
+    if (typeof mc === "string") add(mc);
+    else add(mc?.url || mc?.href || mc?.$?.url);
+  }
+
+  // media:thumbnail
+  const mts = item.mediaThumbnail || item["media:thumbnail"];
+  if (Array.isArray(mts)) {
+    for (const mt of mts) {
+      if (typeof mt === "string") add(mt);
+      else add(mt?.url || mt?.href || mt?.$?.url);
+    }
+  } else if (mts) {
+    const mt = mts;
+    if (typeof mt === "string") add(mt);
+    else add(mt?.url || mt?.href || mt?.$?.url);
+  }
+
+  // Some feeds include <image><url>
+  if (item.image) {
+    if (typeof item.image === "string") add(item.image);
+    else add(item.image?.url || item.image?.href);
+  }
+
+  // Unique
+  return Array.from(new Set(urls));
+}
 
 export const validateFeedUrl = async (feedUrl) => {
   try {

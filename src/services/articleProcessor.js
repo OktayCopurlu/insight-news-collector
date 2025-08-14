@@ -10,6 +10,7 @@ import { createContextLogger } from "../config/logger.js";
 import { generateContentHash } from "../utils/helpers.js";
 import { logLLMEvent } from "../utils/llmLogger.js";
 import { assignClusterForArticle } from "./clusterer.js";
+import { selectAttachBestImage } from "./mediaSelector.js";
 
 const logger = createContextLogger("ArticleProcessor");
 
@@ -138,6 +139,16 @@ export const processArticle = async (articleData, sourceId) => {
       articleId: article.id,
       title: article.title?.substring(0, 50),
     });
+
+    // Media selection & attachment (behind flags)
+    try {
+      await selectAttachBestImage(article);
+    } catch (e) {
+      logger.warn("Media selection failed (non-fatal)", {
+        articleId: article.id,
+        error: e.message,
+      });
+    }
 
     // Cluster assignment (stub) — only for new items; controlled by flag
     try {

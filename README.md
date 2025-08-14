@@ -51,6 +51,7 @@ A comprehensive news aggregation and AI enhancement system built with Node.js, S
 - **Scheduled Tasks**: Automated crawling and AI processing with cron jobs
 - **Rate Limiting**: Built-in rate limiting for API endpoints
 - **Comprehensive Logging**: Structured logging with different levels
+- **Media (Phase 1)**: Attach publisher image via OpenGraph/Twitter/JSON-LD meta (optional)
 
 ## Prerequisites
 
@@ -147,6 +148,58 @@ Enable clustering by environment flags (off by default):
 - `CLUSTER_LLM_SLEEP_MS=250` — sleep between LLM calls to rate-limit.
 
 Timeline update extraction (generic; opt-in):
+
+### Media (Phase 1)
+
+Enable attaching a thumbnail image to new articles using page metadata. Sources checked: `og:image`, `twitter:image`, `link[rel=image_src]`, and JSON-LD `image`/`thumbnailUrl`/`logo`. This is off by default.
+
+Flags:
+
+- `MEDIA_ENABLED=false`
+- `MEDIA_FROM_HTML_META=true`
+- `MEDIA_FROM_RSS=true` (use <media:content>, <media:thumbnail>, <enclosure type="image/*"> when available)
+- `MEDIA_VERIFY_HEAD=false` (disabled by default to avoid extra requests)
+- `MEDIA_MIN_WIDTH=800` (set to 0 to disable)
+- `MEDIA_ACCEPTED_ASPECTS=16:9,4:3` (empty to allow any)
+
+Storage mirroring (optional, Phase 2):
+
+- `MEDIA_STORAGE_ENABLED=false`
+- `MEDIA_STORAGE_BUCKET=news-media`
+- `MEDIA_MAX_DOWNLOAD_BYTES=3000000`
+- `MEDIA_VARIANTS_ENABLED=false` (generate responsive variants via sharp)
+- `MEDIA_VARIANT_WIDTHS=400,800,1200` (comma-separated widths)
+
+OG-card fallback (optional, Phase 3):
+
+- `MEDIA_FALLBACK_OGCARD_ENABLED=false`
+- `OGCARD_WIDTH=1200`
+- `OGCARD_HEIGHT=630`
+- `OGCARD_BG=#0F172A`
+- `OGCARD_FG=#FFFFFF`
+- `OGCARD_ACCENT=#38BDF8`
+
+Stock fallback (optional):
+
+- `MEDIA_STOCK_ENABLED=false`
+- `STOCK_CONFIG_PATH=stock-config.json` (see `stock-config.example.json` for format)
+
+Policy:
+
+- `MEDIA_MIRROR_DEFAULT_ALLOW=false` — if source/article policy doesn’t explicitly allow mirroring, fall back to this default (false recommended)
+
+Utilities:
+
+- AI illustration fallback (optional):
+
+  - `MEDIA_AI_ENABLED=false`
+  - `AI_IMAGE_PROVIDER=svg` (currently only SVG abstract generator is supported)
+  - `AI_IMAGE_WIDTH=1200` (defaults to OGCARD_WIDTH)
+  - `AI_IMAGE_HEIGHT=630` (defaults to OGCARD_HEIGHT)
+
+- `npm run media:test https://example.com/article`
+- `npm run media:backfill` — processes recent articles missing images
+- `npm run media:audit [hours]` — prints coverage of articles without images in the last N hours
 
 - `CLUSTER_UPDATE_RULES_ENABLED=false` — enable lightweight heuristic stance detection for headlines (generic EN/TR examples; safe to keep off by default).
 - `CLUSTER_UPDATE_STANCE_MODE=off` — set to `llm` to use a tiny LLM call to classify stance into supports|contradicts|neutral (JSON-only output, token-capped).

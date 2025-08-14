@@ -1,0 +1,22 @@
+{
+  "matchers": [
+    {
+      "pattern": "\\b(football|soccer|transfer|goal|match)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg",
+        "https://images.pexels.com/photos/399187/pexels-photo-399187.jpeg"
+      ]
+    },
+    {
+      "pattern": "\\b(stocks?|market|economy|inflation|rates?)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/210607/pexels-photo-210607.jpeg",
+        "https://images.pexels.com/photos/325229/pexels-photo-325229.jpeg"
+      ]
+    }
+  ],
+  "default": [
+    "https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg",
+    "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg"
+  ]
+}

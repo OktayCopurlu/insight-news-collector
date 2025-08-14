@@ -1,0 +1,31 @@
+{
+  "matchers": [
+    {
+      "pattern": "\\b(racing|horse racing|sky sports racing|grand national|derby|cheltenham|flat race)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/1540907/pexels-photo-1540907.jpeg",
+        "https://images.pexels.com/photos/573913/pexels-photo-573913.jpeg",
+        "https://images.pexels.com/photos/220419/pexels-photo-220419.jpeg"
+      ]
+    },
+    {
+      "pattern": "\\b(formula 1|f1|motorsport|nascar|indycar|rally)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/274422/pexels-photo-274422.jpeg",
+        "https://images.pexels.com/photos/120049/pexels-photo-120049.jpeg"
+      ]
+    },
+    {
+      "pattern": "\\b(sport|sports|fixture|tournament|league|cup)\\b",
+      "urls": [
+        "https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg",
+        "https://images.pexels.com/photos/399187/pexels-photo-399187.jpeg",
+        "https://images.pexels.com/photos/258395/pexels-photo-258395.jpeg"
+      ]
+    }
+  ],
+  "default": [
+    "https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg",
+    "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg"
+  ]
+}
