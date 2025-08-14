@@ -129,6 +129,29 @@ npm start
 - `GET /api/articles/search` - Search articles
 - `GET /api/articles/stats/overview` - Get article statistics
 
+### Clusters (Backend only; frontend integration deferred)
+
+- `GET /api/clusters/reps` — One representative per cluster (uses `v_cluster_reps`). Query: `limit`, `offset`, `order=asc|desc`, `lang`, `includeAI=true|false`.
+- `GET /api/clusters/:id` — Cluster detail including current AI summary (by `lang`), timeline updates, and articles.
+- `GET /api/clusters/:id/updates` — Timeline updates only.
+
+Enable clustering by environment flags (off by default):
+
+- `CLUSTERING_ENABLED=true` — activates similarity-based assignment during ingestion (trigram, 72h window; thresholds configurable).
+- `CLUSTER_TRGM_THRESHOLD=0.55` — similarity threshold (0.5–0.6 recommended for MVP).
+- `CLUSTER_TRGM_WINDOW_HOURS=72` — time window for candidate search.
+- `CLUSTER_TRGM_LIMIT=10` — top-N candidates.
+- `CLUSTER_ENRICH_ENABLED=true` — allow summarization job (stub or LLM).
+- `CLUSTER_LLM_ENABLED=true` — use real LLM in enricher; otherwise falls back to rule-based summary.
+- `CLUSTER_LANG=en` — default summary language.
+- `CLUSTER_LLM_SLEEP_MS=250` — sleep between LLM calls to rate-limit.
+
+Timeline update extraction (generic; opt-in):
+
+- `CLUSTER_UPDATE_RULES_ENABLED=false` — enable lightweight heuristic stance detection for headlines (generic EN/TR examples; safe to keep off by default).
+- `CLUSTER_UPDATE_STANCE_MODE=off` — set to `llm` to use a tiny LLM call to classify stance into supports|contradicts|neutral (JSON-only output, token-capped).
+- `CLUSTER_UPDATE_STANCE_LLM_TOKENS=120` — token cap for the stance classifier.
+
 ## Configuration
 
 ### Environment Variables

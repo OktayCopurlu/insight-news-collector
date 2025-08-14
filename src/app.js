@@ -12,6 +12,7 @@ import { optionalAuth } from "./middleware/auth.js";
 import feedsRouter from "./routes/feeds.js";
 import articlesRouter from "./routes/articles.js";
 import sourcesRouter from "./routes/sources.js";
+import clustersRouter from "./routes/clusters.js";
 
 dotenv.config();
 
@@ -113,6 +114,7 @@ app.get("/health/db", async (req, res) => {
 app.use("/api/feeds", feedsRouter);
 app.use("/api/articles", articlesRouter);
 app.use("/api/sources", sourcesRouter);
+app.use("/api/clusters", clustersRouter);
 
 // Root endpoint
 app.get("/", (req, res) => {
@@ -125,6 +127,7 @@ app.get("/", (req, res) => {
       feeds: "/api/feeds",
       articles: "/api/articles",
       sources: "/api/sources",
+      clusters: "/api/clusters",
     },
     documentation: "https://github.com/your-repo/insight-feeder",
   });

@@ -9,6 +9,7 @@ import { fetchAndExtract } from "./htmlExtractor.js";
 import { createContextLogger } from "../config/logger.js";
 import { generateContentHash } from "../utils/helpers.js";
 import { logLLMEvent } from "../utils/llmLogger.js";
+import { assignClusterForArticle } from "./clusterer.js";
 
 const logger = createContextLogger("ArticleProcessor");
 
@@ -137,6 +138,20 @@ export const processArticle = async (articleData, sourceId) => {
       articleId: article.id,
       title: article.title?.substring(0, 50),
     });
+
+    // Cluster assignment (stub) — only for new items; controlled by flag
+    try {
+      if (
+        (process.env.CLUSTERING_ENABLED || "false").toLowerCase() === "true"
+      ) {
+        await assignClusterForArticle(article, { sourceId });
+      }
+    } catch (e) {
+      logger.warn("Cluster assignment failed (non-fatal)", {
+        articleId: article.id,
+        error: e.message,
+      });
+    }
 
     // Synchronous AI generation (only once)
     try {

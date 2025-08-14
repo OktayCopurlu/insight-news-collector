@@ -22,8 +22,11 @@ const TABLES_IN_ORDER = [
   "article_categories", // no id column (composite PK)
   "article_scores", // PK article_id
   "article_ai", // has id
+  "cluster_ai", // new: cluster summaries
+  "cluster_updates", // new: timeline
   "crawl_log", // has id
   "articles", // has id (references sources)
+  "clusters", // new: clusters (truncate after articles)
 ];
 
 async function confirm() {

@@ -38,12 +38,30 @@ async function ensureMetaTable() {
   if (error) throw error;
 }
 
-async function listApplied() {
+async function listApplied(retries = 5) {
+  for (let i = 0; i < retries; i++) {
+    const { data, error } = await supabase
+      .from("schema_migrations")
+      .select("filename");
+    if (!error) return new Set((data || []).map((r) => r.filename));
+    const msg = (error.message || "").toLowerCase();
+    if (
+      msg.includes("schema_migrations") ||
+      msg.includes("schema cache") ||
+      msg.includes("relation")
+    ) {
+      // Table might be freshly created; wait and retry
+      await new Promise((r) => setTimeout(r, 500 * (i + 1)));
+      continue;
+    }
+    throw error;
+  }
+  // Last attempt after retries
   const { data, error } = await supabase
     .from("schema_migrations")
     .select("filename");
   if (error) throw error;
-  return new Set(data.map((r) => r.filename));
+  return new Set((data || []).map((r) => r.filename));
 }
 
 function readMigrations() {
@@ -63,9 +81,13 @@ async function applyMigration(file) {
     console.error(`Migration failed (${file}):`, error.message);
     process.exit(1);
   }
-  const { error: insErr } = await supabase
-    .from("schema_migrations")
-    .insert({ filename: file });
+  // Record applied using SQL to avoid schema cache timing issues
+  const { error: insErr } = await supabase.rpc("exec_sql", {
+    sql: `insert into schema_migrations(filename) values ('${file.replace(
+      /'/g,
+      "''"
+    )}') on conflict (filename) do nothing;`,
+  });
   if (insErr) {
     console.error("Failed to record migration:", insErr.message);
     process.exit(1);

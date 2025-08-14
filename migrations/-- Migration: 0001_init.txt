@@ -5,9 +5,25 @@
 -- 0) Extensions ---------------------------------------------------------------
 create extension if not exists pgcrypto;          -- gen_random_uuid()
 create extension if not exists pg_trgm;           -- trigram similarity (optional)
-create extension if not exists vector;            -- pgvector for embeddings (optional)
-create extension if not exists http;              -- net/http helpers (optional)
-create extension if not exists pg_cron;           -- scheduling (optional)
+
+-- Optional extensions — guard against insufficient privileges on managed DBs
+DO $$ BEGIN
+  CREATE EXTENSION IF NOT EXISTS vector;            -- pgvector for embeddings (optional)
+EXCEPTION WHEN insufficient_privilege THEN
+  RAISE NOTICE 'Skipping vector extension (insufficient privilege)';
+END $$;
+
+DO $$ BEGIN
+  CREATE EXTENSION IF NOT EXISTS http;              -- net/http helpers (optional)
+EXCEPTION WHEN insufficient_privilege THEN
+  RAISE NOTICE 'Skipping http extension (insufficient privilege)';
+END $$;
+
+DO $$ BEGIN
+  CREATE EXTENSION IF NOT EXISTS pg_cron;           -- scheduling (optional)
+EXCEPTION WHEN insufficient_privilege THEN
+  RAISE NOTICE 'Skipping pg_cron extension (insufficient privilege)';
+END $$;
 
 -- 1) Core tables --------------------------------------------------------------
 create table if not exists sources (
@@ -34,7 +50,6 @@ create table if not exists articles (
   fetched_at timestamptz default now(),
   content_hash text,
   cluster_id text,
-  title_embedding vector(384),      -- optional (pgvector)
   unique (source_id, content_hash)
 );
 
@@ -173,7 +188,14 @@ create index if not exists idx_articles_pub on articles(published_at desc);
 create index if not exists idx_articles_source_hash on articles(source_id, content_hash);
 create index if not exists idx_article_categories_cat on article_categories(category_id);
 create index if not exists idx_article_places_place on article_places(place_id);
-create index if not exists idx_articles_title_vec on articles using ivfflat (title_embedding vector_cosine_ops);
+-- Add vector embedding column and index only if extension is available
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM pg_extension WHERE extname='vector') THEN
+    ALTER TABLE articles ADD COLUMN IF NOT EXISTS title_embedding vector(384);
+    CREATE INDEX IF NOT EXISTS idx_articles_title_vec
+      ON articles USING ivfflat (title_embedding vector_cosine_ops);
+  END IF;
+END $$;
 
 -- 3) Views (public read surface) ---------------------------------------------
 create or replace view v_articles_public as
