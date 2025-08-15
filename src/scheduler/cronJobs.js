@@ -1,6 +1,7 @@
 import cron from "node-cron";
 import { crawlAllFeeds } from "../services/feedCrawler.js";
 import { enrichPendingClusters } from "../services/clusterEnricher.js";
+import { runPretranslationCycle } from "../services/pretranslator.js";
 import {
   getArticlesNeedingAI,
   processArticleAI,
@@ -73,6 +74,24 @@ export const startCronJobs = () => {
       scheduled: true,
       timezone: "UTC",
     }
+  );
+
+  // Pretranslation cycle every 5 minutes
+  cron.schedule(
+    "*/5 * * * *",
+    async () => {
+      try {
+        const enabled =
+          (process.env.PRETRANS_ENABLED || "true").toLowerCase() !== "false";
+        if (!enabled) return;
+        logger.info("Starting pretranslation cycle");
+        const res = await runPretranslationCycle();
+        logger.info("Pretranslation cycle completed", res);
+      } catch (error) {
+        logger.warn("Pretranslation cycle failed", { error: error.message });
+      }
+    },
+    { scheduled: true, timezone: "UTC" }
   );
 
   // Cleanup old logs daily at 2 AM

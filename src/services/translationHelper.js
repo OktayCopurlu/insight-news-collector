@@ -19,7 +19,10 @@ export const translationMetrics = {
 const MAX_CACHE = parseInt(process.env.TRANSLATION_CACHE_MAX || "500");
 
 function cacheKey(text, src, dst) {
-  const h = crypto.createHash("sha1").update(`${src}|${dst}|${text}`).digest("hex");
+  const h = crypto
+    .createHash("sha1")
+    .update(`${src}|${dst}|${text}`)
+    .digest("hex");
   return `${src}->${dst}:${h}`;
 }
 
@@ -66,7 +69,12 @@ export async function translateText(text, { srcLang, dstLang }) {
       translationMetrics.providerCalls++;
       const { generateAIContent } = await import("./gemini.js");
       const prompt = `Translate to ${dst}. Keep meaning, names, and terminology consistent.\n\nText:\n${text}`;
-      const out = await generateAIContent(prompt, { maxOutputTokens: 2048, temperature: 0.2, attempts: 2 });
+      // Keep token budget modest for translation to reduce latency/timeouts
+      const out = await generateAIContent(prompt, {
+        maxOutputTokens: 480,
+        temperature: 0.2,
+        attempts: 2,
+      });
       translated = (out || "").trim();
     } else if (provider === "openai") {
       // placeholder; implement when available
@@ -81,7 +89,12 @@ export async function translateText(text, { srcLang, dstLang }) {
   if (translated) {
     setCache(key, translated);
     try {
-      await insertRecord("translations", { key, src_lang: src, dst_lang: dst, text: translated });
+      await insertRecord("translations", {
+        key,
+        src_lang: src,
+        dst_lang: dst,
+        text: translated,
+      });
     } catch (_) {
       // ignore if table missing or unique conflict
     }

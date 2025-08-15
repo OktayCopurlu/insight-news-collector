@@ -11,8 +11,8 @@
     "seed:rss": "node scripts/seed-rss-feeds.js",
     "ai:test": "node scripts/test-ai.js",
     "crawl": "node scripts/run-crawl.js",
-  "audit:ml": "node scripts/audit-multilang.js",
-  "lang:backfill": "node scripts/backfill-language-strong.js",
+    "audit:ml": "node scripts/audit-multilang.js",
+    "lang:backfill": "node scripts/backfill-language-strong.js",
     "reset:data": "node scripts/reset-data.js",
     "cluster:enrich": "node scripts/run-cluster-enricher.js",
     "reprocess:ai": "AI_DETAILS_MODE=narrative node scripts/reprocess-ai.js",
@@ -27,6 +27,7 @@
     "db:rls": "node scripts/check-rls.js",
     "test:fulltext": "node scripts/test-fulltext.js",
     "migrate": "node scripts/run-migrations.js",
+    "pretranslate": "node scripts/run-pretranslation.js",
     "test": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --forceExit",
     "test:watch": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --watch"
   },

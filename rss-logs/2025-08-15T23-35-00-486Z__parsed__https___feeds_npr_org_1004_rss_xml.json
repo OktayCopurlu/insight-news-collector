@@ -1,0 +1,31 @@
+{
+  "feedUrl": "https://feeds.npr.org/1004/rss.xml",
+  "itemCount": 10,
+  "sampleItems": [
+    {
+      "title": "A Ukrainian view of the Trump-Putin summit",
+      "language": "en",
+      "published_at": "2025-08-15T21:12:23.000Z"
+    },
+    {
+      "title": "A Secret History of the Japanese Army",
+      "language": "en",
+      "published_at": "2025-08-15T19:15:06.000Z"
+    },
+    {
+      "title": "Trump and Putin conclude talks on Ukraine touting progress, but no breakthrough",
+      "language": "en",
+      "published_at": "2025-08-15T09:00:00.000Z"
+    },
+    {
+      "title": "Morning news brief",
+      "language": "en",
+      "published_at": "2025-08-15T08:16:19.000Z"
+    },
+    {
+      "title": "Trump and Putin meet in Anchorage today",
+      "language": "en",
+      "published_at": "2025-08-15T08:15:46.000Z"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "feedUrl": "https://feeds.bbci.co.uk/news/rss.xml",
+  "itemCount": 41,
+  "sampleItems": [
+    {
+      "title": "Handshakes and a shared limo: Our correspondents on the moment the presidents met",
+      "language": "en",
+      "published_at": "2025-08-15T20:44:25.000Z"
+    },
+    {
+      "title": "Why Alaska? Why now? What to know about the Trump-Putin meeting",
+      "language": "en",
+      "published_at": "2025-08-15T21:13:00.000Z"
+    },
+    {
+      "title": "In maps: The war-ravaged Ukrainian territories at the heart of the summit",
+      "language": "en",
+      "published_at": "2025-08-15T07:30:17.000Z"
+    },
+    {
+      "title": "Sidelined Ukrainians look on with deep scepticism",
+      "language": "en",
+      "published_at": "2025-08-15T13:38:03.000Z"
+    },
+    {
+      "title": "'Putin is a master of persuasion' - BBC correspondents discuss summit strategy",
+      "language": "en",
+      "published_at": "2025-08-15T03:35:15.000Z"
+    }
+  ]
+}
