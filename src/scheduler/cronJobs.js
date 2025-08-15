@@ -1,5 +1,6 @@
 import cron from "node-cron";
 import { crawlAllFeeds } from "../services/feedCrawler.js";
+import { enrichPendingClusters } from "../services/clusterEnricher.js";
 import {
   getArticlesNeedingAI,
   processArticleAI,
@@ -20,6 +21,31 @@ export const startCronJobs = () => {
         logger.info("Starting scheduled feed crawl");
         const results = await crawlAllFeeds();
         logger.info("Scheduled feed crawl completed", results);
+        // Optionally enrich clusters after crawl
+        const enabled =
+          (process.env.CLUSTER_ENRICH_ENABLED || "false").toLowerCase() ===
+          "true";
+        if (enabled) {
+          const langs = (
+            process.env.CLUSTER_LANGS ||
+            process.env.CLUSTER_LANG ||
+            "en"
+          )
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean);
+          for (const lang of langs) {
+            try {
+              const res = await enrichPendingClusters(lang);
+              logger.info("Cluster enrich completed (cron)", { lang, ...res });
+            } catch (e) {
+              logger.warn("Cluster enrich failed (cron)", {
+                lang,
+                error: e.message,
+              });
+            }
+          }
+        }
       } catch (error) {
         logger.error("Scheduled feed crawl failed", { error: error.message });
       }

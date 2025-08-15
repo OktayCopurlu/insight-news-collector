@@ -3,6 +3,7 @@ import { JSDOM } from "jsdom";
 import probe from "probe-image-size";
 import { createContextLogger } from "../config/logger.js";
 import {
+  supabase,
   selectRecords,
   insertRecord,
   updateRecord,
@@ -177,18 +178,14 @@ async function fetchPageMetaImages(url) {
 
 async function upsertMediaAsset(origin, url) {
   const id = generateContentHash(origin, url);
-  try {
-    const rec = await insertRecord("media_assets", {
-      id,
-      origin,
-      url,
-    });
-    return rec;
-  } catch (e) {
-    if (!/duplicate key value/.test(e.message || "")) throw e;
-    const [existing] = await selectRecords("media_assets", { id });
-    return existing;
-  }
+  // Use direct upsert to avoid noisy duplicate key error logs
+  const { data, error } = await supabase
+    .from("media_assets")
+    .upsert({ id, origin, url }, { onConflict: "id" })
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
 }
 
 export async function selectAttachBestImage(article, opts = {}) {

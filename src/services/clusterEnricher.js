@@ -10,35 +10,49 @@ import { normalizeBcp47 } from "../utils/lang.js";
 
 const logger = createContextLogger("ClusterEnricher");
 
-export async function enrichPendingClusters(lang = "en") {
-  if (process.env.CLUSTER_ENRICH_ENABLED === "false") return { processed: 0 };
+export async function enrichPendingClusters(lang = "en", options = {}) {
+  const overrideEnabled = options && options.overrideEnabled === true;
+  if (process.env.CLUSTER_ENRICH_ENABLED === "false" && !overrideEnabled)
+    return { processed: 0 };
 
   try {
     // Prefer SQL helper when available, fallback to client-side check
-    let clusterIds = [];
-    try {
-      const { data, error } = await supabase.rpc("clusters_needing_ai", {
-        p_lang: lang,
-      });
-      if (error) throw error;
-      clusterIds = (data || []).map((r) => r.cluster_id || r.id || r);
-    } catch (_) {
-      // Fallback: list all clusters and filter client-side
-      const all = await selectRecords("clusters", {});
-      clusterIds = all.map((c) => c.id);
-    }
+    let clusters = [];
+    const force =
+      (process.env.CLUSTER_ENRICH_FORCE || "false").toLowerCase() === "true";
+    if (force) {
+      // Force mode: re-enrich all clusters regardless of existing AI
+      clusters = await selectRecords("clusters", {});
+    } else {
+      let clusterIds = [];
+      try {
+        const { data, error } = await supabase.rpc("clusters_needing_ai", {
+          p_lang: lang,
+        });
+        if (error) throw error;
+        clusterIds = (data || []).map((r) => r.cluster_id || r.id || r);
+      } catch (_) {
+        // Fallback: list all clusters and filter client-side
+        const all = await selectRecords("clusters", {});
+        clusterIds = all.map((c) => c.id);
+      }
 
-    // Load cluster rows for selected ids
-    const clusters = clusterIds.length
-      ? (
-          await Promise.all(
-            clusterIds.map(
-              async (id) => (await selectRecords("clusters", { id }))[0]
+      // Load cluster rows for selected ids
+      clusters = clusterIds.length
+        ? (
+            await Promise.all(
+              clusterIds.map(
+                async (id) => (await selectRecords("clusters", { id }))[0]
+              )
             )
-          )
-        ).filter(Boolean)
-      : [];
-  let processed = 0;
+          ).filter(Boolean)
+        : [];
+    }
+    const minChars = parseInt(
+      process.env.CLUSTER_MIN_DETAILS_CHARS || "400",
+      10
+    );
+    let processed = 0;
     for (const c of clusters) {
       // Check if has current ai
       const ai = await selectRecords("cluster_ai", {
@@ -46,36 +60,82 @@ export async function enrichPendingClusters(lang = "en") {
         is_current: true,
         lang,
       });
-      if (ai.length) continue;
+      if (ai.length && !force) continue;
 
-      // Gather last article in cluster as a trivial summary basis
-      const updates = await fetchClusterUpdates(c.id, 3);
+      // Gather context from updates, sample articles, and existing article AI for richer details
+      const updates = await fetchClusterUpdates(c.id, 5);
+      const articles = await fetchClusterArticles(c.id, 5);
+      const articleAIs = await fetchClusterArticleAIs(c.id, 4);
       let title;
       let summary;
+      let details;
       if (
         (process.env.CLUSTER_LLM_ENABLED || "false").toLowerCase() === "true"
       ) {
-        const prompt = buildClusterSummaryPrompt(c, updates, lang);
+        const mode = (
+          process.env.CLUSTER_DETAILS_MODE || "narrative"
+        ).toLowerCase();
+        const bullets = parseInt(process.env.CLUSTER_DETAIL_BULLETS || "8", 10);
+        const prompt = buildClusterSummaryPrompt(
+          c,
+          updates,
+          lang,
+          articles,
+          mode,
+          bullets,
+          articleAIs
+        );
         try {
           const text = await generateAIContent(prompt, {
-            maxOutputTokens: 600,
-            temperature: 0.4,
+            maxOutputTokens: parseInt(
+              process.env.CLUSTER_LLM_MAX_TOKENS || "900",
+              10
+            ),
+            temperature: mode === "narrative" ? 0.5 : 0.4,
             attempts: 2,
           });
           const parsed = safeParseJSON(text);
           title = parsed.ai_title || generateTitleFromUpdates(updates);
           summary = parsed.ai_summary || generateSummaryFromUpdates(updates);
+          details =
+            parsed.ai_details ||
+            composeNarrativeFromArticleAIs(articleAIs, summary);
         } catch (e) {
-          logger.warn("LLM cluster summary failed; using fallback", {
+          logger.warn("LLM cluster summary/details failed; using fallback", {
             clusterId: c.id,
             error: e.message,
           });
           title = generateTitleFromUpdates(updates);
           summary = generateSummaryFromUpdates(updates);
+          details = synthesizeDetailsFallback(
+            updates,
+            articles,
+            summary,
+            articleAIs
+          );
         }
       } else {
         title = generateTitleFromUpdates(updates);
         summary = generateSummaryFromUpdates(updates);
+        details = synthesizeDetailsFallback(
+          updates,
+          articles,
+          summary,
+          articleAIs
+        );
+      }
+
+      // Ensure details are sufficiently rich; if too short, compose a fuller fallback
+      // Always append timeline and coverage to match expected cluster_ai format
+      details = appendTimelineCoverage(details, updates, articles);
+      const detailsNoWsLen = (details || "").replace(/\s/g, "").length;
+      if (!details || detailsNoWsLen < minChars) {
+        details = synthesizeDetailsFallback(
+          updates,
+          articles,
+          summary,
+          articleAIs
+        );
       }
 
       // Mark previous as not current
@@ -89,8 +149,8 @@ export async function enrichPendingClusters(lang = "en") {
         lang,
         ai_title: title,
         ai_summary: summary,
-        ai_details: summary,
-        model: "stub",
+        ai_details: details,
+        model: process.env.LLM_MODEL || "stub",
         is_current: true,
       });
       processed++;
@@ -174,10 +234,21 @@ async function generateAndInsertClusterAI(c, lang) {
   if (aiExisting.length) return;
 
   const updates = await fetchClusterUpdates(c.id, 3);
+  const articles = await fetchClusterArticles(c.id, 5);
+  const articleAIs = await fetchClusterArticleAIs(c.id, 4);
   let title;
   let summary;
+  let details;
   if ((process.env.CLUSTER_LLM_ENABLED || "false").toLowerCase() === "true") {
-    const prompt = buildClusterSummaryPrompt(c, updates, lang);
+    const prompt = buildClusterSummaryPrompt(
+      c,
+      updates,
+      lang,
+      articles,
+      "narrative",
+      8,
+      articleAIs
+    );
     try {
       const text = await generateAIContent(prompt, {
         maxOutputTokens: 600,
@@ -187,6 +258,9 @@ async function generateAndInsertClusterAI(c, lang) {
       const parsed = safeParseJSON(text);
       title = parsed.ai_title || generateTitleFromUpdates(updates);
       summary = parsed.ai_summary || generateSummaryFromUpdates(updates);
+      details =
+        parsed.ai_details ||
+        composeNarrativeFromArticleAIs(articleAIs, summary);
     } catch (e) {
       logger.warn("LLM cluster summary failed; using fallback", {
         clusterId: c.id,
@@ -194,10 +268,24 @@ async function generateAndInsertClusterAI(c, lang) {
       });
       title = generateTitleFromUpdates(updates);
       summary = generateSummaryFromUpdates(updates);
+      details = synthesizeDetailsFallback(
+        updates,
+        articles,
+        summary,
+        articleAIs
+      );
     }
   } else {
     title = generateTitleFromUpdates(updates);
     summary = generateSummaryFromUpdates(updates);
+    details = synthesizeDetailsFallback(updates, articles, summary, articleAIs);
+  }
+  // Always append timeline + coverage
+  details = appendTimelineCoverage(details, updates, articles);
+  const minChars = parseInt(process.env.CLUSTER_MIN_DETAILS_CHARS || "400", 10);
+  const detailsNoWsLen = (details || "").replace(/\s/g, "").length;
+  if (!details || detailsNoWsLen < minChars) {
+    details = synthesizeDetailsFallback(updates, articles, summary, articleAIs);
   }
   try {
     await updatePreviousClusterAI(c.id, lang);
@@ -207,8 +295,8 @@ async function generateAndInsertClusterAI(c, lang) {
     lang,
     ai_title: title,
     ai_summary: summary,
-    ai_details: summary,
-    model: (process.env.LLM_MODEL || "stub"),
+    ai_details: details || summary,
+    model: process.env.LLM_MODEL || "stub",
     is_current: true,
   });
 }
@@ -222,6 +310,131 @@ async function fetchClusterUpdates(clusterId, limit = 5) {
       new Date(a.happened_at || a.created_at)
   );
   return sorted.slice(0, limit);
+}
+
+async function fetchClusterArticles(clusterId, limit = 3) {
+  const all = await selectRecords("articles", { cluster_id: clusterId });
+  const sorted = all.sort(
+    (a, b) => new Date(b.published_at) - new Date(a.published_at)
+  );
+  return sorted.slice(0, limit);
+}
+
+async function fetchClusterArticleAIs(clusterId, limit = 4) {
+  try {
+    const articles = await fetchClusterArticles(clusterId, 10);
+    const ids = articles.map((a) => a.id);
+    if (!ids.length) return [];
+    const { data, error } = await supabase
+      .from("article_ai")
+      .select("article_id, ai_title, ai_summary, ai_details, created_at")
+      .in("article_id", ids)
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data || [])
+      .filter((r) => r.ai_details || r.ai_summary)
+      .slice(0, limit);
+  } catch (_) {
+    return [];
+  }
+}
+
+function trimText(text, maxChars) {
+  if (!text) return "";
+  if (text.length <= maxChars) return text;
+  return (
+    text
+      .slice(0, maxChars)
+      .replace(/[\s\S]{0,200}$/m, "")
+      .trim() + "…"
+  );
+}
+
+function composeNarrativeFromArticleAIs(articleAIs, fallbackSummary) {
+  if (!articleAIs || !articleAIs.length) return fallbackSummary || "";
+  // Prefer the longest two narratives
+  const items = [...articleAIs]
+    .map((r) => ({
+      text:
+        (r.ai_details && r.ai_details.trim()) || (r.ai_summary || "").trim(),
+      len: (r.ai_details && r.ai_details.length) || (r.ai_summary || "").length,
+    }))
+    .filter((x) => x.text)
+    .sort((a, b) => b.len - a.len)
+    .slice(0, 2);
+  const combined = items.map((i) => i.text).join("\n\n");
+  // Keep the narrative focused; cap to avoid overly long details
+  return trimText(combined, 1800);
+}
+
+function synthesizeDetailsFallback(
+  updates,
+  articles,
+  summary,
+  articleAIs = []
+) {
+  const parts = [];
+  const narrative = composeNarrativeFromArticleAIs(articleAIs, summary);
+  if (narrative) parts.push(narrative.trim());
+  if (updates && updates.length) {
+    const top = updates.slice(0, 6);
+    parts.push(
+      "Timeline:\n" +
+        top
+          .map(
+            (u) =>
+              `• ${u.source_id || "src"}: ${u.summary || u.claim || "update"}`
+          )
+          .join("\n")
+    );
+  }
+  if (articles && articles.length) {
+    const topA = articles.slice(0, 3);
+    parts.push(
+      "Coverage:\n" +
+        topA
+          .map(
+            (a) =>
+              `• ${a.source_id || "source"} | ${new Date(
+                a.published_at
+              ).toISOString()} \u2014 ${a.title || a.snippet || "article"}`
+          )
+          .join("\n")
+    );
+  }
+  return parts.filter(Boolean).join("\n\n");
+}
+
+function appendTimelineCoverage(narrative, updates, articles) {
+  const parts = [];
+  if (narrative) parts.push(String(narrative).trim());
+  if (updates && updates.length) {
+    const top = updates.slice(0, 6);
+    parts.push(
+      "Timeline:\n" +
+        top
+          .map(
+            (u) =>
+              `• ${u.source_id || "src"}: ${u.summary || u.claim || "update"}`
+          )
+          .join("\n")
+    );
+  }
+  if (articles && articles.length) {
+    const topA = articles.slice(0, 3);
+    parts.push(
+      "Coverage:\n" +
+        topA
+          .map(
+            (a) =>
+              `• ${a.source_id || "source"} | ${new Date(
+                a.published_at
+              ).toISOString()} \u2014 ${a.title || a.snippet || "article"}`
+          )
+          .join("\n")
+    );
+  }
+  return parts.filter(Boolean).join("\n\n");
 }
 
 function generateTitleFromUpdates(updates) {
@@ -258,21 +471,68 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function buildClusterSummaryPrompt(cluster, updates, lang) {
-  const lines = updates
-    .slice(0, 5)
+function buildClusterSummaryPrompt(
+  cluster,
+  updates,
+  lang,
+  articles = [],
+  mode = "narrative",
+  bullets = 8,
+  articleAIs = []
+) {
+  const upLines = (updates || [])
+    .slice(0, 6)
     .map(
       (u) =>
-        `- ${u.happened_at || u.created_at} | ${
-          u.source_id || "src"
-        } | stance=${u.stance || ""} | ${u.claim || u.summary || "update"}`
+        `- ${u.happened_at || u.created_at} | ${u.source_id || "src"} | ${
+          u.claim || u.summary || "update"
+        }`
     )
     .join("\n");
-  return `You are summarizing a news story cluster for language ${lang}. Input provides latest updates with source and stance. Be neutral and factual.
+  const artLines = (articles || [])
+    .slice(0, 3)
+    .map(
+      (a) =>
+        `- ${a.published_at} | ${a.source_id || "source"} | ${
+          a.title || a.snippet || "article"
+        }`
+    )
+    .join("\n");
+  const aiNarratives = (articleAIs || [])
+    .slice(0, 3)
+    .map(
+      (r, idx) =>
+        `-- Narrative ${idx + 1} --\n${trimText(
+          r.ai_details || r.ai_summary || "",
+          1200
+        )}`
+    )
+    .join("\n\n");
+  const base = `You are summarizing a news story cluster for language ${lang}. Use ONLY facts from updates, article snippets, and the provided coverage narratives. Be neutral and factual. Avoid speculation. Use clear, concise language.`;
+  if (mode === "narrative") {
+    return `${base}
 
-Return STRICT JSON only: {"ai_title":"...","ai_summary":"..."}
+Return STRICT JSON only (minified) with these keys: {"ai_title":"...","ai_summary":"...","ai_details":"Paragraph1\\n\\nParagraph2"}
+Constraints for ai_details: 3-5 short paragraphs totaling 1000-1600 characters; no list formatting; reference sources implicitly (no links). Prefer the coverage narratives where possible; reconcile differences neutrally.
 
-Updates:\n${lines}`;
+Updates:\n${upLines}
+
+Articles:\n${artLines}
+
+Coverage narratives:\n${aiNarratives}`;
+  }
+  // bullets
+  return `${base}
+
+Return STRICT JSON only (minified): {"ai_title":"...","ai_summary":"...","ai_details":"• Bullet 1\n• Bullet 2"}
+
+Bullet rules: ${bullets} bullets max, each <= 200 chars, no duplication, no speculation.
+
+Updates:\n${upLines}
+
+Articles:\n${artLines}
+
+Coverage narratives:\n${aiNarratives}`;
 }
 
 function safeParseJSON(raw) {

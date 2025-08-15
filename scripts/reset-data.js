@@ -12,6 +12,7 @@ import readline from "node:readline";
 import dotenv from "dotenv";
 import { supabase } from "../src/config/database.js";
 import { crawlAllFeeds } from "../src/services/feedCrawler.js";
+import { enrichPendingClusters } from "../src/services/clusterEnricher.js";
 import { createContextLogger } from "../src/config/logger.js";
 import { selectRecords } from "../src/config/database.js";
 import { selectAttachBestImage } from "../src/services/mediaSelector.js";
@@ -115,8 +116,49 @@ async function reset() {
   }
 
   logger.info("Tables cleared. Re-crawling all enabled feeds...");
-  const crawlResult = await crawlAllFeeds();
+  // Optional limits for a quick reset: set CRAWL_PER_FEED_LIMIT and/or CRAWL_TOTAL_LIMIT
+  const perFeedLimit = process.env.CRAWL_PER_FEED_LIMIT
+    ? parseInt(process.env.CRAWL_PER_FEED_LIMIT, 10)
+    : null;
+  const totalLimit = process.env.CRAWL_TOTAL_LIMIT
+    ? parseInt(process.env.CRAWL_TOTAL_LIMIT, 10)
+    : null;
+  const crawlOpts = {};
+  if (Number.isFinite(perFeedLimit)) crawlOpts.perFeedLimit = perFeedLimit;
+  if (Number.isFinite(totalLimit)) crawlOpts.totalLimit = totalLimit;
+  const crawlResult = await crawlAllFeeds(crawlOpts);
   logger.info("Re-crawl complete", crawlResult);
+
+  // Optionally: enrich clusters automatically for configured languages
+  const runEnrich =
+    (process.env.RUN_CLUSTER_ENRICH_AFTER_RESET || "true").toLowerCase() ===
+    "true";
+  if (runEnrich) {
+    const langs = (
+      process.env.CLUSTER_LANGS ||
+      process.env.CLUSTER_LANG ||
+      "en"
+    )
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    logger.info("Enriching clusters after reset", { langs });
+    for (const lang of langs) {
+      try {
+        const res = await enrichPendingClusters(lang, {
+          overrideEnabled: true,
+        });
+        logger.info("Cluster enrich complete", { lang, ...res });
+      } catch (e) {
+        logger.warn("Cluster enrich failed (post-reset)", {
+          lang,
+          error: e.message,
+        });
+      }
+    }
+  } else {
+    logger.info("Skipping cluster enrich after reset (flag disabled)");
+  }
 
   // Optional: backfill media thumbnails for recent articles so FE regains images post-reset
   const mediaEnabled =
