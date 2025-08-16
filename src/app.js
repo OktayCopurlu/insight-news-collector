@@ -13,6 +13,8 @@ import feedsRouter from "./routes/feeds.js";
 import articlesRouter from "./routes/articles.js";
 import sourcesRouter from "./routes/sources.js";
 import clustersRouter from "./routes/clusters.js";
+import { translationMetrics } from "./services/translationHelper.js";
+import { pretranslateMetrics } from "./services/pretranslator.js";
 
 dotenv.config();
 
@@ -80,6 +82,17 @@ app.get("/health", async (req, res) => {
     timestamp: new Date().toISOString(),
     version: process.env.npm_package_version || "1.0.0",
     database: lastDbHealth,
+  });
+});
+
+// Lightweight metrics endpoint (JSON)
+app.get("/metrics", (req, res) => {
+  res.json({
+    service: "insight-feeder",
+    version: process.env.npm_package_version || "1.0.0",
+    ts: new Date().toISOString(),
+    translation: translationMetrics,
+    pretranslation: pretranslateMetrics,
   });
 });
 

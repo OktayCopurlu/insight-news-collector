@@ -46,14 +46,22 @@ export const processArticle = async (articleData, sourceId) => {
           if (normalized) {
             const current = articleData.language || "";
             const isAuto = !current || current === "auto";
-            const looksArabic = /[\u0600-\u06FF]/.test(preExtractedFullText || "");
+            const looksArabic = /[\u0600-\u06FF]/.test(
+              preExtractedFullText || ""
+            );
             // Turkish-specific letters only (exclude ö, ü as they appear in German)
             const hasTrSpecific = /[ğĞşŞıİçÇ]/.test(preExtractedFullText || "");
             const hasDeUmlaut = /[äÄöÖüÜß]/.test(preExtractedFullText || "");
-            const deWords = /( der | die | das | und | oder | aber | mit | von | für )/i.test(` ${preExtractedFullText || ""} `);
-            const mismatchArabic = looksArabic && current && !current.startsWith("ar");
-            const mismatchTurkish = hasTrSpecific && current && current !== "tr";
-            const mismatchGerman = hasDeUmlaut && deWords && current && current !== "de";
+            const deWords =
+              /( der | die | das | und | oder | aber | mit | von | für )/i.test(
+                ` ${preExtractedFullText || ""} `
+              );
+            const mismatchArabic =
+              looksArabic && current && !current.startsWith("ar");
+            const mismatchTurkish =
+              hasTrSpecific && current && current !== "tr";
+            const mismatchGerman =
+              hasDeUmlaut && deWords && current && current !== "de";
             if (isAuto || mismatchArabic || mismatchTurkish) {
               articleData.language = normalized;
             }
@@ -188,9 +196,17 @@ export const processArticle = async (articleData, sourceId) => {
       });
     }
 
-    // Synchronous AI generation (only once)
+    // Synchronous AI generation (only once) — behind feature flag
     try {
-      await processArticleAI(article, { preExtractedFullText });
+      if (
+        (process.env.ENABLE_PER_ARTICLE_AI || "false").toLowerCase() === "true"
+      ) {
+        await processArticleAI(article, { preExtractedFullText });
+      } else {
+        logger.debug("Per-article AI disabled (ENABLE_PER_ARTICLE_AI=false)", {
+          articleId: article.id,
+        });
+      }
     } catch (error) {
       logger.error("AI processing failed", {
         articleId: article.id,
@@ -340,8 +356,18 @@ export const processArticleAI = async (article, options = {}) => {
       aiRecordId: aiRecord.id,
     });
 
-    // Process categorization
-    await processArticleCategories(article);
+    // Process categorization — behind feature flag
+    if (
+      (process.env.ENABLE_PER_ARTICLE_CATEGORIES || "false").toLowerCase() ===
+      "true"
+    ) {
+      await processArticleCategories(article);
+    } else {
+      logger.debug(
+        "Per-article categories disabled (ENABLE_PER_ARTICLE_CATEGORIES=false)",
+        { articleId: article.id }
+      );
+    }
 
     return aiRecord;
   } catch (error) {

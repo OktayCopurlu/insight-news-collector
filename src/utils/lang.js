@@ -10,9 +10,11 @@ export function normalizeBcp47(input, fallback = "en") {
   const parts = s.split("-").filter(Boolean);
   if (!parts.length) return fallback;
   const lang = (parts[0] || "").toLowerCase();
-  let region = parts[1] && parts[1].length === 2 ? parts[1].toUpperCase() : null;
+  let region =
+    parts[1] && parts[1].length === 2 ? parts[1].toUpperCase() : null;
   // Support scripts like zh-Hans
-  const script = parts[1] && parts[1].length === 4 ? capitalize(parts[1]) : null;
+  const script =
+    parts[1] && parts[1].length === 4 ? capitalize(parts[1]) : null;
   if (script && parts[2] && parts[2].length === 2) {
     region = parts[2].toUpperCase();
   }
@@ -24,9 +26,19 @@ export function normalizeBcp47(input, fallback = "en") {
 
 export function isRtlLang(code) {
   const c = (code || "").toLowerCase();
-  return c.startsWith("ar") || c.startsWith("he") || c.startsWith("fa") || c.startsWith("ur");
+  return (
+    c.startsWith("ar") ||
+    c.startsWith("he") ||
+    c.startsWith("fa") ||
+    c.startsWith("ur")
+  );
 }
 
 function capitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+}
+
+export function baseLang(code) {
+  const n = normalizeBcp47(code, "en");
+  return n.split("-")[0];
 }

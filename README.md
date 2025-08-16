@@ -103,6 +103,31 @@ npm start
 - `GET /health` - Server health status (includes cached DB status)
 - `GET /health/db` - Live database connectivity check (503 if disconnected)
 
+### Metrics
+
+- `GET /metrics` - Lightweight in-process counters for observability. Returns JSON like:
+
+  {
+  "service": "insight-feeder",
+  "translation": {
+  "providerCalls": 12,
+  "providerErrors": 0,
+  "cacheHits": 34,
+  "cacheMisses": 5,
+  "latencyMs": { "last": 120, "avg": 98, "total": 17640 }
+  },
+  "pretranslation": {
+  "cycles": 7,
+  "clustersChecked": 25,
+  "jobsCreated": 10,
+  "translationsInserted": 9,
+  "skippedFresh": 6,
+  "jobTimeouts": 0
+  }
+  }
+
+These counters reset on process restart and are intended for quick visibility and CI assertions.
+
 ### Sources
 
 - `GET /api/sources` - List all sources

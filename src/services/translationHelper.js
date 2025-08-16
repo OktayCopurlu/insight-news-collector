@@ -15,6 +15,10 @@ export const translationMetrics = {
   cacheMisses: 0,
   providerCalls: 0,
   providerErrors: 0,
+  providerLatencyMsTotal: 0,
+  providerLatencySamples: 0,
+  providerLatencyMsLast: 0,
+  providerLatencyMsAvg: 0,
 };
 const MAX_CACHE = parseInt(process.env.TRANSLATION_CACHE_MAX || "500");
 
@@ -68,6 +72,7 @@ export async function translateText(text, { srcLang, dstLang }) {
     } else if (provider === "gemini") {
       translationMetrics.providerCalls++;
       const { generateAIContent } = await import("./gemini.js");
+      const t0 = Date.now();
       const prompt = `Translate to ${dst}. Keep meaning, names, and terminology consistent.\n\nText:\n${text}`;
       // Keep token budget modest for translation to reduce latency/timeouts
       const out = await generateAIContent(prompt, {
@@ -75,6 +80,14 @@ export async function translateText(text, { srcLang, dstLang }) {
         temperature: 0.2,
         attempts: 2,
       });
+      const dt = Date.now() - t0;
+      translationMetrics.providerLatencyMsLast = dt;
+      translationMetrics.providerLatencyMsTotal += dt;
+      translationMetrics.providerLatencySamples += 1;
+      translationMetrics.providerLatencyMsAvg = Math.round(
+        translationMetrics.providerLatencyMsTotal /
+          Math.max(1, translationMetrics.providerLatencySamples)
+      );
       translated = (out || "").trim();
     } else if (provider === "openai") {
       // placeholder; implement when available

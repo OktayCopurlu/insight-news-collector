@@ -10,6 +10,14 @@ import { translateFields } from "./translationHelper.js";
 import crypto from "node:crypto";
 
 const logger = createContextLogger("Pretranslator");
+export const pretranslateMetrics = {
+  cycles: 0,
+  clustersChecked: 0,
+  jobsCreated: 0,
+  translationsInserted: 0,
+  skippedFresh: 0,
+  jobTimeouts: 0,
+};
 
 // Lightweight process-level idempotency guard to avoid duplicate work within a single run
 // Idempotency key format (per plan): `${clusterId}|${targetLang}|${pivotHash}`
@@ -37,6 +45,12 @@ function enqueueJob(job) {
   if (_jobKeys.has(key) || isDone(key)) return false; // skip duplicates within run
   _jobKeys.add(key);
   _jobQueue.push(job);
+  try {
+    logger.debug("metric: pretranslate.enqueued", {
+      clusterId: job.cluster_id,
+      target_lang: job.target_lang,
+    });
+  } catch (_) {}
   return true;
 }
 
@@ -167,6 +181,11 @@ export async function runPretranslationCycle(options = {}) {
       translationsInserted,
       skippedFresh,
     });
+    pretranslateMetrics.cycles += 1;
+    pretranslateMetrics.clustersChecked += clustersChecked;
+    pretranslateMetrics.jobsCreated += jobsCreated;
+    pretranslateMetrics.translationsInserted += translationsInserted;
+    pretranslateMetrics.skippedFresh += skippedFresh;
     return { clustersChecked, jobsCreated, translationsInserted, skippedFresh };
   } catch (error) {
     logger.error("Pretranslation cycle error", { error: error.message });
@@ -375,7 +394,19 @@ async function processJob(job, perItemTimeoutMs) {
   const to = (p, ms) =>
     Promise.race([
       p,
-      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms)),
+      new Promise((_, rej) =>
+        setTimeout(() => {
+          try {
+            pretranslateMetrics.jobTimeouts += 1;
+            logger.warn("metric: pretranslate.timeout", {
+              clusterId: job.cluster_id,
+              target_lang: job.target_lang,
+              timeout_ms: ms,
+            });
+          } catch (_) {}
+          rej(new Error("timeout"));
+        }, ms)
+      ),
     ]);
 
   try {
@@ -445,6 +476,12 @@ async function processJob(job, perItemTimeoutMs) {
         pivot_hash: job.pivot_hash,
         is_current: true,
       });
+      try {
+        logger.info("metric: pretranslate.inserted", {
+          clusterId: job.cluster_id,
+          lang: dst,
+        });
+      } catch (_) {}
     } catch (insErr) {
       // Fallback when pivot_hash column doesn't exist
       await insertRecord("cluster_ai", {
@@ -458,6 +495,12 @@ async function processJob(job, perItemTimeoutMs) {
         }`,
         is_current: true,
       });
+      try {
+        logger.info("metric: pretranslate.inserted", {
+          clusterId: job.cluster_id,
+          lang: dst,
+        });
+      } catch (_) {}
     }
     markDone(idempotencyKey);
     return { inserted: 1, skipped: 0 };
