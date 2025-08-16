@@ -217,13 +217,13 @@ router.get("/:id/stats", async (req, res) => {
     const sourceId = req.params.id;
 
     // Get article count
-  const { data: _articles, count: articleCount } = await supabase
+    const { data: _articles, count: articleCount } = await supabase
       .from("articles")
       .select("id", { count: "exact", head: true })
       .eq("source_id", sourceId);
 
     // Get recent articles (last 24 hours)
-  const { data: _recentArticles, count: recentCount } = await supabase
+    const { data: _recentArticles, count: recentCount } = await supabase
       .from("articles")
       .select("id", { count: "exact", head: true })
       .eq("source_id", sourceId)

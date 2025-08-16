@@ -28,8 +28,8 @@
     "migrate": "node scripts/run-migrations.js",
     "pretranslate": "node scripts/run-pretranslation.js",
     "test": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --forceExit",
-  "test:watch": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --watch",
-  "lint": "eslint \"src/**/*.js\" \"scripts/**/*.js\" --max-warnings=0"
+    "test:watch": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --watch",
+    "lint": "eslint \"src/**/*.js\" \"scripts/**/*.js\" --max-warnings=0"
   },
   "keywords": [
     "news",

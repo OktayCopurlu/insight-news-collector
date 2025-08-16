@@ -1,6 +1,6 @@
 // ESLint flat config for Node ESM project
-import js from '@eslint/js';
-import globals from 'globals';
+import js from "@eslint/js";
+import globals from "globals";
 
 export default [
   js.configs.recommended,
@@ -12,11 +12,11 @@ export default [
       "llm-logs/**",
       "rss-logs/**",
       "supabase/**",
-      "tests/fixtures/**"
+      "tests/fixtures/**",
     ],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: 'module',
+      sourceType: "module",
       // Enable Node 18+ globals (process, Buffer, URL, setTimeout, AbortController, etc.)
       globals: {
         ...globals.node,
@@ -24,8 +24,16 @@ export default [
       },
     },
     rules: {
-      'no-unused-vars': ['error', { args: 'after-used', argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrors: 'none' }],
-      'no-undef': 'error',
+      "no-unused-vars": [
+        "error",
+        {
+          args: "after-used",
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrors: "none",
+        },
+      ],
+      "no-undef": "error",
     },
   },
 ];
