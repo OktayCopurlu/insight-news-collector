@@ -46,12 +46,15 @@ describe("utils/helpers", () => {
   });
 
   test("parseBoolean handles strings and numbers", async () => {
-    await step("Then booleans are parsed from strings and numbers", async () => {
-      expect(parseBoolean("true")).toBe(true);
-      expect(parseBoolean("FALSE")).toBe(false);
-      expect(parseBoolean(1)).toBe(true);
-      expect(parseBoolean(0)).toBe(false);
-    });
+    await step(
+      "Then booleans are parsed from strings and numbers",
+      async () => {
+        expect(parseBoolean("true")).toBe(true);
+        expect(parseBoolean("FALSE")).toBe(false);
+        expect(parseBoolean(1)).toBe(true);
+        expect(parseBoolean(0)).toBe(false);
+      }
+    );
   });
 
   test("truncateText adds ellipsis when exceeding length", async () => {
@@ -70,13 +73,16 @@ describe("utils/helpers", () => {
   });
 
   test("createRateLimiter enforces window", async () => {
-    await step("Given limiter of 2 per 100ms, Then third call is blocked and resets after window", async () => {
-      const allow = createRateLimiter(2, 100); // 2 per 100ms
-      expect(allow("k")).toBe(true);
-      expect(allow("k")).toBe(true);
-      expect(allow("k")).toBe(false);
-      await new Promise((r) => setTimeout(r, 120));
-      expect(allow("k")).toBe(true); // window reset
-    });
+    await step(
+      "Given limiter of 2 per 100ms, Then third call is blocked and resets after window",
+      async () => {
+        const allow = createRateLimiter(2, 100); // 2 per 100ms
+        expect(allow("k")).toBe(true);
+        expect(allow("k")).toBe(true);
+        expect(allow("k")).toBe(false);
+        await new Promise((r) => setTimeout(r, 120));
+        expect(allow("k")).toBe(true); // window reset
+      }
+    );
   });
 });

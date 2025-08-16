@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import { step } from "../testStep.js";
 
 // Mock DB helpers to avoid real Supabase calls in tests
 await jest.unstable_mockModule("../../src/config/database.js", () => ({
@@ -30,15 +31,27 @@ describe("translationHelper", () => {
   });
 
   test("returns null when no dstLang", async () => {
-    const res = await translateText("Hello", { srcLang: "en", dstLang: "" });
-    expect(res).toBeNull();
+    const res = await step("When dstLang is empty, translateText returns null", async () =>
+      translateText("Hello", { srcLang: "en", dstLang: "" })
+    );
+    await step("Then result is null", async () => {
+      expect(res).toBeNull();
+    });
   });
 
   test("translates and caches result", async () => {
     const text = "Hello world";
-    const res1 = await translateText(text, { srcLang: "en", dstLang: "tr" });
-    expect(res1).toContain("[xlated]");
-    const res2 = await translateText(text, { srcLang: "en", dstLang: "tr" });
-    expect(res2).toBe(res1); // cache hit
+    const res1 = await step("Given a first translation, it is computed", async () =>
+      translateText(text, { srcLang: "en", dstLang: "tr" })
+    );
+    await step("Then the first result contains provider marker", async () => {
+      expect(res1).toContain("[xlated]");
+    });
+    const res2 = await step("When translating the same text again, cache is used", async () =>
+      translateText(text, { srcLang: "en", dstLang: "tr" })
+    );
+    await step("Then cache hit returns identical result", async () => {
+      expect(res2).toBe(res1);
+    });
   });
 });

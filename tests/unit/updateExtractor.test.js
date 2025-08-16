@@ -1,4 +1,5 @@
 import { extractUpdateFromArticle } from "../../src/services/updateExtractor.js";
+import { step } from "../testStep.js";
 
 describe("updateExtractor", () => {
   const OLD_ENV = process.env;
@@ -18,9 +19,13 @@ describe("updateExtractor", () => {
       snippet: "Short",
       language: "en",
     };
-    const upd = await extractUpdateFromArticle(article);
-    expect(upd.stance).toBe("contradicts");
-    expect(upd.claim).toMatch(/Ronaldo/);
+    const upd = await step("When I extract update from EN contradicts title", async () =>
+      extractUpdateFromArticle(article)
+    );
+    await step("Then stance is contradicts and claim contains Ronaldo", async () => {
+      expect(upd.stance).toBe("contradicts");
+      expect(upd.claim).toMatch(/Ronaldo/);
+    });
   });
 
   test("detects supports in EN", async () => {
@@ -29,8 +34,12 @@ describe("updateExtractor", () => {
       snippet: "Short",
       language: "en",
     };
-    const upd = await extractUpdateFromArticle(article);
-    expect(upd.stance).toBe("supports");
+    const upd = await step("When I extract update from EN supports title", async () =>
+      extractUpdateFromArticle(article)
+    );
+    await step("Then stance is supports", async () => {
+      expect(upd.stance).toBe("supports");
+    });
   });
 
   test("detects contradicts in TR", async () => {
@@ -39,8 +48,12 @@ describe("updateExtractor", () => {
       snippet: "Kısa",
       language: "tr",
     };
-    const upd = await extractUpdateFromArticle(article);
-    expect(upd.stance).toBe("contradicts");
+    const upd = await step("When I extract update from TR contradicts title", async () =>
+      extractUpdateFromArticle(article)
+    );
+    await step("Then stance is contradicts", async () => {
+      expect(upd.stance).toBe("contradicts");
+    });
   });
 
   test("falls back to neutral", async () => {
@@ -49,7 +62,11 @@ describe("updateExtractor", () => {
       snippet: "Short",
       language: "en",
     };
-    const upd = await extractUpdateFromArticle(article);
-    expect(upd.stance).toBe("neutral");
+    const upd = await step("When I extract update from neutral title", async () =>
+      extractUpdateFromArticle(article)
+    );
+    await step("Then stance is neutral", async () => {
+      expect(upd.stance).toBe("neutral");
+    });
   });
 });

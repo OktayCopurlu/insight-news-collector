@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "../../src/app.js";
+import { step } from "../testStep.js";
 import { testConnection, supabase } from "../../src/config/database.js";
 
 /**
@@ -21,38 +22,43 @@ const hasSupabaseEnv = !!(
 
 describe("E2E: Health & Database connectivity", () => {
   test("GET /health returns healthy status", async () => {
-    const res = await request(app).get("/health").expect(200);
-    expect(res.body).toMatchObject({ success: true, status: "healthy" });
-    expect(res.body.database).toBeDefined();
+    const res = await step("When I request /health", async () =>
+      request(app).get("/health").expect(200)
+    );
+    await step("Then it reports healthy status and database field", async () => {
+      expect(res.body).toMatchObject({ success: true, status: "healthy" });
+      expect(res.body.database).toBeDefined();
+    });
   });
 
-  (hasSupabaseEnv ? test : test.skip)(
-    "Supabase testConnection() returns true",
-    async () => {
-      const ok = await testConnection();
+  (hasSupabaseEnv ? test : test.skip)("Supabase testConnection() returns true", async () => {
+    const ok = await step("When I call testConnection()", async () =>
+      testConnection()
+    );
+    await step("Then it returns true", async () => {
       expect(ok).toBe(true);
-    }
-  );
+    });
+  });
 
-  (hasSupabaseEnv ? test : test.skip)(
-    "Supabase can select from sources table (or it is empty)",
-    async () => {
-      // Query minimal data to verify connectivity & authorization; tolerate empty table
-      const { data, error } = await supabase
-        .from("sources")
-        .select("id")
-        .limit(1);
+  (hasSupabaseEnv ? test : test.skip)("Supabase can select from sources table (or it is empty)", async () => {
+    // Query minimal data to verify connectivity & authorization; tolerate empty table
+    const { data, error } = await step(
+      "When I select from sources with limit 1",
+      async () => supabase.from("sources").select("id").limit(1)
+    );
+    await step("Then there is no error and data is an array", async () => {
       expect(error).toBeNull();
       expect(Array.isArray(data)).toBe(true);
-    }
-  );
+    });
+  });
 
-  (hasSupabaseEnv ? test : test.skip)(
-    "GET /health/db returns connected status",
-    async () => {
-      const res = await request(app).get("/health/db").expect(200);
+  (hasSupabaseEnv ? test : test.skip)("GET /health/db returns connected status", async () => {
+    const res = await step("When I request /health/db", async () =>
+      request(app).get("/health/db").expect(200)
+    );
+    await step("Then it reports connected and includes latencyMs", async () => {
       expect(res.body).toMatchObject({ success: true, database: "connected" });
       expect(typeof res.body.latencyMs).toBe("number");
-    }
-  );
+    });
+  });
 });

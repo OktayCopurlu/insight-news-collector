@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import { step } from "../testStep.js";
 
 // ESM-friendly module mocking: create mocks, then dynamically import subject under test
 const mockDb = {
@@ -46,9 +47,13 @@ describe("clusterer.assignClusterForArticle", () => {
   });
 
   test("reuses existing cluster when similarity candidate has cluster_id", async () => {
-    mockDb.supabase.rpc.mockResolvedValue({
-      data: [{ article_id: "a1", similarity: 0.9, cluster_id: "cluster-123" }],
-      error: null,
+    await step("Given a high-similarity candidate with cluster id", async () => {
+      mockDb.supabase.rpc.mockResolvedValue({
+        data: [
+          { article_id: "a1", similarity: 0.9, cluster_id: "cluster-123" },
+        ],
+        error: null,
+      });
     });
     const article = {
       id: "new-1",
@@ -58,19 +63,23 @@ describe("clusterer.assignClusterForArticle", () => {
       published_at: new Date().toISOString(),
       language: "en",
     };
-    const clusterId = await assignClusterForArticle(article, {
-      sourceId: "src1",
-    });
-    expect(clusterId).toBe("cluster-123");
-    expect(mockDb.updateRecord).toHaveBeenCalledWith(
-      "articles",
-      article.id,
-      expect.objectContaining({ cluster_id: "cluster-123" })
+    const clusterId = await step("When I assign a cluster", async () =>
+      assignClusterForArticle(article, { sourceId: "src1" })
     );
+    await step("Then the existing cluster is reused and article is updated", async () => {
+      expect(clusterId).toBe("cluster-123");
+      expect(mockDb.updateRecord).toHaveBeenCalledWith(
+        "articles",
+        article.id,
+        expect.objectContaining({ cluster_id: "cluster-123" })
+      );
+    });
   });
 
   test("creates new cluster when no candidates", async () => {
-    mockDb.supabase.rpc.mockResolvedValue({ data: [], error: null });
+    await step("Given no similarity candidates", async () => {
+      mockDb.supabase.rpc.mockResolvedValue({ data: [], error: null });
+    });
     const article = {
       id: "new-2",
       title: "Unique story",
@@ -78,9 +87,11 @@ describe("clusterer.assignClusterForArticle", () => {
       published_at: new Date().toISOString(),
       language: "en",
     };
-    const clusterId = await assignClusterForArticle(article, {
-      sourceId: "src1",
+    const clusterId = await step("When I assign a cluster", async () =>
+      assignClusterForArticle(article, { sourceId: "src1" })
+    );
+    await step("Then a new cluster is created with article id", async () => {
+      expect(clusterId).toBe(article.id);
     });
-    expect(clusterId).toBe(article.id);
   });
 });

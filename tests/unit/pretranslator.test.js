@@ -1,4 +1,5 @@
 import { jest } from "@jest/globals";
+import { step } from "../testStep.js";
 import crypto from "node:crypto";
 
 // Build an in-memory mock for supabase and DB helpers
@@ -149,46 +150,59 @@ async function setupMocks(state) {
 
 describe("pretranslator job queue", () => {
   test("enqueues and processes jobs for missing targets", async () => {
-    const state = createDbState();
-    await setupMocks(state);
+    const state = await step("Given DB state with one pivot cluster", async () =>
+      createDbState()
+    );
+    await step("And mocks are installed", async () => setupMocks(state));
     const { runPretranslationCycle } = await import(
       "../../src/services/pretranslator.js"
     );
 
-    const res1 = await runPretranslationCycle({
-      recentHours: 48,
-      concurrency: 2,
-      perItemTimeoutMs: 500,
-    });
-    // Pretranslate langs: tr,de minus pivot en => 2 jobs, 2 inserts
-    expect(res1.jobsCreated).toBe(2);
-    expect(res1.translationsInserted).toBe(2);
-
-    // Verify rows exist with pivot hash/model tag
-    const pivotSig = sha1_10(`Pivot Title\nPivot Summary\nPivot Details`);
-    const tr = state.cluster_ai.find(
-      (r) => r.lang === "tr" && r.cluster_id === 101
+    const res1 = await step(
+      "When I run a pretranslation cycle",
+      async () =>
+        runPretranslationCycle({
+          recentHours: 48,
+          concurrency: 2,
+          perItemTimeoutMs: 500,
+        })
     );
-    const de = state.cluster_ai.find(
-      (r) => r.lang === "de" && r.cluster_id === 101
-    );
-    expect(tr).toBeTruthy();
-    expect(de).toBeTruthy();
-    expect(
-      tr.pivot_hash === pivotSig || (tr.model || "").includes(`#ph=${pivotSig}`)
-    ).toBe(true);
-    expect(
-      de.pivot_hash === pivotSig || (de.model || "").includes(`#ph=${pivotSig}`)
-    ).toBe(true);
-
-    // Running again should create no new work due to idempotency/freshness
-    const res2 = await runPretranslationCycle({
-      recentHours: 48,
-      concurrency: 2,
-      perItemTimeoutMs: 500,
+    await step("Then two jobs and inserts are created for tr,de", async () => {
+      expect(res1.jobsCreated).toBe(2);
+      expect(res1.translationsInserted).toBe(2);
     });
-    expect(res2.jobsCreated).toBe(0);
-    expect(res2.translationsInserted).toBe(0);
+
+    await step("And pivot signature is present on inserted rows", async () => {
+      const pivotSig = sha1_10(`Pivot Title\nPivot Summary\nPivot Details`);
+      const tr = state.cluster_ai.find(
+        (r) => r.lang === "tr" && r.cluster_id === 101
+      );
+      const de = state.cluster_ai.find(
+        (r) => r.lang === "de" && r.cluster_id === 101
+      );
+      expect(tr).toBeTruthy();
+      expect(de).toBeTruthy();
+      expect(
+        tr.pivot_hash === pivotSig || (tr.model || "").includes(`#ph=${pivotSig}`)
+      ).toBe(true);
+      expect(
+        de.pivot_hash === pivotSig || (de.model || "").includes(`#ph=${pivotSig}`)
+      ).toBe(true);
+    });
+
+    const res2 = await step(
+      "When I run the cycle again, no new work is created",
+      async () =>
+        runPretranslationCycle({
+          recentHours: 48,
+          concurrency: 2,
+          perItemTimeoutMs: 500,
+        })
+    );
+    await step("Then jobsCreated and translationsInserted are zero", async () => {
+      expect(res2.jobsCreated).toBe(0);
+      expect(res2.translationsInserted).toBe(0);
+    });
   });
 
   test("skips already fresh lang by pivot hash", async () => {
@@ -208,25 +222,35 @@ describe("pretranslator job queue", () => {
       model: `pretranslator#ph=${pivotSig}`,
     });
 
-    await setupMocks(state);
-    // fresh import so that internal idempotency maps are clean for this test
-    jest.resetModules();
-    await setupMocks(state);
+    await step("Given mocks installed and modules reset", async () => {
+      await setupMocks(state);
+      // fresh import so that internal idempotency maps are clean for this test
+      jest.resetModules();
+      await setupMocks(state);
+    });
     const { runPretranslationCycle } = await import(
       "../../src/services/pretranslator.js"
     );
 
-    const res = await runPretranslationCycle({
-      recentHours: 48,
-      concurrency: 2,
-      perItemTimeoutMs: 500,
-    });
-    // Only 'de' should be enqueued/inserted (1), 'tr' skipped as fresh
-    expect(res.jobsCreated).toBe(1);
-    expect(res.translationsInserted).toBe(1);
-    const de = state.cluster_ai.filter(
-      (r) => r.cluster_id === 101 && r.lang === "de"
+    const res = await step(
+      "When I run the pretranslation cycle",
+      async () =>
+        runPretranslationCycle({
+          recentHours: 48,
+          concurrency: 2,
+          perItemTimeoutMs: 500,
+        })
     );
-    expect(de.length).toBe(1);
+    await step(
+      "Then only 'de' is processed because 'tr' is fresh by pivot",
+      async () => {
+        expect(res.jobsCreated).toBe(1);
+        expect(res.translationsInserted).toBe(1);
+        const de = state.cluster_ai.filter(
+          (r) => r.cluster_id === 101 && r.lang === "de"
+        );
+        expect(de.length).toBe(1);
+      }
+    );
   });
 });
