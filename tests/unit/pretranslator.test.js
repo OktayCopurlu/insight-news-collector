@@ -44,6 +44,14 @@ async function setupMocks(state) {
     () => ({
       translateText: async (text, { srcLang, dstLang }) =>
         `[${srcLang}->${dstLang}] ${text}`,
+      translateFields: async (
+        { title = "", summary = "", details = "" },
+        { srcLang, dstLang }
+      ) => ({
+        title: `[${srcLang}->${dstLang}] ${title}`,
+        summary: `[${srcLang}->${dstLang}] ${summary}`,
+        details: `[${srcLang}->${dstLang}] ${details}`,
+      }),
       clearTranslationCache: () => {},
     })
   );
