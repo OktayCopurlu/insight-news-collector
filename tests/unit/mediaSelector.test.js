@@ -3,8 +3,10 @@ import { step } from "../testStep.js";
 
 describe("extractMetaImagesFromHtml", () => {
   it("picks og:image and twitter:image and sorts by preference", async () => {
-    const { html, base } = await step("Given sample HTML with meta images", async () => ({
-      html: `
+    const { html, base } = await step(
+      "Given sample HTML with meta images",
+      async () => ({
+        html: `
       <html><head>
         <meta property="og:image" content="/images/og-large.jpg" />
         <meta name="twitter:image" content="https://cdn.example.com/card.webp" />
@@ -15,8 +17,9 @@ describe("extractMetaImagesFromHtml", () => {
           "image": ["/schema1.jpg", {"url":"/schema2.png"}]
         }</script>
       </head><body></body></html>`,
-      base: "https://news.example.com/article/123",
-    }));
+        base: "https://news.example.com/article/123",
+      })
+    );
     const urls = await step("When I extract image URLs", async () =>
       extractMetaImagesFromHtml(html, base)
     );
@@ -35,8 +38,9 @@ describe("extractMetaImagesFromHtml", () => {
         <meta property="og:image" content="/logo.svg" />
         <meta property="og:image" content="/photo.gif" />
       </head></html>`;
-    const urls = await step("When I extract from undesirable formats", async () =>
-      extractMetaImagesFromHtml(html, "https://ex.com")
+    const urls = await step(
+      "When I extract from undesirable formats",
+      async () => extractMetaImagesFromHtml(html, "https://ex.com")
     );
     await step("Then no URLs remain after filtering", async () => {
       expect(urls.length).toBe(0);

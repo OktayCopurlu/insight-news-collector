@@ -19,13 +19,17 @@ describe("updateExtractor", () => {
       snippet: "Short",
       language: "en",
     };
-    const upd = await step("When I extract update from EN contradicts title", async () =>
-      extractUpdateFromArticle(article)
+    const upd = await step(
+      "When I extract update from EN contradicts title",
+      async () => extractUpdateFromArticle(article)
     );
-    await step("Then stance is contradicts and claim contains Ronaldo", async () => {
-      expect(upd.stance).toBe("contradicts");
-      expect(upd.claim).toMatch(/Ronaldo/);
-    });
+    await step(
+      "Then stance is contradicts and claim contains Ronaldo",
+      async () => {
+        expect(upd.stance).toBe("contradicts");
+        expect(upd.claim).toMatch(/Ronaldo/);
+      }
+    );
   });
 
   test("detects supports in EN", async () => {
@@ -34,8 +38,9 @@ describe("updateExtractor", () => {
       snippet: "Short",
       language: "en",
     };
-    const upd = await step("When I extract update from EN supports title", async () =>
-      extractUpdateFromArticle(article)
+    const upd = await step(
+      "When I extract update from EN supports title",
+      async () => extractUpdateFromArticle(article)
     );
     await step("Then stance is supports", async () => {
       expect(upd.stance).toBe("supports");
@@ -48,8 +53,9 @@ describe("updateExtractor", () => {
       snippet: "Kısa",
       language: "tr",
     };
-    const upd = await step("When I extract update from TR contradicts title", async () =>
-      extractUpdateFromArticle(article)
+    const upd = await step(
+      "When I extract update from TR contradicts title",
+      async () => extractUpdateFromArticle(article)
     );
     await step("Then stance is contradicts", async () => {
       expect(upd.stance).toBe("contradicts");
@@ -62,8 +68,9 @@ describe("updateExtractor", () => {
       snippet: "Short",
       language: "en",
     };
-    const upd = await step("When I extract update from neutral title", async () =>
-      extractUpdateFromArticle(article)
+    const upd = await step(
+      "When I extract update from neutral title",
+      async () => extractUpdateFromArticle(article)
     );
     await step("Then stance is neutral", async () => {
       expect(upd.stance).toBe("neutral");

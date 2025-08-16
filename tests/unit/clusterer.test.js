@@ -47,14 +47,17 @@ describe("clusterer.assignClusterForArticle", () => {
   });
 
   test("reuses existing cluster when similarity candidate has cluster_id", async () => {
-    await step("Given a high-similarity candidate with cluster id", async () => {
-      mockDb.supabase.rpc.mockResolvedValue({
-        data: [
-          { article_id: "a1", similarity: 0.9, cluster_id: "cluster-123" },
-        ],
-        error: null,
-      });
-    });
+    await step(
+      "Given a high-similarity candidate with cluster id",
+      async () => {
+        mockDb.supabase.rpc.mockResolvedValue({
+          data: [
+            { article_id: "a1", similarity: 0.9, cluster_id: "cluster-123" },
+          ],
+          error: null,
+        });
+      }
+    );
     const article = {
       id: "new-1",
       title: "Transfer progresses",
@@ -66,14 +69,17 @@ describe("clusterer.assignClusterForArticle", () => {
     const clusterId = await step("When I assign a cluster", async () =>
       assignClusterForArticle(article, { sourceId: "src1" })
     );
-    await step("Then the existing cluster is reused and article is updated", async () => {
-      expect(clusterId).toBe("cluster-123");
-      expect(mockDb.updateRecord).toHaveBeenCalledWith(
-        "articles",
-        article.id,
-        expect.objectContaining({ cluster_id: "cluster-123" })
-      );
-    });
+    await step(
+      "Then the existing cluster is reused and article is updated",
+      async () => {
+        expect(clusterId).toBe("cluster-123");
+        expect(mockDb.updateRecord).toHaveBeenCalledWith(
+          "articles",
+          article.id,
+          expect.objectContaining({ cluster_id: "cluster-123" })
+        );
+      }
+    );
   });
 
   test("creates new cluster when no candidates", async () => {

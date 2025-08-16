@@ -7,13 +7,16 @@ describe("/metrics endpoint", () => {
     const res = await step("When I request /metrics", async () =>
       request(app).get("/metrics").expect(200)
     );
-    await step("Then the response contains expected metric sections", async () => {
-      expect(res.body).toHaveProperty("service", "insight-feeder");
-      expect(res.body).toHaveProperty("translation");
-      expect(res.body.translation).toHaveProperty("providerCalls");
-      expect(res.body.translation).toHaveProperty("cacheHits");
-      expect(res.body).toHaveProperty("pretranslation");
-      expect(res.body.pretranslation).toHaveProperty("cycles");
-    });
+    await step(
+      "Then the response contains expected metric sections",
+      async () => {
+        expect(res.body).toHaveProperty("service", "insight-feeder");
+        expect(res.body).toHaveProperty("translation");
+        expect(res.body.translation).toHaveProperty("providerCalls");
+        expect(res.body.translation).toHaveProperty("cacheHits");
+        expect(res.body).toHaveProperty("pretranslation");
+        expect(res.body.pretranslation).toHaveProperty("cycles");
+      }
+    );
   });
 });

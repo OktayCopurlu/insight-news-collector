@@ -150,22 +150,21 @@ async function setupMocks(state) {
 
 describe("pretranslator job queue", () => {
   test("enqueues and processes jobs for missing targets", async () => {
-    const state = await step("Given DB state with one pivot cluster", async () =>
-      createDbState()
+    const state = await step(
+      "Given DB state with one pivot cluster",
+      async () => createDbState()
     );
     await step("And mocks are installed", async () => setupMocks(state));
     const { runPretranslationCycle } = await import(
       "../../src/services/pretranslator.js"
     );
 
-    const res1 = await step(
-      "When I run a pretranslation cycle",
-      async () =>
-        runPretranslationCycle({
-          recentHours: 48,
-          concurrency: 2,
-          perItemTimeoutMs: 500,
-        })
+    const res1 = await step("When I run a pretranslation cycle", async () =>
+      runPretranslationCycle({
+        recentHours: 48,
+        concurrency: 2,
+        perItemTimeoutMs: 500,
+      })
     );
     await step("Then two jobs and inserts are created for tr,de", async () => {
       expect(res1.jobsCreated).toBe(2);
@@ -183,10 +182,12 @@ describe("pretranslator job queue", () => {
       expect(tr).toBeTruthy();
       expect(de).toBeTruthy();
       expect(
-        tr.pivot_hash === pivotSig || (tr.model || "").includes(`#ph=${pivotSig}`)
+        tr.pivot_hash === pivotSig ||
+          (tr.model || "").includes(`#ph=${pivotSig}`)
       ).toBe(true);
       expect(
-        de.pivot_hash === pivotSig || (de.model || "").includes(`#ph=${pivotSig}`)
+        de.pivot_hash === pivotSig ||
+          (de.model || "").includes(`#ph=${pivotSig}`)
       ).toBe(true);
     });
 
@@ -199,10 +200,13 @@ describe("pretranslator job queue", () => {
           perItemTimeoutMs: 500,
         })
     );
-    await step("Then jobsCreated and translationsInserted are zero", async () => {
-      expect(res2.jobsCreated).toBe(0);
-      expect(res2.translationsInserted).toBe(0);
-    });
+    await step(
+      "Then jobsCreated and translationsInserted are zero",
+      async () => {
+        expect(res2.jobsCreated).toBe(0);
+        expect(res2.translationsInserted).toBe(0);
+      }
+    );
   });
 
   test("skips already fresh lang by pivot hash", async () => {
@@ -232,14 +236,12 @@ describe("pretranslator job queue", () => {
       "../../src/services/pretranslator.js"
     );
 
-    const res = await step(
-      "When I run the pretranslation cycle",
-      async () =>
-        runPretranslationCycle({
-          recentHours: 48,
-          concurrency: 2,
-          perItemTimeoutMs: 500,
-        })
+    const res = await step("When I run the pretranslation cycle", async () =>
+      runPretranslationCycle({
+        recentHours: 48,
+        concurrency: 2,
+        perItemTimeoutMs: 500,
+      })
     );
     await step(
       "Then only 'de' is processed because 'tr' is fresh by pivot",
