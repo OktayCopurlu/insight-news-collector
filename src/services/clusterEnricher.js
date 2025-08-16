@@ -65,7 +65,7 @@ export async function enrichPendingClusters(lang = "en", options = {}) {
       // Gather context from updates, sample articles, and existing article AI for richer details
       const updates = await fetchClusterUpdates(c.id, 5);
       const articles = await fetchClusterArticles(c.id, 5);
-      const articleAIs = await fetchClusterArticleAIs(c.id, 4);
+      const articleAIs = [];
       let title;
       let summary;
       let details;
@@ -235,7 +235,7 @@ async function generateAndInsertClusterAI(c, lang) {
 
   const updates = await fetchClusterUpdates(c.id, 3);
   const articles = await fetchClusterArticles(c.id, 5);
-  const articleAIs = await fetchClusterArticleAIs(c.id, 4);
+  const articleAIs = [];
   let title;
   let summary;
   let details;
@@ -320,24 +320,7 @@ async function fetchClusterArticles(clusterId, limit = 3) {
   return sorted.slice(0, limit);
 }
 
-async function fetchClusterArticleAIs(clusterId, limit = 4) {
-  try {
-    const articles = await fetchClusterArticles(clusterId, 10);
-    const ids = articles.map((a) => a.id);
-    if (!ids.length) return [];
-    const { data, error } = await supabase
-      .from("article_ai")
-      .select("article_id, ai_title, ai_summary, ai_details, created_at")
-      .in("article_id", ids)
-      .order("created_at", { ascending: false });
-    if (error) throw error;
-    return (data || [])
-      .filter((r) => r.ai_details || r.ai_summary)
-      .slice(0, limit);
-  } catch (_) {
-    return [];
-  }
-}
+// fetchClusterArticleAIs removed — deprecated per-article AI
 
 function trimText(text, maxChars) {
   if (!text) return "";

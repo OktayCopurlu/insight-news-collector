@@ -146,14 +146,10 @@ These counters reset on process restart and are intended for quick visibility an
 - `GET /api/feeds/:id/stats` - Get feed statistics
 - `POST /api/feeds/validate` - Validate feed URL
 
-### Articles
+### Articles (deprecated)
 
-- `GET /api/articles` - List articles with filtering and pagination
-- `GET /api/articles/:id` - Get article by ID
-- `GET /api/articles/ai/pending` - Get articles needing AI processing
-- `POST /api/articles/:id/ai` - Process AI enhancement for article
-- `GET /api/articles/search` - Search articles
-- `GET /api/articles/stats/overview` - Get article statistics
+- BFF: `/feed`, `/cluster/:id`, `/translate/batch`
+- Feeder: `/api/clusters/...` for backend/internal needs
 
 ### Clusters (Backend only; frontend integration deferred)
 

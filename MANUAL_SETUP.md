@@ -57,19 +57,6 @@ CREATE TABLE IF NOT EXISTS feeds (
   last_seen_at timestamptz
 );
 
--- Create article_ai table
-CREATE TABLE IF NOT EXISTS article_ai (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  article_id uuid REFERENCES articles(id) ON DELETE CASCADE,
-  ai_title text,
-  ai_summary text,
-  ai_details text,
-  ai_language text,
-  model text,
-  prompt_hash text,
-  created_at timestamptz DEFAULT now(),
-  is_current boolean DEFAULT true
-);
 
 -- Create categories table
 CREATE TABLE IF NOT EXISTS categories (
@@ -107,39 +94,17 @@ CREATE TABLE IF NOT EXISTS article_scores (
 -- Create indexes
 CREATE INDEX IF NOT EXISTS idx_articles_pub ON articles(published_at DESC);
 CREATE INDEX IF NOT EXISTS idx_articles_source_hash ON articles(source_id, content_hash);
-CREATE INDEX IF NOT EXISTS idx_article_ai_current ON article_ai(article_id, is_current);
 CREATE INDEX IF NOT EXISTS idx_feeds_enabled ON feeds(enabled);
 CREATE INDEX IF NOT EXISTS idx_article_categories_cat ON article_categories(category_id);
 
 -- Enable Row Level Security
 ALTER TABLE sources ENABLE ROW LEVEL SECURITY;
 ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE article_ai ENABLE ROW LEVEL SECURITY;
 ALTER TABLE feeds ENABLE ROW LEVEL SECURITY;
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE article_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE crawl_log ENABLE ROW LEVEL SECURITY;
 ALTER TABLE article_scores ENABLE ROW LEVEL SECURITY;
-
--- Create RPC function
-CREATE OR REPLACE FUNCTION articles_needing_ai()
-RETURNS TABLE (
-  id uuid,
-  published_at timestamptz,
-  language text,
-  source_trust real,
-  cluster_size int
-) LANGUAGE plpgsql AS $$
-BEGIN
-  RETURN QUERY
-  SELECT a.id, a.published_at, a.language,
-         0.7::real as source_trust,
-         1 as cluster_size
-    FROM articles a
-   WHERE NOT EXISTS (SELECT 1 FROM article_ai x WHERE x.article_id=a.id AND x.is_current)
-   ORDER BY a.published_at DESC NULLS LAST
-   LIMIT 200;
-END; $$;
 
 -- Insert seed data
 INSERT INTO categories(path, parent_path) VALUES
@@ -168,10 +133,10 @@ After running the SQL, restart your Node.js server and the errors should be gone
 You can verify the tables were created by running this query:
 
 ```sql
-SELECT table_name 
-FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
 ORDER BY table_name;
 ```
 
-You should see all the tables listed: articles, article_ai, article_categories, article_scores, categories, crawl_log, feeds, sources.
+You should see all the tables listed: articles, article_categories, article_scores, categories, crawl_log, feeds, sources, clusters, cluster_ai.

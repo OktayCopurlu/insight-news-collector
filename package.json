@@ -15,7 +15,6 @@
     "lang:backfill": "node scripts/backfill-language-strong.js",
     "reset:data": "node scripts/reset-data.js",
     "cluster:enrich": "node scripts/run-cluster-enricher.js",
-    "reprocess:ai": "AI_DETAILS_MODE=narrative node scripts/reprocess-ai.js",
     "logs:audit": "node scripts/audit-llm-logs.js",
     "logs:clean": "LLM_LOG_DIR=llm-logs node scripts/cleanup-llm-logs.js --purge && LLM_LOG_DIR=rss-logs node scripts/cleanup-llm-logs.js --purge && find rss-logs -type f ! -name '*.json' -delete 2>/dev/null || true",
     "media:test": "node scripts/test-media-extract.js",

@@ -68,31 +68,7 @@ const createTables = async () => {
       console.log("✓ Articles table created");
     }
 
-    // Create article_ai table
-    const { error: aiError } = await supabase.rpc("exec_sql", {
-      sql: `
-        CREATE TABLE IF NOT EXISTS article_ai (
-          id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-          article_id uuid REFERENCES articles(id) ON DELETE CASCADE,
-          ai_title text,
-          ai_summary text,
-          ai_details text,
-          ai_language text,
-          model text,
-          prompt_hash text,
-          created_at timestamptz DEFAULT now(),
-          is_current boolean DEFAULT true
-        );
-        CREATE INDEX IF NOT EXISTS idx_article_ai_current ON article_ai(article_id, is_current);
-        ALTER TABLE article_ai ENABLE ROW LEVEL SECURITY;
-      `,
-    });
-
-    if (aiError) {
-      console.error("Error creating article_ai table:", aiError);
-    } else {
-      console.log("✓ Article AI table created");
-    }
+    // legacy per-article AI table removed (cluster-first)
 
     // Create feeds table
     const { error: feedsError } = await supabase.rpc("exec_sql", {
@@ -203,35 +179,7 @@ const createTables = async () => {
       console.log("✓ Article scores table created");
     }
 
-    // Create the RPC function for articles needing AI
-    const { error: rpcError } = await supabase.rpc("exec_sql", {
-      sql: `
-        CREATE OR REPLACE FUNCTION articles_needing_ai()
-        RETURNS TABLE (
-          id uuid,
-          published_at timestamptz,
-          language text,
-          source_trust real,
-          cluster_size int
-        ) LANGUAGE plpgsql AS $$
-        BEGIN
-          RETURN QUERY
-          SELECT a.id, a.published_at, a.language,
-                 0.7::real as source_trust,
-                 1 as cluster_size
-            FROM articles a
-           WHERE NOT EXISTS (SELECT 1 FROM article_ai x WHERE x.article_id=a.id AND x.is_current)
-           ORDER BY a.published_at DESC NULLS LAST
-           LIMIT 200;
-        END; $$;
-      `,
-    });
-
-    if (rpcError) {
-      console.error("Error creating RPC function:", rpcError);
-    } else {
-      console.log("✓ RPC function created");
-    }
+    // RPC articles_needing_ai removed (depended on legacy per-article AI)
 
     // Insert seed data
     const { error: seedError } = await supabase.rpc("exec_sql", {

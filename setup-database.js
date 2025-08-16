@@ -1,5 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
+import { createClient } from "@supabase/supabase-js";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -9,18 +9,18 @@ const supabase = createClient(
 );
 
 const createTables = async () => {
-  console.log('Creating database tables...');
-  
+  console.log("Creating database tables...");
+
   try {
     // Create sources table
-    console.log('Creating sources table...');
+    console.log("Creating sources table...");
     const { error: sourcesError } = await supabase
-      .from('_temp')
-      .select('*')
+      .from("_temp")
+      .select("*")
       .limit(0);
-    
+
     // If we can't even do a basic query, let's try a different approach
-    const { data, error } = await supabase.rpc('exec', {
+    const { data, error } = await supabase.rpc("exec", {
       sql: `
         CREATE TABLE IF NOT EXISTS sources (
           id text PRIMARY KEY,
@@ -33,22 +33,24 @@ const createTables = async () => {
           canonical_link_required boolean DEFAULT true,
           created_at timestamptz DEFAULT now()
         );
-      `
+      `,
     });
-    
+
     if (error) {
-      console.log('RPC exec failed, trying direct SQL execution...');
-      
+      console.log("RPC exec failed, trying direct SQL execution...");
+
       // Try using the SQL editor approach
-      const response = await fetch(`${process.env.SUPABASE_URL}/rest/v1/rpc/exec`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-          'apikey': process.env.SUPABASE_SERVICE_ROLE_KEY
-        },
-        body: JSON.stringify({
-          sql: `
+      const response = await fetch(
+        `${process.env.SUPABASE_URL}/rest/v1/rpc/exec`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+            apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+          },
+          body: JSON.stringify({
+            sql: `
             -- Create sources table
             CREATE TABLE IF NOT EXISTS sources (
               id text PRIMARY KEY,
@@ -94,19 +96,6 @@ const createTables = async () => {
               last_seen_at timestamptz
             );
             
-            -- Create article_ai table
-            CREATE TABLE IF NOT EXISTS article_ai (
-              id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-              article_id uuid REFERENCES articles(id) ON DELETE CASCADE,
-              ai_title text,
-              ai_summary text,
-              ai_details text,
-              ai_language text,
-              model text,
-              prompt_hash text,
-              created_at timestamptz DEFAULT now(),
-              is_current boolean DEFAULT true
-            );
             
             -- Create categories table
             CREATE TABLE IF NOT EXISTS categories (
@@ -144,39 +133,19 @@ const createTables = async () => {
             -- Create indexes
             CREATE INDEX IF NOT EXISTS idx_articles_pub ON articles(published_at DESC);
             CREATE INDEX IF NOT EXISTS idx_articles_source_hash ON articles(source_id, content_hash);
-            CREATE INDEX IF NOT EXISTS idx_article_ai_current ON article_ai(article_id, is_current);
             CREATE INDEX IF NOT EXISTS idx_feeds_enabled ON feeds(enabled);
             CREATE INDEX IF NOT EXISTS idx_article_categories_cat ON article_categories(category_id);
             
             -- Enable RLS
             ALTER TABLE sources ENABLE ROW LEVEL SECURITY;
             ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
-            ALTER TABLE article_ai ENABLE ROW LEVEL SECURITY;
             ALTER TABLE feeds ENABLE ROW LEVEL SECURITY;
             ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
             ALTER TABLE article_categories ENABLE ROW LEVEL SECURITY;
             ALTER TABLE crawl_log ENABLE ROW LEVEL SECURITY;
             ALTER TABLE article_scores ENABLE ROW LEVEL SECURITY;
             
-            -- Create RPC function
-            CREATE OR REPLACE FUNCTION articles_needing_ai()
-            RETURNS TABLE (
-              id uuid,
-              published_at timestamptz,
-              language text,
-              source_trust real,
-              cluster_size int
-            ) LANGUAGE plpgsql AS $$
-            BEGIN
-              RETURN QUERY
-              SELECT a.id, a.published_at, a.language,
-                     0.7::real as source_trust,
-                     1 as cluster_size
-                FROM articles a
-               WHERE NOT EXISTS (SELECT 1 FROM article_ai x WHERE x.article_id=a.id AND x.is_current)
-               ORDER BY a.published_at DESC NULLS LAST
-               LIMIT 200;
-            END; $$;
+            -- Deprecated per-article AI removed
             
             -- Insert seed data
             INSERT INTO categories(path, parent_path) VALUES
@@ -188,27 +157,31 @@ const createTables = async () => {
               ('geo.uk','geo'),
               ('geo.uk.london','geo.uk')
             ON CONFLICT (path) DO NOTHING;
-          `
-        })
-      });
-      
+          `,
+          }),
+        }
+      );
+
       if (response.ok) {
-        console.log('✓ Database tables created successfully via REST API');
+        console.log("✓ Database tables created successfully via REST API");
       } else {
         const errorText = await response.text();
-        console.error('REST API failed:', errorText);
-        throw new Error('Failed to create tables via REST API');
+        console.error("REST API failed:", errorText);
+        throw new Error("Failed to create tables via REST API");
       }
     } else {
-      console.log('✓ Database tables created successfully via RPC');
+      console.log("✓ Database tables created successfully via RPC");
     }
-    
-    console.log('\n🎉 Database setup completed!');
-    
+
+    console.log("\n🎉 Database setup completed!");
   } catch (error) {
-    console.error('Failed to create tables:', error.message);
-    console.log('\n❌ Database setup failed. Please run the SQL manually in Supabase SQL Editor:');
-    console.log('Copy the SQL from migrations/-- Migration: 0001_init.txt and paste it into your Supabase SQL Editor.');
+    console.error("Failed to create tables:", error.message);
+    console.log(
+      "\n❌ Database setup failed. Please run the SQL manually in Supabase SQL Editor:"
+    );
+    console.log(
+      "Copy the SQL from migrations/-- Migration: 0001_init.txt and paste it into your Supabase SQL Editor."
+    );
     process.exit(1);
   }
 };

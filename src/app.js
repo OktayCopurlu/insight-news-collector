@@ -10,7 +10,6 @@ import { optionalAuth } from "./middleware/auth.js";
 
 // Import routes
 import feedsRouter from "./routes/feeds.js";
-import articlesRouter from "./routes/articles.js";
 import sourcesRouter from "./routes/sources.js";
 import clustersRouter from "./routes/clusters.js";
 import { translationMetrics } from "./services/translationHelper.js";
@@ -125,7 +124,6 @@ app.get("/health/db", async (req, res) => {
 
 // API routes
 app.use("/api/feeds", feedsRouter);
-app.use("/api/articles", articlesRouter);
 app.use("/api/sources", sourcesRouter);
 app.use("/api/clusters", clustersRouter);
 
@@ -138,7 +136,6 @@ app.get("/", (req, res) => {
     endpoints: {
       health: "/health",
       feeds: "/api/feeds",
-      articles: "/api/articles",
       sources: "/api/sources",
       clusters: "/api/clusters",
     },

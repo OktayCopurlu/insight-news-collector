@@ -15,7 +15,7 @@ const supabase = createClient(
 );
 
 const tables = (
-  process.argv[2] || "media_assets,article_ai,articles,sources"
+  process.argv[2] || "media_assets,articles,sources,clusters,cluster_ai"
 ).split(",");
 
 async function q(sql) {

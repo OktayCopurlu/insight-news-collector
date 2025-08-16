@@ -24,7 +24,7 @@ const logger = createContextLogger("ResetData");
 const TABLES_IN_ORDER = [
   "article_categories", // no id column (composite PK)
   "article_scores", // PK article_id
-  "article_ai", // has id
+  // legacy per-article AI table removed (cluster-first)
   "cluster_ai", // new: cluster summaries
   "cluster_updates", // new: timeline
   "crawl_log", // has id
@@ -68,9 +68,6 @@ async function clearTableFallback(name) {
       query = query.not("article_id", "is", null);
       break;
     case "article_scores":
-      query = query.not("article_id", "is", null);
-      break;
-    case "article_ai":
       query = query.not("article_id", "is", null);
       break;
     case "crawl_log":

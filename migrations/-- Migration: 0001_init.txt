@@ -53,19 +53,7 @@ create table if not exists articles (
   unique (source_id, content_hash)
 );
 
-create table if not exists article_ai (
-  id uuid primary key default gen_random_uuid(),
-  article_id uuid references articles(id) on delete cascade,
-  ai_title text,
-  ai_summary text,
-  ai_details text,
-  ai_language text,
-  model text,
-  prompt_hash text,
-  created_at timestamptz default now(),
-  is_current boolean default true
-);
-create index if not exists idx_article_ai_current on article_ai(article_id, is_current);
+-- legacy per-article AI table removed (cluster-first)
 
 create table if not exists media_assets (
   id text primary key,
@@ -215,29 +203,12 @@ select a.id,
   join sources s on s.id=a.source_id;
 
 -- 4) RPCs --------------------------------------------------------------------
-create or replace function articles_needing_ai()
-returns table (
-  id uuid,
-  published_at timestamptz,
-  language text,
-  source_trust real,
-  cluster_size int
-) language plpgsql as $$
-begin
-  return query
-  select a.id, a.published_at, a.language,
-         0.7::real as source_trust,
-         1 as cluster_size
-    from articles a
-   where not exists (select 1 from article_ai x where x.article_id=a.id and x.is_current)
-   order by a.published_at desc nulls last
-   limit 200;
-end; $$;
+-- RPC articles_needing_ai removed (legacy per-article AI deprecated)
 
 -- 5) RLS (enable; you will serve via Edge Functions using service role) ------
 alter table sources enable row level security;
 alter table articles enable row level security;
-alter table article_ai enable row level security;
+-- legacy per-article AI table removed (no RLS)
 alter table media_assets enable row level security;
 alter table article_media enable row level security;
 alter table categories enable row level security;

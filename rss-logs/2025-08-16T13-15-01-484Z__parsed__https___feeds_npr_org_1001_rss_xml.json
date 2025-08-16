@@ -1,0 +1,31 @@
+{
+  "feedUrl": "https://feeds.npr.org/1001/rss.xml",
+  "itemCount": 10,
+  "sampleItems": [
+    {
+      "title": "Air Canada suspends operations as flight attendants go on strike",
+      "language": "en",
+      "published_at": "2025-08-16T12:48:06.000Z"
+    },
+    {
+      "title": "Hurricane Erin becomes a Category 4 in the Caribbean as the region braces for flooding",
+      "language": "en",
+      "published_at": "2025-08-16T12:34:53.000Z"
+    },
+    {
+      "title": "As arms race in Asia intensifies, a-bomb survivors make final plea for peace",
+      "language": "en",
+      "published_at": "2025-08-16T12:00:00.000Z"
+    },
+    {
+      "title": "Opinion: Remembering Ted Clark, great colleague — better friend",
+      "language": "en",
+      "published_at": "2025-08-16T12:00:00.000Z"
+    },
+    {
+      "title": "Amid growing 'scandal' of elder homelessness, health care groups aim to help",
+      "language": "en",
+      "published_at": "2025-08-16T11:00:00.000Z"
+    }
+  ]
+}

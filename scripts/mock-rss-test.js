@@ -28,26 +28,7 @@ function makeItem({ url, title, snippet, language = "en", published_at }) {
   return { url, title, snippet, language, published_at, content_hash };
 }
 
-async function upsertStubAIForMissing(articleIds) {
-  for (const id of articleIds) {
-    const { data: existing } = await supabase
-      .from("article_ai")
-      .select("id")
-      .eq("article_id", id)
-      .eq("is_current", true);
-    if (existing && existing.length) continue;
-    await insertRecord("article_ai", {
-      article_id: id,
-      ai_title: "AI title (stub)",
-      ai_summary: "AI summary (stub)",
-      ai_details: "• detail 1\n• detail 2",
-      ai_language: "en",
-      model: "stub",
-      prompt_hash: "stub",
-      is_current: true,
-    });
-  }
-}
+// AI stubs removed; cluster-first enrichers handle cluster_ai
 
 async function main() {
   // Ensure flags for this run
@@ -108,23 +89,12 @@ async function main() {
   const uniqCount = new Set(articles.map((a) => a.content_hash)).size;
   const duplicatesCaught = items.length - uniqCount;
 
-  // Ensure AI exists (stub if LLM disabled) and count
-  await upsertStubAIForMissing(articles.map((a) => a.id));
-  const { data: aiRows, error: aiErr } = await supabase
-    .from("article_ai")
-    .select("id")
-    .in(
-      "article_id",
-      articles.map((a) => a.id)
-    )
-    .eq("is_current", true);
-  if (aiErr) throw aiErr;
-  const aiCount = aiRows ? aiRows.length : 0;
+  // Report-only: AI generation is not required in cluster-first path
 
   // Output
   console.log("Input items:", items.length);
   console.log("Unique articles inserted:", uniqCount);
-  console.log("AI generated (current) records:", aiCount);
+  console.log("AI generated (current) records: (skipped)");
   console.log("Duplicates detected (by content_hash):", duplicatesCaught);
 }
 

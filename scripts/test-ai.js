@@ -2,12 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { createContextLogger } from "../src/config/logger.js";
-import { testConnection, selectRecords } from "../src/config/database.js";
+import { testConnection } from "../src/config/database.js";
 import { generateAIContent } from "../src/services/gemini.js";
-import {
-  getArticlesNeedingAI,
-  processArticleAI,
-} from "../src/services/articleProcessor.js";
 
 const logger = createContextLogger("AITest");
 
@@ -41,58 +37,10 @@ const run = async () => {
     process.exit(0);
   }
 
-  let targetArticle = null;
-  try {
-    const needing = await getArticlesNeedingAI(1);
-    if (needing.length > 0) {
-      const articles = await selectRecords("articles", { id: needing[0].id });
-      targetArticle = articles[0];
-    } else {
-      const latest = await selectRecords(
-        "articles",
-        {},
-        { orderBy: { column: "published_at", ascending: false }, limit: 1 }
-      );
-      targetArticle = latest[0];
-    }
-  } catch (e) {
-    logger.warn("Failed to locate article for enhancement test", {
-      error: e.message,
-    });
-  }
-
-  if (!targetArticle) {
-    logger.warn("No article found to test enhancement; exiting");
-    process.exit(0);
-  }
-
-  try {
-    const ai = await processArticleAI(targetArticle);
-    logger.info("Article AI enhancement succeeded", {
-      articleId: targetArticle.id,
-      aiId: ai.id,
-    });
-    console.log(
-      JSON.stringify(
-        { success: true, articleId: targetArticle.id, aiId: ai.id },
-        null,
-        2
-      )
-    );
-  } catch (e) {
-    logger.error("Article enhancement failed", {
-      articleId: targetArticle.id,
-      error: e.message,
-    });
-    console.log(
-      JSON.stringify(
-        { success: false, articleId: targetArticle.id, error: e.message },
-        null,
-        2
-      )
-    );
-    process.exit(1);
-  }
+  // Per-article enhancement test removed; basic AI key validation above is sufficient now
+  console.log(
+    JSON.stringify({ success: true, checked: "ai_key_and_db" }, null, 2)
+  );
 };
 
 run();

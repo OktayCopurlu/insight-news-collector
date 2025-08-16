@@ -2,10 +2,7 @@ import cron from "node-cron";
 import { crawlAllFeeds } from "../services/feedCrawler.js";
 import { enrichPendingClusters } from "../services/clusterEnricher.js";
 import { runPretranslationCycle } from "../services/pretranslator.js";
-import {
-  getArticlesNeedingAI,
-  processArticleAI,
-} from "../services/articleProcessor.js";
+// Per-article AI removed — no longer importing queue processors
 import { selectRecords, supabase } from "../config/database.js";
 import { createContextLogger } from "../config/logger.js";
 
@@ -57,24 +54,7 @@ export const startCronJobs = () => {
     }
   );
 
-  // Process AI enhancements every 10 minutes
-  cron.schedule(
-    "*/10 * * * *",
-    async () => {
-      try {
-        logger.info("Starting scheduled AI processing");
-        await processAIQueue();
-      } catch (error) {
-        logger.error("Scheduled AI processing failed", {
-          error: error.message,
-        });
-      }
-    },
-    {
-      scheduled: true,
-      timezone: "UTC",
-    }
-  );
+  // Per-article AI queue removed — no scheduled job
 
   // Pretranslation cycle every 5 minutes
   cron.schedule(
@@ -114,49 +94,7 @@ export const startCronJobs = () => {
   logger.info("Cron jobs started successfully");
 };
 
-const processAIQueue = async () => {
-  try {
-    const articlesNeedingAI = await getArticlesNeedingAI(20); // Process 20 at a time
-
-    if (articlesNeedingAI.length === 0) {
-      logger.debug("No articles need AI processing");
-      return;
-    }
-
-    logger.info("Processing AI queue", { count: articlesNeedingAI.length });
-
-    let processed = 0;
-    let failed = 0;
-
-    for (const articleData of articlesNeedingAI) {
-      try {
-        // Get full article data
-        const articles = await selectRecords("articles", {
-          id: articleData.id,
-        });
-
-        if (articles.length > 0) {
-          await processArticleAI(articles[0]);
-          processed++;
-        }
-      } catch (error) {
-        failed++;
-        logger.warn("Failed to process AI for article", {
-          articleId: articleData.id,
-          error: error.message,
-        });
-      }
-
-      // Add small delay to avoid overwhelming the AI service
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-
-    logger.info("AI queue processing completed", { processed, failed });
-  } catch (error) {
-    logger.error("AI queue processing failed", { error: error.message });
-    throw error;
-  }
-};
+// Per-article AI queue processor removed
 
 const cleanupOldLogs = async () => {
   try {

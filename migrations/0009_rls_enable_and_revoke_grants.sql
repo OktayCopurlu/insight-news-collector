@@ -3,7 +3,7 @@ DO $$
 DECLARE t text;
 BEGIN
   FOR t IN SELECT unnest(ARRAY[
-    'sources','articles','article_ai','feeds','categories','article_categories',
+    'sources','articles','feeds','categories','article_categories',
     'crawl_log','article_scores','media_assets','article_media','media_variants'
   ])
   LOOP
@@ -20,7 +20,7 @@ DO $$
 DECLARE t text;
 BEGIN
   FOR t IN SELECT unnest(ARRAY[
-    'sources','articles','article_ai','feeds','categories','article_categories',
+    'sources','articles','feeds','categories','article_categories',
     'crawl_log','article_scores','media_assets','article_media','media_variants'
   ])
   LOOP

@@ -4,7 +4,7 @@ import {
   updateRecord,
 } from "../config/database.js";
 import { supabase } from "../config/database.js";
-import { enhanceArticle, categorizeArticle } from "./gemini.js";
+import { categorizeArticle } from "./gemini.js";
 import { fetchAndExtract } from "./htmlExtractor.js";
 import { normalizeBcp47 } from "../utils/lang.js";
 import { createContextLogger } from "../config/logger.js";
@@ -196,24 +196,6 @@ export const processArticle = async (articleData, sourceId) => {
       });
     }
 
-    // Synchronous AI generation (only once) — behind feature flag
-    try {
-      if (
-        (process.env.ENABLE_PER_ARTICLE_AI || "false").toLowerCase() === "true"
-      ) {
-        await processArticleAI(article, { preExtractedFullText });
-      } else {
-        logger.debug("Per-article AI disabled (ENABLE_PER_ARTICLE_AI=false)", {
-          articleId: article.id,
-        });
-      }
-    } catch (error) {
-      logger.error("AI processing failed", {
-        articleId: article.id,
-        error: error.message,
-      });
-    }
-
     // Calculate article score asynchronously
     calculateArticleScore(article).catch((e) =>
       logger.warn("Score calc failed (new)", {
@@ -232,152 +214,7 @@ export const processArticle = async (articleData, sourceId) => {
   }
 };
 
-export const processArticleAI = async (article, options = {}) => {
-  try {
-    logger.debug("Processing AI enhancement", { articleId: article.id });
-
-    // Check if AI processing already exists
-    const existingAI = await selectRecords("article_ai", {
-      article_id: article.id,
-      is_current: true,
-    });
-
-    if (existingAI.length > 0) {
-      logger.debug("AI enhancement already exists", { articleId: article.id });
-      return existingAI[0];
-    }
-
-    // Optionally fetch full HTML content for richer AI context
-    let fullText = options.preExtractedFullText || null;
-    if (!fullText && process.env.ENABLE_HTML_EXTRACTION === "true") {
-      const extracted = await fetchAndExtract(
-        article.canonical_url || article.url
-      );
-      fullText = extracted?.text || null;
-      if (fullText) {
-        logger.debug("Full text extracted", {
-          articleId: article.id,
-          chars: fullText.length,
-          strategy: extracted?.diagnostics?.strategy,
-          tooShort: extracted?.diagnostics?.tooShort,
-        });
-        // Inline meta log for correlation without exposing full text
-        try {
-          const hash = generateContentHash(fullText).slice(0, 8);
-          logLLMEvent({
-            label: "fulltext_meta",
-            prompt_hash: hash,
-            model: "n/a",
-            prompt: "meta only",
-            response_raw: "",
-            meta: {
-              articleId: article.id,
-              full_text_chars: fullText.length,
-              strategy: extracted?.diagnostics?.strategy,
-              http_status: extracted?.diagnostics?.httpStatus,
-              content_type: extracted?.diagnostics?.contentType,
-              initial_html_chars: extracted?.diagnostics?.initialHtmlChars,
-              readability_chars: extracted?.diagnostics?.readabilityChars,
-              selectors_chars: extracted?.diagnostics?.selectorsChars,
-              jsonld_chars: extracted?.diagnostics?.jsonldChars,
-              meta_desc_chars: extracted?.diagnostics?.metaDescChars,
-              truncated: extracted?.diagnostics?.truncated,
-              too_short: extracted?.diagnostics?.tooShort,
-              paywall_suspect: extracted?.diagnostics?.paywallSuspect,
-            },
-          });
-          if (
-            (process.env.FULLTEXT_LOG_PREVIEW || "true").toLowerCase() ===
-            "true"
-          ) {
-            const maxPreview = parseInt(
-              process.env.FULLTEXT_LOG_PREVIEW_CHARS || "400"
-            );
-            const preview = fullText.slice(0, maxPreview);
-            logLLMEvent({
-              label: "fulltext_preview",
-              prompt_hash: hash,
-              model: "n/a",
-              prompt: "preview",
-              response_raw: preview,
-              meta: {
-                articleId: article.id,
-                preview_chars: preview.length,
-                total_chars: fullText.length,
-              },
-            });
-          }
-        } catch (e) {
-          logger.warn("Failed to log fulltext meta", {
-            articleId: article.id,
-            error: e.message,
-          });
-        }
-        // Persist full_text if column exists and article row lacks it
-        try {
-          if (!article.full_text && fullText) {
-            await updateRecord("articles", article.id, { full_text: fullText });
-            article.full_text = fullText; // reflect locally
-          }
-        } catch (e) {
-          if (!/full_text/.test(e.message || "")) {
-            logger.warn("Failed to update full_text on article", {
-              articleId: article.id,
-              error: e.message,
-            });
-          }
-        }
-      }
-    }
-
-    // Generate AI enhancement with optional full text
-    const aiContent = await enhanceArticle(article, {
-      fullText,
-      detailBullets: 8,
-    });
-
-    // Mark previous AI records as not current
-    await updatePreviousAIRecords(article.id);
-
-    // Insert new AI record
-    const aiRecord = await insertRecord("article_ai", {
-      article_id: article.id,
-      ai_title: aiContent.ai_title,
-      ai_summary: aiContent.ai_summary,
-      ai_details: aiContent.ai_details,
-      ai_language: aiContent.ai_language,
-      model: aiContent.model,
-      prompt_hash: aiContent.prompt_hash,
-      is_current: true,
-    });
-
-    logger.info("AI enhancement completed", {
-      articleId: article.id,
-      aiRecordId: aiRecord.id,
-    });
-
-    // Process categorization — behind feature flag
-    if (
-      (process.env.ENABLE_PER_ARTICLE_CATEGORIES || "false").toLowerCase() ===
-      "true"
-    ) {
-      await processArticleCategories(article);
-    } else {
-      logger.debug(
-        "Per-article categories disabled (ENABLE_PER_ARTICLE_CATEGORIES=false)",
-        { articleId: article.id }
-      );
-    }
-
-    return aiRecord;
-  } catch (error) {
-    logger.error("AI processing failed", {
-      articleId: article.id,
-      error: error.message,
-    });
-    throw error;
-  }
-};
+// processArticleAI removed — deprecated
 
 export const processArticleCategories = async (article) => {
   try {
@@ -461,22 +298,7 @@ export const calculateArticleScore = async (article) => {
   }
 };
 
-const updatePreviousAIRecords = async (articleId) => {
-  try {
-    const { error } = await supabase
-      .from("article_ai")
-      .update({ is_current: false })
-      .eq("article_id", articleId)
-      .eq("is_current", true);
-
-    if (error) throw error;
-  } catch (error) {
-    logger.warn("Failed to update previous AI records", {
-      articleId,
-      error: error.message,
-    });
-  }
-};
+// updatePreviousAIRecords removed — no longer relevant
 
 export const calculateRecencyScore = (publishedAt) => {
   if (!publishedAt) return 0.5;
@@ -502,15 +324,4 @@ export const calculateTitleScore = (title) => {
   return 0.6;
 };
 
-export const getArticlesNeedingAI = async (limit = 50) => {
-  try {
-    const { data, error } = await supabase.rpc("articles_needing_ai");
-
-    if (error) throw error;
-
-    return data.slice(0, limit);
-  } catch (error) {
-    logger.error("Failed to get articles needing AI", { error: error.message });
-    return [];
-  }
-};
+// getArticlesNeedingAI removed — per-article AI queue disabled
