@@ -154,7 +154,7 @@ app.use("*", (req, res) => {
 });
 
 // Global error handler
-app.use((error, req, res, next) => {
+app.use((error, req, res, _next) => {
   logger.error("Unhandled error", {
     error: error.message,
     stack: error.stack,

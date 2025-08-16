@@ -83,7 +83,7 @@ export const insertRecord = async (table, data) => {
 
 export const updateRecord = async (table, id, updates) => {
   try {
-    const { data, error } = await supabase
+    const { data: _data, error } = await supabase
       .from(table)
       .update(updates)
       .eq('id', id)
@@ -92,7 +92,7 @@ export const updateRecord = async (table, id, updates) => {
     
     if (error) throw error;
     
-    return data;
+    return _data;
   } catch (error) {
     logger.error('Failed to update record', { 
       table, 
@@ -117,7 +117,7 @@ export const testConnection = async () => {
       .select('count')
       .limit(1);
     
-    const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
+  const { data: _data, error } = await Promise.race([queryPromise, timeoutPromise]);
     
     if (error) {
       logger.warn('Database connection test failed', { error: error.message });

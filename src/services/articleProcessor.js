@@ -1,9 +1,4 @@
-import {
-  selectRecords,
-  insertRecord,
-  updateRecord,
-} from "../config/database.js";
-import { supabase } from "../config/database.js";
+import { selectRecords, insertRecord } from "../config/database.js";
 import { categorizeArticle } from "./gemini.js";
 import { fetchAndExtract } from "./htmlExtractor.js";
 import { normalizeBcp47 } from "../utils/lang.js";

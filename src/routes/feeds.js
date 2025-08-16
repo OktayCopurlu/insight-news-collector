@@ -3,7 +3,7 @@ import { selectRecords, insertRecord, updateRecord } from '../config/database.js
 import { crawlFeedById, getFeedStats } from '../services/feedCrawler.js';
 import { validateFeedUrl, extractFeedMetadata } from '../services/feedParser.js';
 import { createContextLogger } from '../config/logger.js';
-import { isValidUrl, generateUUID } from '../utils/helpers.js';
+import { isValidUrl } from '../utils/helpers.js';
 
 const router = express.Router();
 const logger = createContextLogger('FeedsAPI');

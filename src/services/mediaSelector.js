@@ -188,7 +188,7 @@ async function upsertMediaAsset(origin, url) {
   return data;
 }
 
-export async function selectAttachBestImage(article, opts = {}) {
+export async function selectAttachBestImage(article, _opts = {}) {
   // Default ON so freshly ingested articles attach images without separate backfills
   const enabled =
     (process.env.MEDIA_ENABLED || "true").toLowerCase() === "true";

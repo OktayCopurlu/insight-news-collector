@@ -1,9 +1,4 @@
-import {
-  supabase,
-  selectRecords,
-  insertRecord,
-  updateRecord,
-} from "../config/database.js";
+import { supabase, insertRecord, updateRecord } from "../config/database.js";
 import { createContextLogger } from "../config/logger.js";
 import { normalizeBcp47 } from "../utils/lang.js";
 import { translateFields } from "./translationHelper.js";

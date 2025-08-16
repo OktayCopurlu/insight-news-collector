@@ -3,7 +3,7 @@ import { crawlAllFeeds } from "../services/feedCrawler.js";
 import { enrichPendingClusters } from "../services/clusterEnricher.js";
 import { runPretranslationCycle } from "../services/pretranslator.js";
 // Per-article AI removed — no longer importing queue processors
-import { selectRecords, supabase } from "../config/database.js";
+import { supabase } from "../config/database.js";
 import { createContextLogger } from "../config/logger.js";
 
 const logger = createContextLogger("CronScheduler");

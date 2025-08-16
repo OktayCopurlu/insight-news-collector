@@ -1,11 +1,6 @@
 #!/usr/bin/env node
 import dotenv from "dotenv";
-import {
-  supabase,
-  insertRecord,
-  selectRecords,
-  updateRecord,
-} from "../src/config/database.js";
+import { supabase, insertRecord, selectRecords } from "../src/config/database.js";
 import { assignClusterForArticle } from "../src/services/clusterer.js";
 
 dotenv.config();

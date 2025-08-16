@@ -56,7 +56,7 @@ function buildSvg({
   </svg>`;
 }
 
-export async function generateOgCardForArticle(article, options = {}) {
+export async function generateOgCardForArticle(article, _options = {}) {
   const bucket = process.env.MEDIA_STORAGE_BUCKET || "news-media";
   const width = parseInt(process.env.OGCARD_WIDTH || "1200", 10);
   const height = parseInt(process.env.OGCARD_HEIGHT || "630", 10);

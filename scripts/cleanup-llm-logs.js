@@ -39,7 +39,7 @@ if (!files.length) {
 function parseTs(name) {
   const isoPart = name.split("__")[0];
   // revert - in date/time separators to more ISO-like to parse forgivingly
-  const restored = isoPart.replace(/-/g, ":");
+  const _restored = isoPart.replace(/-/g, ":");
   // We replaced all dashes though; fallback to file mtime
   const stats = fs.statSync(path.join(dir, name));
   return stats.mtimeMs; // rely on mtime for simplicity / robustness

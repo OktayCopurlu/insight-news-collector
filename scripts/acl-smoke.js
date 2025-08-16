@@ -15,7 +15,7 @@ if (!url || !anon) {
 
 const anonClient = createClient(url, anon);
 
-async function trySelect(name, type = "table") {
+async function trySelect(name, _type = "table") {
   try {
     const { data, error } = await anonClient.from(name).select("*").limit(1);
     if (error) {

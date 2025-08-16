@@ -46,7 +46,7 @@ function buildAbstractSvg({ title, width = 1200, height = 630, hue = 200 }) {
 </svg>`;
 }
 
-export async function generateIllustrationForArticle(article, options = {}) {
+export async function generateIllustrationForArticle(article, _options = {}) {
   const provider = (process.env.AI_IMAGE_PROVIDER || "svg").toLowerCase();
   const bucket = process.env.MEDIA_STORAGE_BUCKET || "news-media";
   const width = parseInt(
