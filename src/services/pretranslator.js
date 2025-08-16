@@ -379,7 +379,11 @@ async function processJob(job, perItemTimeoutMs) {
     ]);
 
   try {
-    const { title: cTitle, summary: cSummary, details: cDetails } = await to(
+    const {
+      title: cTitle,
+      summary: cSummary,
+      details: cDetails,
+    } = await to(
       withRetry(
         () =>
           translateFields(
@@ -409,7 +413,9 @@ async function processJob(job, perItemTimeoutMs) {
     const ai_title = clean(cTitle) || clean(pivotRow.ai_title);
     const ai_summary = clean(cSummary) || clean(pivotRow.ai_summary);
     const ai_details =
-      clean(cDetails) || clean(pivotRow.ai_details) || clean(pivotRow.ai_summary);
+      clean(cDetails) ||
+      clean(pivotRow.ai_details) ||
+      clean(pivotRow.ai_summary);
 
     // Flip previous current for this lang, then insert new current
     try {

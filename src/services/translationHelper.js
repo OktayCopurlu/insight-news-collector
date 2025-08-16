@@ -114,10 +114,7 @@ export function clearTranslationCache() {
 // - Otherwise, makes a single JSON-constrained provider call (Gemini) and
 //   writes per-field caches and DB rows for future reuse.
 // - On provider failure, falls back to per-string translateText for each field.
-export async function translateFields(
-  fields,
-  { srcLang = "auto", dstLang }
-) {
+export async function translateFields(fields, { srcLang = "auto", dstLang }) {
   const src = normalizeBcp47(srcLang || "auto");
   const dst = normalizeBcp47(dstLang);
   const { title = "", summary = "", details = "" } = fields || {};
@@ -149,7 +146,10 @@ export async function translateFields(
     resolveCached(summary),
     resolveCached(details),
   ]);
-  const allHit = (title ? !!tHit : true) && (summary ? !!sHit : true) && (details ? !!dHit : true);
+  const allHit =
+    (title ? !!tHit : true) &&
+    (summary ? !!sHit : true) &&
+    (details ? !!dHit : true);
   if (allHit) {
     return {
       title: (tHit || title || "").trim(),
@@ -192,7 +192,10 @@ export async function translateFields(
         })
       );
       const end = Math.max(text.lastIndexOf("}"), text.lastIndexOf("]"));
-      const slice = start !== Number.MAX_SAFE_INTEGER && end > start ? text.slice(start, end + 1) : "{}";
+      const slice =
+        start !== Number.MAX_SAFE_INTEGER && end > start
+          ? text.slice(start, end + 1)
+          : "{}";
       try {
         obj = JSON.parse(slice);
       } catch {
@@ -229,9 +232,15 @@ export async function translateFields(
   } catch (_) {
     // Provider path failed — fallback to per-string
     const [tt, ss, dd] = await Promise.all([
-      title ? translateText(title, { srcLang: src, dstLang: dst }) : Promise.resolve(""),
-      summary ? translateText(summary, { srcLang: src, dstLang: dst }) : Promise.resolve(""),
-      details ? translateText(details, { srcLang: src, dstLang: dst }) : Promise.resolve(""),
+      title
+        ? translateText(title, { srcLang: src, dstLang: dst })
+        : Promise.resolve(""),
+      summary
+        ? translateText(summary, { srcLang: src, dstLang: dst })
+        : Promise.resolve(""),
+      details
+        ? translateText(details, { srcLang: src, dstLang: dst })
+        : Promise.resolve(""),
     ]);
     return {
       title: String(tt || title || "").trim(),
