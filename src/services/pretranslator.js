@@ -6,7 +6,7 @@ import {
 } from "../config/database.js";
 import { createContextLogger } from "../config/logger.js";
 import { normalizeBcp47 } from "../utils/lang.js";
-import { translateText } from "./translationHelper.js";
+import { translateFields } from "./translationHelper.js";
 import crypto from "node:crypto";
 
 const logger = createContextLogger("Pretranslator");
@@ -379,23 +379,17 @@ async function processJob(job, perItemTimeoutMs) {
     ]);
 
   try {
-    const [tTitle, tSummary, tDetails] = await to(
+    const { title: cTitle, summary: cSummary, details: cDetails } = await to(
       withRetry(
         () =>
-          Promise.all([
-            translateText(pivotRow.ai_title || "", {
-              srcLang: pivotLang,
-              dstLang: dst,
-            }),
-            translateText(pivotRow.ai_summary || "", {
-              srcLang: pivotLang,
-              dstLang: dst,
-            }),
-            translateText(pivotRow.ai_details || pivotRow.ai_summary || "", {
-              srcLang: pivotLang,
-              dstLang: dst,
-            }),
-          ]),
+          translateFields(
+            {
+              title: pivotRow.ai_title || "",
+              summary: pivotRow.ai_summary || "",
+              details: pivotRow.ai_details || pivotRow.ai_summary || "",
+            },
+            { srcLang: pivotLang, dstLang: dst }
+          ),
         2,
         200
       ),
@@ -403,11 +397,8 @@ async function processJob(job, perItemTimeoutMs) {
     );
 
     const clean = (v) => (v || "").trim();
-    const cTitle = clean(tTitle);
-    const cSummary = clean(tSummary);
-    const cDetails = clean(tDetails);
     // Guard: if nothing actually translated, skip insert to avoid creating fake target rows with pivot text
-    if (!cTitle && !cSummary && !cDetails) {
+    if (!clean(cTitle) && !clean(cSummary) && !clean(cDetails)) {
       logger.debug("Skip insert: no translations produced", {
         clusterId: job.cluster_id,
         dst,
@@ -415,10 +406,10 @@ async function processJob(job, perItemTimeoutMs) {
       markDone(idempotencyKey);
       return { inserted: 0, skipped: 1 };
     }
-    const ai_title = cTitle || clean(pivotRow.ai_title);
-    const ai_summary = cSummary || clean(pivotRow.ai_summary);
+    const ai_title = clean(cTitle) || clean(pivotRow.ai_title);
+    const ai_summary = clean(cSummary) || clean(pivotRow.ai_summary);
     const ai_details =
-      cDetails || clean(pivotRow.ai_details) || clean(pivotRow.ai_summary);
+      clean(cDetails) || clean(pivotRow.ai_details) || clean(pivotRow.ai_summary);
 
     // Flip previous current for this lang, then insert new current
     try {
