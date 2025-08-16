@@ -24,21 +24,10 @@ export function normalizeBcp47(input, fallback = "en") {
   return out.join("-");
 }
 
-export function isRtlLang(code) {
-  const c = (code || "").toLowerCase();
-  return (
-    c.startsWith("ar") ||
-    c.startsWith("he") ||
-    c.startsWith("fa") ||
-    c.startsWith("ur")
-  );
-}
+// (removed) _isRtlLang was unused
 
 function capitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 }
 
-export function baseLang(code) {
-  const n = normalizeBcp47(code, "en");
-  return n.split("-")[0];
-}
+// (removed) _baseLang was unused

@@ -128,7 +128,9 @@ export function extractMetaImagesFromHtml(html, baseUrl) {
           if (item.logo) add(item.logo);
         }
       }
-    } catch (_) {}
+    } catch (_) {
+      /* ignore JSON-LD parse errors */
+    }
   });
 
   // Filter and absolutize
@@ -570,7 +572,9 @@ export async function selectAttachBestImage(article, _opts = {}) {
           width: chosen.width,
           height: chosen.height,
         });
-      } catch (_) {}
+      } catch (_) {
+        /* ignore update failure */
+      }
     }
     try {
       await insertRecord("article_media", {

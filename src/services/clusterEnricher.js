@@ -141,7 +141,9 @@ export async function enrichPendingClusters(lang = "en", options = {}) {
       // Mark previous as not current
       try {
         await updatePreviousClusterAI(c.id, lang);
-      } catch (_) {}
+      } catch (_) {
+        /* ignore RPC failure; fallback handled */
+      }
 
       // Insert new
       await insertRecord("cluster_ai", {
@@ -289,7 +291,9 @@ async function generateAndInsertClusterAI(c, lang) {
   }
   try {
     await updatePreviousClusterAI(c.id, lang);
-  } catch (_) {}
+  } catch (_) {
+    /* ignore language selection failure */
+  }
   await insertRecord("cluster_ai", {
     cluster_id: c.id,
     lang,
@@ -446,7 +450,9 @@ async function updatePreviousClusterAI(clusterId, lang) {
   for (const row of existing) {
     try {
       await updateRecord("cluster_ai", row.id, { is_current: false });
-    } catch (_) {}
+    } catch (_) {
+      /* ignore updateRecord failure */
+    }
   }
 }
 

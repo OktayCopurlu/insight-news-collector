@@ -172,7 +172,9 @@ function extractRssMediaCandidates(item) {
       if (/\.gif(\?|#|$)/i.test(url)) return;
       if (/^data:/i.test(url)) return;
       urls.push(url);
-    } catch (_) {}
+    } catch (_) {
+      /* ignore JSON-LD parse errors */
+    }
   };
 
   // enclosures
@@ -287,7 +289,12 @@ const detectLanguageWithConfidence = (title = "", content = "") => {
     }
   });
   // If German words are present and umlauts appear, favor de over tr when no Turkish-specific letters
-  if (detected !== "de" && trSpecific === 0 && counts["de"] >= 2 && deUmlauts >= 1) {
+  if (
+    detected !== "de" &&
+    trSpecific === 0 &&
+    counts["de"] >= 2 &&
+    deUmlauts >= 1
+  ) {
     detected = "de";
     maxMatches = Math.max(maxMatches, counts["de"] + 1);
   }
@@ -300,13 +307,14 @@ export const extractFeedMetadata = async (feedUrl) => {
   try {
     const feed = await parser.parseURL(feedUrl);
 
-      return {
+    return {
       title: feed.title || "",
       description: feed.description || "",
       link: feed.link || "",
-        language: normalizeBcp47(
-          feed.language || detectLanguageWithConfidence(feed.title, feed.description).lang
-        ),
+      language: normalizeBcp47(
+        feed.language ||
+          detectLanguageWithConfidence(feed.title, feed.description).lang
+      ),
       lastBuildDate: feed.lastBuildDate ? new Date(feed.lastBuildDate) : null,
       itemCount: feed.items?.length || 0,
     };

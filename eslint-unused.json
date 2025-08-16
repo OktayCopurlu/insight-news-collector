@@ -1,0 +1,1027 @@
+[
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/acl-smoke.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/attach-media-once.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/audit-llm-logs.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/audit-missing-images.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/audit-multilang.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/backfill-language-strong.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/backfill-media.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/check-rls.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/cleanup-llm-logs.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/mock-rss-test.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/print-markets.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/reprocess-ai.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/reset-data.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/run-audit-media.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/run-cluster-enricher-auto.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/run-cluster-enricher.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/run-crawl.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/run-migrations.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/run-pretranslation.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/sample-cluster-ai.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/seed-data.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/seed-multilang-feeds.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/seed-rss-feeds.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/smoke-cluster.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/source-policy-set.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/test-ai.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/test-fulltext.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/test-media-extract.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/scripts/verify-storage.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/_reserved/mediaTextTranslator.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/app.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/config/database.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/config/logger.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/middleware/auth.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/middleware/rateLimiter.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/routes/clusters.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/routes/feeds.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/routes/sources.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/scheduler/cronJobs.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/aiIllustrator.js",
+    "messages": [
+      {
+        "ruleId": "no-control-regex",
+        "severity": 2,
+        "message": "Unexpected control character(s) in regular expression: \\x00, \\x1f.",
+        "line": 17,
+        "column": 14,
+        "nodeType": "Literal",
+        "messageId": "unexpected",
+        "endLine": 17,
+        "endColumn": 32
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { createContextLogger } from \"../config/logger.js\";\nimport { supabase } from \"../config/database.js\";\n\nconst logger = createContextLogger(\"AIIllustrator\");\n\nfunction hashToHue(str) {\n  let h = 0;\n  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;\n  return Math.abs(h) % 360;\n}\n\nfunction buildAbstractSvg({ title, width = 1200, height = 630, hue = 200 }) {\n  const bg = `hsl(${hue}, 55%, 14%)`;\n  const fg = `hsl(${(hue + 180) % 360}, 90%, 92%)`;\n  const acc = `hsl(${(hue + 20) % 360}, 85%, 55%)`;\n  const safeTitle = String(title || \"Illustration\")\n    .replace(/[\\u0000-\\u001F]/g, \"\")\n    .slice(0, 90);\n  return `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"${width}\" height=\"${height}\" viewBox=\"0 0 ${width} ${height}\">\n  <defs>\n    <linearGradient id=\"g1\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\">\n      <stop offset=\"0%\" stop-color=\"${bg}\"/>\n      <stop offset=\"100%\" stop-color=\"${acc}\" stop-opacity=\"0.25\"/>\n    </linearGradient>\n  </defs>\n  <rect width=\"100%\" height=\"100%\" fill=\"url(#g1)\"/>\n  <g opacity=\"0.25\" fill=\"none\" stroke=\"${fg}\">\n    <circle cx=\"${width * 0.75}\" cy=\"${height * 0.25}\" r=\"160\" />\n    <circle cx=\"${width * 0.2}\" cy=\"${height * 0.7}\" r=\"100\" />\n    <path d=\"M 0 ${height * 0.85} C ${width * 0.25} ${height * 0.7}, ${\n    width * 0.5\n  } ${height * 0.95}, ${width} ${height * 0.8}\" stroke-width=\"6\"/>\n  </g>\n  <g fill=\"${fg}\">\n    <rect x=\"56\" y=\"64\" width=\"128\" height=\"36\" rx=\"8\" fill=\"${acc}\"/>\n    <text x=\"72\" y=\"88\" font-family=\"-apple-system,Segoe UI,Inter,Arial,sans-serif\" font-size=\"18\" font-weight=\"700\">Illustration</text>\n    <foreignObject x=\"56\" y=\"120\" width=\"${width - 112}\" height=\"${\n    height - 180\n  }\">\n      <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-family: -apple-system,Segoe UI,Inter,Arial,sans-serif; color: ${fg}; font-size: 48px; line-height: 1.15; font-weight: 800;\">\n        ${safeTitle}\n      </div>\n    </foreignObject>\n  </g>\n</svg>`;\n}\n\nexport async function generateIllustrationForArticle(article, _options = {}) {\n  const provider = (process.env.AI_IMAGE_PROVIDER || \"svg\").toLowerCase();\n  const bucket = process.env.MEDIA_STORAGE_BUCKET || \"news-media\";\n  const width = parseInt(\n    process.env.AI_IMAGE_WIDTH || process.env.OGCARD_WIDTH || \"1200\",\n    10\n  );\n  const height = parseInt(\n    process.env.AI_IMAGE_HEIGHT || process.env.OGCARD_HEIGHT || \"630\",\n    10\n  );\n\n  if (provider !== \"svg\") {\n    // Placeholder for future providers (e.g., replicate). Currently unsupported.\n    const allowed = [\"svg\"]; // extend later\n    logger.info(\"AI image provider not configured; falling back to SVG\", {\n      provider,\n      allowed,\n    });\n  }\n\n  const hue = hashToHue(article.id || article.title || \"seed\");\n  const svg = buildAbstractSvg({\n    title: article.title || \"News\",\n    width,\n    height,\n    hue,\n  });\n  const bytes = Buffer.from(svg, \"utf8\");\n\n  const y = new Date().getUTCFullYear();\n  const m = String(new Date().getUTCMonth() + 1).padStart(2, \"0\");\n  const file = `${article.id}-ai-illustration.svg`;\n  const storagePath = `${y}/${m}/${file}`;\n\n  const { error } = await supabase.storage\n    .from(bucket)\n    .upload(storagePath, bytes, { contentType: \"image/svg+xml\", upsert: true });\n  if (error) throw error;\n\n  const { data: pub } = supabase.storage.from(bucket).getPublicUrl(storagePath);\n  logger.info(\"AI illustration generated\", {\n    articleId: article.id,\n    path: storagePath,\n    publicUrl: pub?.publicUrl,\n  });\n  return {\n    storagePath,\n    publicUrl: pub?.publicUrl || null,\n    contentType: \"image/svg+xml\",\n    width,\n    height,\n    caption: \"Illustration\",\n  };\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/articleProcessor.js",
+    "messages": [
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 89,
+        "column": 23,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 89,
+        "endColumn": 25,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [3818, 3818], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      },
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 107,
+        "column": 23,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 107,
+        "endColumn": 25,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [4437, 4437], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 2,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { selectRecords, insertRecord } from \"../config/database.js\";\nimport { categorizeArticle } from \"./gemini.js\";\nimport { fetchAndExtract } from \"./htmlExtractor.js\";\nimport { normalizeBcp47 } from \"../utils/lang.js\";\nimport { createContextLogger } from \"../config/logger.js\";\nimport { generateContentHash } from \"../utils/helpers.js\";\nimport { logLLMEvent } from \"../utils/llmLogger.js\";\nimport { assignClusterForArticle } from \"./clusterer.js\";\nimport { selectAttachBestImage } from \"./mediaSelector.js\";\n\nconst logger = createContextLogger(\"ArticleProcessor\");\n\nexport const processArticle = async (articleData, sourceId) => {\n  try {\n    logger.debug(\"Processing article\", {\n      title: articleData.title?.substring(0, 50),\n      sourceId,\n    });\n\n    // Check if article already exists\n    const existingArticles = await selectRecords(\"articles\", {\n      source_id: sourceId,\n      content_hash: articleData.content_hash,\n    });\n\n    if (existingArticles.length > 0) return existingArticles[0];\n\n    // (Optional) enforce full text requirement before persisting\n    const requireFull = true; // strict: must have full text\n    let preExtractedFullText = null;\n    // Always attempt extraction if enabled (even if not strictly required)\n    if (process.env.ENABLE_HTML_EXTRACTION === \"true\") {\n      try {\n        const extracted = await fetchAndExtract(\n          articleData.canonical_url || articleData.url\n        );\n        preExtractedFullText = extracted?.text || null;\n        // If page declares language, adopt when missing/auto or when strong mismatch suspected\n        if (extracted?.language) {\n          const normalized = normalizeBcp47(extracted.language);\n          if (normalized) {\n            const current = articleData.language || \"\";\n            const isAuto = !current || current === \"auto\";\n            const looksArabic = /[\\u0600-\\u06FF]/.test(\n              preExtractedFullText || \"\"\n            );\n            // Turkish-specific letters only (exclude ö, ü as they appear in German)\n            const hasTrSpecific = /[ğĞşŞıİçÇ]/.test(preExtractedFullText || \"\");\n            const hasDeUmlaut = /[äÄöÖüÜß]/.test(preExtractedFullText || \"\");\n            const deWords =\n              /( der | die | das | und | oder | aber | mit | von | für )/i.test(\n                ` ${preExtractedFullText || \"\"} `\n              );\n            const mismatchArabic =\n              looksArabic && current && !current.startsWith(\"ar\");\n            const mismatchTurkish =\n              hasTrSpecific && current && current !== \"tr\";\n            const mismatchGerman =\n              hasDeUmlaut && deWords && current && current !== \"de\";\n            if (isAuto || mismatchArabic || mismatchTurkish) {\n              articleData.language = normalized;\n            }\n            // If page-declared lang is de and content signals German, prefer de\n            if (!isAuto && normalized === \"de\" && mismatchGerman) {\n              articleData.language = \"de\";\n            }\n          }\n        }\n        const tooShort = extracted?.diagnostics?.tooShort;\n        if (requireFull && (!preExtractedFullText || tooShort)) {\n          logger.warn(\"Skipping article due to missing/short full text\", {\n            url: articleData.url,\n            hasText: !!preExtractedFullText,\n            tooShort,\n          });\n          try {\n            logLLMEvent({\n              label: \"fulltext_skip\",\n              prompt_hash: generateContentHash(articleData.url).slice(0, 8),\n              model: \"n/a\",\n              prompt: \"skip-meta\",\n              response_raw: \"\",\n              meta: {\n                url: articleData.url,\n                reason: !preExtractedFullText ? \"no_text\" : \"too_short\",\n                too_short: tooShort || false,\n              },\n            });\n          } catch (_) {}\n          return null; // signal skipped\n        }\n      } catch (e) {\n        if (requireFull) {\n          logger.warn(\"Skipping article due to extraction error\", {\n            url: articleData.url,\n            error: e.message,\n          });\n          try {\n            logLLMEvent({\n              label: \"fulltext_skip\",\n              prompt_hash: generateContentHash(articleData.url).slice(0, 8),\n              model: \"n/a\",\n              prompt: \"skip-error\",\n              response_raw: \"\",\n              meta: { url: articleData.url, reason: \"error\", error: e.message },\n            });\n          } catch (_) {}\n          return null;\n        }\n      }\n    }\n\n    // Create new article (only after passing fulltext requirement if enforced)\n    let article;\n    try {\n      article = await insertRecord(\"articles\", {\n        source_id: sourceId,\n        url: articleData.url,\n        canonical_url: articleData.canonical_url || articleData.url,\n        title: articleData.title,\n        snippet: articleData.snippet,\n        language: articleData.language,\n        published_at: articleData.published_at,\n        content_hash: articleData.content_hash,\n        fetched_at: new Date(),\n        full_text: preExtractedFullText || null,\n      });\n    } catch (e) {\n      if (/duplicate key value/.test(e.message || \"\")) {\n        // Race condition: another worker inserted first. Fetch existing and continue.\n        logger.debug(\"Duplicate detected on insert (race)\", {\n          url: articleData.url,\n          contentHash: articleData.content_hash,\n        });\n        const raced = await selectRecords(\"articles\", {\n          source_id: sourceId,\n          content_hash: articleData.content_hash,\n        });\n        if (raced.length) {\n          article = raced[0];\n        } else {\n          throw e; // fallback - shouldn't happen\n        }\n      } else if (/full_text/.test(e.message || \"\")) {\n        logger.warn(\"Insert without full_text (column missing)\", {\n          url: articleData.url,\n          error: e.message,\n        });\n        article = await insertRecord(\"articles\", {\n          source_id: sourceId,\n          url: articleData.url,\n          canonical_url: articleData.canonical_url || articleData.url,\n          title: articleData.title,\n          snippet: articleData.snippet,\n          language: articleData.language,\n          published_at: articleData.published_at,\n          content_hash: articleData.content_hash,\n          fetched_at: new Date(),\n        });\n      } else {\n        throw e;\n      }\n    }\n\n    logger.info(\"Article created\", {\n      articleId: article.id,\n      title: article.title?.substring(0, 50),\n    });\n\n    // Media selection & attachment (behind flags)\n    try {\n      await selectAttachBestImage(article);\n    } catch (e) {\n      logger.warn(\"Media selection failed (non-fatal)\", {\n        articleId: article.id,\n        error: e.message,\n      });\n    }\n\n    // Cluster assignment (stub) — only for new items; controlled by flag\n    try {\n      if (\n        (process.env.CLUSTERING_ENABLED || \"false\").toLowerCase() === \"true\"\n      ) {\n        await assignClusterForArticle(article, { sourceId });\n      }\n    } catch (e) {\n      logger.warn(\"Cluster assignment failed (non-fatal)\", {\n        articleId: article.id,\n        error: e.message,\n      });\n    }\n\n    // Calculate article score asynchronously\n    calculateArticleScore(article).catch((e) =>\n      logger.warn(\"Score calc failed (new)\", {\n        articleId: article.id,\n        error: e.message,\n      })\n    );\n\n    return article;\n  } catch (error) {\n    logger.error(\"Failed to process article\", {\n      title: articleData.title?.substring(0, 50),\n      error: error.message,\n    });\n    throw error;\n  }\n};\n\n// processArticleAI removed — deprecated\n\nexport const processArticleCategories = async (article) => {\n  try {\n    logger.debug(\"Processing article categorization\", {\n      articleId: article.id,\n    });\n\n    const categories = await categorizeArticle(article);\n\n    for (const category of categories) {\n      // Find or create category\n      let categoryRecord = await selectRecords(\"categories\", {\n        path: category.path,\n      });\n\n      if (categoryRecord.length === 0) {\n        categoryRecord = [\n          await insertRecord(\"categories\", { path: category.path }),\n        ];\n      }\n\n      // Insert article-category relationship\n      try {\n        await insertRecord(\"article_categories\", {\n          article_id: article.id,\n          category_id: categoryRecord[0].id,\n          confidence: category.confidence,\n        });\n      } catch (error) {\n        // Ignore duplicate key errors\n        if (!error.message.includes(\"duplicate key\")) {\n          throw error;\n        }\n      }\n    }\n\n    logger.info(\"Article categorization completed\", {\n      articleId: article.id,\n      categoryCount: categories.length,\n    });\n  } catch (error) {\n    logger.error(\"Categorization failed\", {\n      articleId: article.id,\n      error: error.message,\n    });\n    // Don't throw - categorization failure shouldn't stop article processing\n  }\n};\n\nexport const calculateArticleScore = async (article) => {\n  try {\n    const factors = {\n      recency: calculateRecencyScore(article.published_at),\n      titleLength: calculateTitleScore(article.title),\n      hasSnippet: article.snippet ? 1.0 : 0.0,\n      sourceReliability: 0.7, // Default source reliability\n    };\n\n    const score =\n      Object.values(factors).reduce((sum, factor) => sum + factor, 0) /\n      Object.keys(factors).length;\n\n    await insertRecord(\"article_scores\", {\n      article_id: article.id,\n      score,\n      factors,\n    });\n\n    logger.debug(\"Article score calculated\", {\n      articleId: article.id,\n      score: score.toFixed(2),\n    });\n\n    return { score, factors };\n  } catch (error) {\n    logger.error(\"Score calculation failed\", {\n      articleId: article.id,\n      error: error.message,\n    });\n    return { score: 0.5, factors: {} };\n  }\n};\n\n// updatePreviousAIRecords removed — no longer relevant\n\nexport const calculateRecencyScore = (publishedAt) => {\n  if (!publishedAt) return 0.5;\n\n  const now = new Date();\n  const published = new Date(publishedAt);\n  const hoursDiff = (now - published) / (1000 * 60 * 60);\n\n  if (hoursDiff < 1) return 1.0;\n  if (hoursDiff < 6) return 0.9;\n  if (hoursDiff < 24) return 0.7;\n  if (hoursDiff < 72) return 0.5;\n  return 0.3;\n};\n\nexport const calculateTitleScore = (title) => {\n  if (!title) return 0.0;\n\n  const length = title.length;\n  if (length < 20) return 0.3;\n  if (length < 60) return 1.0;\n  if (length < 100) return 0.8;\n  return 0.6;\n};\n\n// getArticlesNeedingAI removed — per-article AI queue disabled\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/clusterEnricher.js",
+    "messages": [
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 144,
+        "column": 19,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 144,
+        "endColumn": 21,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [4742, 4742], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      },
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 292,
+        "column": 15,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 292,
+        "endColumn": 17,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [9361, 9361], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      },
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 449,
+        "column": 17,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 449,
+        "endColumn": 19,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [13806, 13806], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 3,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import {\n  supabase,\n  selectRecords,\n  insertRecord,\n  updateRecord,\n} from \"../config/database.js\";\nimport { generateAIContent } from \"./gemini.js\";\nimport { createContextLogger } from \"../config/logger.js\";\nimport { normalizeBcp47 } from \"../utils/lang.js\";\n\nconst logger = createContextLogger(\"ClusterEnricher\");\n\nexport async function enrichPendingClusters(lang = \"en\", options = {}) {\n  const overrideEnabled = options && options.overrideEnabled === true;\n  if (process.env.CLUSTER_ENRICH_ENABLED === \"false\" && !overrideEnabled)\n    return { processed: 0 };\n\n  try {\n    // Prefer SQL helper when available, fallback to client-side check\n    let clusters = [];\n    const force =\n      (process.env.CLUSTER_ENRICH_FORCE || \"false\").toLowerCase() === \"true\";\n    if (force) {\n      // Force mode: re-enrich all clusters regardless of existing AI\n      clusters = await selectRecords(\"clusters\", {});\n    } else {\n      let clusterIds = [];\n      try {\n        const { data, error } = await supabase.rpc(\"clusters_needing_ai\", {\n          p_lang: lang,\n        });\n        if (error) throw error;\n        clusterIds = (data || []).map((r) => r.cluster_id || r.id || r);\n      } catch (_) {\n        // Fallback: list all clusters and filter client-side\n        const all = await selectRecords(\"clusters\", {});\n        clusterIds = all.map((c) => c.id);\n      }\n\n      // Load cluster rows for selected ids\n      clusters = clusterIds.length\n        ? (\n            await Promise.all(\n              clusterIds.map(\n                async (id) => (await selectRecords(\"clusters\", { id }))[0]\n              )\n            )\n          ).filter(Boolean)\n        : [];\n    }\n    const minChars = parseInt(\n      process.env.CLUSTER_MIN_DETAILS_CHARS || \"400\",\n      10\n    );\n    let processed = 0;\n    for (const c of clusters) {\n      // Check if has current ai\n      const ai = await selectRecords(\"cluster_ai\", {\n        cluster_id: c.id,\n        is_current: true,\n        lang,\n      });\n      if (ai.length && !force) continue;\n\n      // Gather context from updates, sample articles, and existing article AI for richer details\n      const updates = await fetchClusterUpdates(c.id, 5);\n      const articles = await fetchClusterArticles(c.id, 5);\n      const articleAIs = [];\n      let title;\n      let summary;\n      let details;\n      if (\n        (process.env.CLUSTER_LLM_ENABLED || \"false\").toLowerCase() === \"true\"\n      ) {\n        const mode = (\n          process.env.CLUSTER_DETAILS_MODE || \"narrative\"\n        ).toLowerCase();\n        const bullets = parseInt(process.env.CLUSTER_DETAIL_BULLETS || \"8\", 10);\n        const prompt = buildClusterSummaryPrompt(\n          c,\n          updates,\n          lang,\n          articles,\n          mode,\n          bullets,\n          articleAIs\n        );\n        try {\n          const text = await generateAIContent(prompt, {\n            maxOutputTokens: parseInt(\n              process.env.CLUSTER_LLM_MAX_TOKENS || \"900\",\n              10\n            ),\n            temperature: mode === \"narrative\" ? 0.5 : 0.4,\n            attempts: 2,\n          });\n          const parsed = safeParseJSON(text);\n          title = parsed.ai_title || generateTitleFromUpdates(updates);\n          summary = parsed.ai_summary || generateSummaryFromUpdates(updates);\n          details =\n            parsed.ai_details ||\n            composeNarrativeFromArticleAIs(articleAIs, summary);\n        } catch (e) {\n          logger.warn(\"LLM cluster summary/details failed; using fallback\", {\n            clusterId: c.id,\n            error: e.message,\n          });\n          title = generateTitleFromUpdates(updates);\n          summary = generateSummaryFromUpdates(updates);\n          details = synthesizeDetailsFallback(\n            updates,\n            articles,\n            summary,\n            articleAIs\n          );\n        }\n      } else {\n        title = generateTitleFromUpdates(updates);\n        summary = generateSummaryFromUpdates(updates);\n        details = synthesizeDetailsFallback(\n          updates,\n          articles,\n          summary,\n          articleAIs\n        );\n      }\n\n      // Ensure details are sufficiently rich; if too short, compose a fuller fallback\n      // Always append timeline and coverage to match expected cluster_ai format\n      details = appendTimelineCoverage(details, updates, articles);\n      const detailsNoWsLen = (details || \"\").replace(/\\s/g, \"\").length;\n      if (!details || detailsNoWsLen < minChars) {\n        details = synthesizeDetailsFallback(\n          updates,\n          articles,\n          summary,\n          articleAIs\n        );\n      }\n\n      // Mark previous as not current\n      try {\n        await updatePreviousClusterAI(c.id, lang);\n      } catch (_) {}\n\n      // Insert new\n      await insertRecord(\"cluster_ai\", {\n        cluster_id: c.id,\n        lang,\n        ai_title: title,\n        ai_summary: summary,\n        ai_details: details,\n        model: process.env.LLM_MODEL || \"stub\",\n        is_current: true,\n      });\n      processed++;\n\n      // Optional throttle between clusters when using LLM\n      if (\n        (process.env.CLUSTER_LLM_ENABLED || \"false\").toLowerCase() === \"true\"\n      ) {\n        const sleepMs = parseInt(process.env.CLUSTER_LLM_SLEEP_MS || \"250\");\n        if (sleepMs > 0) await sleep(sleepMs);\n      }\n    }\n    return { processed };\n  } catch (error) {\n    logger.error(\"Cluster enrich failed\", { error: error.message });\n    return { processed: 0, error: error.message };\n  }\n}\n\nexport async function enrichClustersAutoPivot() {\n  if (process.env.CLUSTER_ENRICH_ENABLED === \"false\") return { processed: 0 };\n  try {\n    // Fetch clusters lacking any current AI (any lang)\n    const allClusters = await selectRecords(\"clusters\", {});\n    let processed = 0;\n    for (const c of allClusters) {\n      const existing = await selectRecords(\"cluster_ai\", {\n        cluster_id: c.id,\n        is_current: true,\n      });\n      if (existing.length) continue; // already has a pivot\n\n      const lang = await selectDominantLanguageForCluster(c.id);\n      await generateAndInsertClusterAI(c, lang);\n      processed++;\n    }\n    return { processed };\n  } catch (error) {\n    logger.error(\"Auto-pivot cluster enrich failed\", { error: error.message });\n    return { processed: 0, error: error.message };\n  }\n}\n\nasync function selectDominantLanguageForCluster(clusterId) {\n  // Prefer languages in updates; fallback to articles\n  const upd = await selectRecords(\"cluster_updates\", { cluster_id: clusterId });\n  const counts = new Map();\n  for (const u of upd) {\n    const l = normalizeBcp47(u.lang || \"\");\n    if (!l) continue;\n    counts.set(l, (counts.get(l) || 0) + 1);\n  }\n  if (!counts.size) {\n    const arts = await selectRecords(\"articles\", { cluster_id: clusterId });\n    for (const a of arts) {\n      const l = normalizeBcp47(a.language || \"\");\n      if (!l) continue;\n      counts.set(l, (counts.get(l) || 0) + 1);\n    }\n  }\n  if (!counts.size) return \"en\";\n  // pick max; if tie, prefer en\n  let best = null;\n  let bestCount = -1;\n  for (const [l, n] of counts.entries()) {\n    if (n > bestCount || (n === bestCount && l === \"en\")) {\n      best = l;\n      bestCount = n;\n    }\n  }\n  return best || \"en\";\n}\n\nasync function generateAndInsertClusterAI(c, lang) {\n  // Guard: if already exists for this lang as current, skip\n  const aiExisting = await selectRecords(\"cluster_ai\", {\n    cluster_id: c.id,\n    is_current: true,\n    lang,\n  });\n  if (aiExisting.length) return;\n\n  const updates = await fetchClusterUpdates(c.id, 3);\n  const articles = await fetchClusterArticles(c.id, 5);\n  const articleAIs = [];\n  let title;\n  let summary;\n  let details;\n  if ((process.env.CLUSTER_LLM_ENABLED || \"false\").toLowerCase() === \"true\") {\n    const prompt = buildClusterSummaryPrompt(\n      c,\n      updates,\n      lang,\n      articles,\n      \"narrative\",\n      8,\n      articleAIs\n    );\n    try {\n      const text = await generateAIContent(prompt, {\n        maxOutputTokens: 600,\n        temperature: 0.4,\n        attempts: 2,\n      });\n      const parsed = safeParseJSON(text);\n      title = parsed.ai_title || generateTitleFromUpdates(updates);\n      summary = parsed.ai_summary || generateSummaryFromUpdates(updates);\n      details =\n        parsed.ai_details ||\n        composeNarrativeFromArticleAIs(articleAIs, summary);\n    } catch (e) {\n      logger.warn(\"LLM cluster summary failed; using fallback\", {\n        clusterId: c.id,\n        error: e.message,\n      });\n      title = generateTitleFromUpdates(updates);\n      summary = generateSummaryFromUpdates(updates);\n      details = synthesizeDetailsFallback(\n        updates,\n        articles,\n        summary,\n        articleAIs\n      );\n    }\n  } else {\n    title = generateTitleFromUpdates(updates);\n    summary = generateSummaryFromUpdates(updates);\n    details = synthesizeDetailsFallback(updates, articles, summary, articleAIs);\n  }\n  // Always append timeline + coverage\n  details = appendTimelineCoverage(details, updates, articles);\n  const minChars = parseInt(process.env.CLUSTER_MIN_DETAILS_CHARS || \"400\", 10);\n  const detailsNoWsLen = (details || \"\").replace(/\\s/g, \"\").length;\n  if (!details || detailsNoWsLen < minChars) {\n    details = synthesizeDetailsFallback(updates, articles, summary, articleAIs);\n  }\n  try {\n    await updatePreviousClusterAI(c.id, lang);\n  } catch (_) {}\n  await insertRecord(\"cluster_ai\", {\n    cluster_id: c.id,\n    lang,\n    ai_title: title,\n    ai_summary: summary,\n    ai_details: details || summary,\n    model: process.env.LLM_MODEL || \"stub\",\n    is_current: true,\n  });\n}\n\nasync function fetchClusterUpdates(clusterId, limit = 5) {\n  // Minimal fetch via RPC-less path (select and sort client-side)\n  const all = await selectRecords(\"cluster_updates\", { cluster_id: clusterId });\n  const sorted = all.sort(\n    (a, b) =>\n      new Date(b.happened_at || b.created_at) -\n      new Date(a.happened_at || a.created_at)\n  );\n  return sorted.slice(0, limit);\n}\n\nasync function fetchClusterArticles(clusterId, limit = 3) {\n  const all = await selectRecords(\"articles\", { cluster_id: clusterId });\n  const sorted = all.sort(\n    (a, b) => new Date(b.published_at) - new Date(a.published_at)\n  );\n  return sorted.slice(0, limit);\n}\n\n// fetchClusterArticleAIs removed — deprecated per-article AI\n\nfunction trimText(text, maxChars) {\n  if (!text) return \"\";\n  if (text.length <= maxChars) return text;\n  return (\n    text\n      .slice(0, maxChars)\n      .replace(/[\\s\\S]{0,200}$/m, \"\")\n      .trim() + \"…\"\n  );\n}\n\nfunction composeNarrativeFromArticleAIs(articleAIs, fallbackSummary) {\n  if (!articleAIs || !articleAIs.length) return fallbackSummary || \"\";\n  // Prefer the longest two narratives\n  const items = [...articleAIs]\n    .map((r) => ({\n      text:\n        (r.ai_details && r.ai_details.trim()) || (r.ai_summary || \"\").trim(),\n      len: (r.ai_details && r.ai_details.length) || (r.ai_summary || \"\").length,\n    }))\n    .filter((x) => x.text)\n    .sort((a, b) => b.len - a.len)\n    .slice(0, 2);\n  const combined = items.map((i) => i.text).join(\"\\n\\n\");\n  // Keep the narrative focused; cap to avoid overly long details\n  return trimText(combined, 1800);\n}\n\nfunction synthesizeDetailsFallback(\n  updates,\n  articles,\n  summary,\n  articleAIs = []\n) {\n  const parts = [];\n  const narrative = composeNarrativeFromArticleAIs(articleAIs, summary);\n  if (narrative) parts.push(narrative.trim());\n  if (updates && updates.length) {\n    const top = updates.slice(0, 6);\n    parts.push(\n      \"Timeline:\\n\" +\n        top\n          .map(\n            (u) =>\n              `• ${u.source_id || \"src\"}: ${u.summary || u.claim || \"update\"}`\n          )\n          .join(\"\\n\")\n    );\n  }\n  if (articles && articles.length) {\n    const topA = articles.slice(0, 3);\n    parts.push(\n      \"Coverage:\\n\" +\n        topA\n          .map(\n            (a) =>\n              `• ${a.source_id || \"source\"} | ${new Date(\n                a.published_at\n              ).toISOString()} \\u2014 ${a.title || a.snippet || \"article\"}`\n          )\n          .join(\"\\n\")\n    );\n  }\n  return parts.filter(Boolean).join(\"\\n\\n\");\n}\n\nfunction appendTimelineCoverage(narrative, updates, articles) {\n  const parts = [];\n  if (narrative) parts.push(String(narrative).trim());\n  if (updates && updates.length) {\n    const top = updates.slice(0, 6);\n    parts.push(\n      \"Timeline:\\n\" +\n        top\n          .map(\n            (u) =>\n              `• ${u.source_id || \"src\"}: ${u.summary || u.claim || \"update\"}`\n          )\n          .join(\"\\n\")\n    );\n  }\n  if (articles && articles.length) {\n    const topA = articles.slice(0, 3);\n    parts.push(\n      \"Coverage:\\n\" +\n        topA\n          .map(\n            (a) =>\n              `• ${a.source_id || \"source\"} | ${new Date(\n                a.published_at\n              ).toISOString()} \\u2014 ${a.title || a.snippet || \"article\"}`\n          )\n          .join(\"\\n\")\n    );\n  }\n  return parts.filter(Boolean).join(\"\\n\\n\");\n}\n\nfunction generateTitleFromUpdates(updates) {\n  if (!updates || !updates.length) return null;\n  const first = updates[0];\n  return first.claim || null;\n}\n\nfunction generateSummaryFromUpdates(updates) {\n  if (!updates || !updates.length) return null;\n  return updates\n    .map(\n      (u) => `• ${u.source_id || \"src\"}: ${u.summary || u.claim || \"update\"}`\n    )\n    .join(\"\\n\");\n}\n\nasync function updatePreviousClusterAI(clusterId, lang) {\n  // Using raw supabase client is not exposed here; rely on updateRecord-like approach via RPC in future if needed\n  // As a fallback, select then mark old ones not current\n  const existing = await selectRecords(\"cluster_ai\", {\n    cluster_id: clusterId,\n    lang,\n    is_current: true,\n  });\n  for (const row of existing) {\n    try {\n      await updateRecord(\"cluster_ai\", row.id, { is_current: false });\n    } catch (_) {}\n  }\n}\n\nfunction sleep(ms) {\n  return new Promise((resolve) => setTimeout(resolve, ms));\n}\n\nfunction buildClusterSummaryPrompt(\n  cluster,\n  updates,\n  lang,\n  articles = [],\n  mode = \"narrative\",\n  bullets = 8,\n  articleAIs = []\n) {\n  const upLines = (updates || [])\n    .slice(0, 6)\n    .map(\n      (u) =>\n        `- ${u.happened_at || u.created_at} | ${u.source_id || \"src\"} | ${\n          u.claim || u.summary || \"update\"\n        }`\n    )\n    .join(\"\\n\");\n  const artLines = (articles || [])\n    .slice(0, 3)\n    .map(\n      (a) =>\n        `- ${a.published_at} | ${a.source_id || \"source\"} | ${\n          a.title || a.snippet || \"article\"\n        }`\n    )\n    .join(\"\\n\");\n  const aiNarratives = (articleAIs || [])\n    .slice(0, 3)\n    .map(\n      (r, idx) =>\n        `-- Narrative ${idx + 1} --\\n${trimText(\n          r.ai_details || r.ai_summary || \"\",\n          1200\n        )}`\n    )\n    .join(\"\\n\\n\");\n  const base = `You are summarizing a news story cluster for language ${lang}. Use ONLY facts from updates, article snippets, and the provided coverage narratives. Be neutral and factual. Avoid speculation. Use clear, concise language.`;\n  if (mode === \"narrative\") {\n    return `${base}\n\nReturn STRICT JSON only (minified) with these keys: {\"ai_title\":\"...\",\"ai_summary\":\"...\",\"ai_details\":\"Paragraph1\\\\n\\\\nParagraph2\"}\nConstraints for ai_details: 3-5 short paragraphs totaling 1000-1600 characters; no list formatting; reference sources implicitly (no links). Prefer the coverage narratives where possible; reconcile differences neutrally.\n\nUpdates:\\n${upLines}\n\nArticles:\\n${artLines}\n\nCoverage narratives:\\n${aiNarratives}`;\n  }\n  // bullets\n  return `${base}\n\nReturn STRICT JSON only (minified): {\"ai_title\":\"...\",\"ai_summary\":\"...\",\"ai_details\":\"• Bullet 1\\n• Bullet 2\"}\n\nBullet rules: ${bullets} bullets max, each <= 200 chars, no duplication, no speculation.\n\nUpdates:\\n${upLines}\n\nArticles:\\n${artLines}\n\nCoverage narratives:\\n${aiNarratives}`;\n}\n\nfunction safeParseJSON(raw) {\n  try {\n    const cleaned = (raw || \"\")\n      .trim()\n      .replace(/^```(json)?\\n?/i, \"\")\n      .replace(/```\\s*$/i, \"\");\n    return JSON.parse(cleaned);\n  } catch (_) {\n    return {};\n  }\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/clusterer.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/feedCrawler.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/feedParser.js",
+    "messages": [
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 175,
+        "column": 17,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 175,
+        "endColumn": 19,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [5596, 5596], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import Parser from \"rss-parser\";\nimport axios from \"axios\";\nimport { createContextLogger } from \"../config/logger.js\";\nimport { generateContentHash } from \"../utils/helpers.js\";\nimport fs from \"fs\";\nimport path from \"path\";\nimport { normalizeBcp47 } from \"../utils/lang.js\";\n\nconst logger = createContextLogger(\"FeedParser\");\n\nconst parser = new Parser({\n  timeout: parseInt(process.env.FETCH_TIMEOUT_MS) || 15000,\n  headers: {\n    \"User-Agent\": process.env.FEED_USER_AGENT || \"InsightFeeder/1.0\",\n  },\n  // Capture common media-related fields\n  customFields: {\n    item: [\n      [\"media:content\", \"mediaContent\", { keepArray: true }],\n      [\"media:thumbnail\", \"mediaThumbnail\", { keepArray: true }],\n      [\"enclosure\", \"enclosures\", { keepArray: true }],\n      [\"content:encoded\", \"contentEncoded\"],\n      [\"image\", \"image\"],\n    ],\n  },\n});\n\nexport const parseFeed = async (feedUrl, options = {}) => {\n  try {\n    logger.info(\"Parsing feed\", { feedUrl });\n\n    const axiosConfig = {\n      timeout: parseInt(process.env.FETCH_TIMEOUT_MS) || 15000,\n      headers: {\n        \"User-Agent\": process.env.FEED_USER_AGENT || \"InsightFeeder/1.0\",\n      },\n    };\n\n    // Add conditional headers if available\n    if (options.lastEtag) {\n      axiosConfig.headers[\"If-None-Match\"] = options.lastEtag;\n    }\n    if (options.lastModified) {\n      axiosConfig.headers[\"If-Modified-Since\"] = options.lastModified;\n    }\n\n    const response = await axios.get(feedUrl, axiosConfig);\n\n    // Check if content was modified\n    if (response.status === 304) {\n      logger.info(\"Feed not modified\", { feedUrl });\n      return { items: [], notModified: true };\n    }\n\n    const feed = await parser.parseString(response.data);\n\n    // Optional raw RSS logging\n    if ((process.env.RSS_LOG_ENABLED || \"true\").toLowerCase() === \"true\") {\n      try {\n        const dir = path.resolve(\n          process.cwd(),\n          process.env.RSS_LOG_DIR || \"rss-logs\"\n        );\n        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });\n        const ts = new Date().toISOString().replace(/[:.]/g, \"-\");\n        const base = feedUrl.replace(/[^a-z0-9]/gi, \"_\").slice(0, 60);\n        const file = path.join(dir, `${ts}__raw__${base}.xml`);\n        fs.writeFileSync(\n          file,\n          response.data.slice(\n            0,\n            parseInt(process.env.RSS_LOG_MAX_BYTES || \"500000\")\n          ),\n          \"utf8\"\n        );\n      } catch (e) {\n        logger.warn(\"Failed to write raw RSS log\", {\n          feedUrl,\n          error: e.message,\n        });\n      }\n    }\n\n    const items = feed.items.map((item) => {\n      const mediaCandidates = extractRssMediaCandidates(item);\n      // language: prefer explicit hints; else heuristic with confidence\n      let lang = item.isoLanguage || item.lang || null;\n      if (!lang) {\n        const dl = detectLanguageWithConfidence(\n          item.title,\n          item.contentSnippet || item.summary || item.description\n        );\n        lang = dl.confidence >= 0.25 ? dl.lang : \"en\";\n      }\n      return {\n        title: item.title || \"\",\n        url: item.link || item.guid || \"\",\n        snippet: item.contentSnippet || item.summary || item.description || \"\",\n        published_at: item.pubDate ? new Date(item.pubDate) : new Date(),\n        language: normalizeBcp47(lang),\n        content_hash: generateContentHash(item.title, item.contentSnippet),\n        media_candidates: mediaCandidates,\n      };\n    });\n\n    // Structured JSON log (metadata + normalized items only, no full raw) to aid debugging\n    if ((process.env.RSS_LOG_ENABLED || \"true\").toLowerCase() === \"true\") {\n      try {\n        const dir = path.resolve(\n          process.cwd(),\n          process.env.RSS_LOG_DIR || \"rss-logs\"\n        );\n        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });\n        const ts = new Date().toISOString().replace(/[:.]/g, \"-\");\n        const base = feedUrl.replace(/[^a-z0-9]/gi, \"_\").slice(0, 60);\n        const metaFile = path.join(dir, `${ts}__parsed__${base}.json`);\n        const meta = {\n          feedUrl,\n          itemCount: items.length,\n          etag: response.headers.etag,\n          lastModified: response.headers[\"last-modified\"],\n          sampleItems: items.slice(0, 5).map((it) => ({\n            title: it.title,\n            language: it.language,\n            published_at: it.published_at,\n          })),\n        };\n        fs.writeFileSync(metaFile, JSON.stringify(meta, null, 2), \"utf8\");\n      } catch (e) {\n        logger.warn(\"Failed to write parsed RSS log\", {\n          feedUrl,\n          error: e.message,\n        });\n      }\n    }\n\n    logger.info(\"Feed parsed successfully\", {\n      feedUrl,\n      itemCount: items.length,\n      etag: response.headers.etag,\n      lastModified: response.headers[\"last-modified\"],\n    });\n\n    return {\n      items,\n      etag: response.headers.etag,\n      lastModified: response.headers[\"last-modified\"],\n      notModified: false,\n    };\n  } catch (error) {\n    if (error.response?.status === 304) {\n      return { items: [], notModified: true };\n    }\n\n    logger.error(\"Failed to parse feed\", {\n      feedUrl,\n      error: error.message,\n      status: error.response?.status,\n    });\n    throw error;\n  }\n};\n\nfunction extractRssMediaCandidates(item) {\n  const urls = [];\n  const add = (u) => {\n    if (!u) return;\n    try {\n      const url = new URL(u).href;\n      // basic filter: avoid svg/gif/data\n      if (/\\.svg(\\?|#|$)/i.test(url)) return;\n      if (/\\.gif(\\?|#|$)/i.test(url)) return;\n      if (/^data:/i.test(url)) return;\n      urls.push(url);\n    } catch (_) {}\n  };\n\n  // enclosures\n  if (Array.isArray(item.enclosures)) {\n    for (const e of item.enclosures) {\n      const type = (e?.type || e?.[\"@type\"] || \"\").toLowerCase();\n      if (!type || type.startsWith(\"image/\")) add(e?.url || e?.href);\n    }\n  } else if (item.enclosure) {\n    const e = item.enclosure;\n    const type = (e?.type || \"\").toLowerCase();\n    if (!type || type.startsWith(\"image/\")) add(e?.url);\n  }\n\n  // media:content\n  const mcs = item.mediaContent || item[\"media:content\"];\n  if (Array.isArray(mcs)) {\n    for (const mc of mcs) {\n      if (typeof mc === \"string\") add(mc);\n      else add(mc?.url || mc?.href || mc?.$?.url);\n    }\n  } else if (mcs) {\n    const mc = mcs;\n    if (typeof mc === \"string\") add(mc);\n    else add(mc?.url || mc?.href || mc?.$?.url);\n  }\n\n  // media:thumbnail\n  const mts = item.mediaThumbnail || item[\"media:thumbnail\"];\n  if (Array.isArray(mts)) {\n    for (const mt of mts) {\n      if (typeof mt === \"string\") add(mt);\n      else add(mt?.url || mt?.href || mt?.$?.url);\n    }\n  } else if (mts) {\n    const mt = mts;\n    if (typeof mt === \"string\") add(mt);\n    else add(mt?.url || mt?.href || mt?.$?.url);\n  }\n\n  // Some feeds include <image><url>\n  if (item.image) {\n    if (typeof item.image === \"string\") add(item.image);\n    else add(item.image?.url || item.image?.href);\n  }\n\n  // Unique\n  return Array.from(new Set(urls));\n}\n\nexport const validateFeedUrl = async (feedUrl) => {\n  try {\n    const response = await axios.head(feedUrl, {\n      timeout: 5000,\n      headers: {\n        \"User-Agent\": process.env.FEED_USER_AGENT || \"InsightFeeder/1.0\",\n      },\n    });\n\n    const contentType = response.headers[\"content-type\"] || \"\";\n    const isValidFeed =\n      contentType.includes(\"xml\") ||\n      contentType.includes(\"rss\") ||\n      contentType.includes(\"atom\");\n\n    return {\n      valid: isValidFeed,\n      contentType,\n      status: response.status,\n    };\n  } catch (error) {\n    logger.warn(\"Feed validation failed\", { feedUrl, error: error.message });\n    return {\n      valid: false,\n      error: error.message,\n    };\n  }\n};\n\nconst detectLanguageWithConfidence = (title = \"\", content = \"\") => {\n  const raw = `${title} ${content}`;\n  const text = raw.toLowerCase();\n\n  // Strong signals first: Arabic script and Turkish diacritics\n  const arabicChars = (raw.match(/[\\u0600-\\u06FF]/g) || []).length;\n  if (arabicChars >= 5) return { lang: \"ar\", confidence: 1.0 };\n\n  // Turkish-specific letters (exclude ö, ü which also appear in German)\n  const trSpecific = (raw.match(/[ğĞşŞıİçÇ]/g) || []).length;\n  if (trSpecific >= 1) return { lang: \"tr\", confidence: 0.95 };\n\n  // Function words heuristic; exclude highly ambiguous tokens to reduce false positives\n  const patterns = {\n    en: /\\b(the|and|or|but|in|on|at|to|for|of|with|by)\\b/g,\n    es: /\\b(el|la|los|las|y|o|pero|en|con|por|para)\\b/g, // exclude 'de'\n    fr: /\\b(le|la|les|et|ou|mais|dans|sur|avec|par|pour)\\b/g, // exclude 'de'\n    de: /\\b(der|die|das|und|oder|aber|in|auf|mit|von|für)\\b/g,\n    it: /\\b(il|la|lo|gli|le|e|o|ma|in|su|con|per)\\b/g, // exclude 'di'/'da'\n    tr: /\\b(ve|ile|ama|fakat|için|olarak|üzerine|göre|daha|değil|ancak|bir)\\b/g,\n  };\n\n  const counts = {};\n  const deUmlauts = (raw.match(/[äÄöÖüÜß]/g) || []).length;\n  let maxMatches = 0;\n  let detected = \"en\";\n  Object.entries(patterns).forEach(([lang, pattern]) => {\n    const matches = (text.match(pattern) || []).length;\n    counts[lang] = matches;\n    if (matches > maxMatches) {\n      maxMatches = matches;\n      detected = lang;\n    }\n  });\n  // If German words are present and umlauts appear, favor de over tr when no Turkish-specific letters\n  if (detected !== \"de\" && trSpecific === 0 && counts[\"de\"] >= 2 && deUmlauts >= 1) {\n    detected = \"de\";\n    maxMatches = Math.max(maxMatches, counts[\"de\"] + 1);\n  }\n  const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;\n  const confidence = Math.min(1, maxMatches / Math.max(3, total));\n  return { lang: detected, confidence };\n};\n\nexport const extractFeedMetadata = async (feedUrl) => {\n  try {\n    const feed = await parser.parseURL(feedUrl);\n\n      return {\n      title: feed.title || \"\",\n      description: feed.description || \"\",\n      link: feed.link || \"\",\n        language: normalizeBcp47(\n          feed.language || detectLanguageWithConfidence(feed.title, feed.description).lang\n        ),\n      lastBuildDate: feed.lastBuildDate ? new Date(feed.lastBuildDate) : null,\n      itemCount: feed.items?.length || 0,\n    };\n  } catch (error) {\n    logger.error(\"Failed to extract feed metadata\", {\n      feedUrl,\n      error: error.message,\n    });\n    throw error;\n  }\n};\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/gemini.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/htmlExtractor.js",
+    "messages": [
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 127,
+        "column": 15,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 127,
+        "endColumn": 17,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [3714, 3714], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import axios from \"axios\";\nimport { JSDOM } from \"jsdom\";\nimport { Readability } from \"@mozilla/readability\";\nimport { createContextLogger } from \"../config/logger.js\";\nimport { normalizeBcp47 } from \"../utils/lang.js\";\n\nconst logger = createContextLogger(\"HtmlExtractor\");\n\nconst MAX_FETCH_MS = parseInt(process.env.FETCH_TIMEOUT_MS) || 15000;\nconst MAX_CHARS = parseInt(process.env.HTML_EXTRACT_MAX_CHARS || \"12000\");\nconst MIN_USEFUL_CHARS = parseInt(process.env.HTML_EXTRACT_MIN_CHARS || \"800\");\n\n// Utility: collapse whitespace & basic cleanup\nfunction normalizeText(txt) {\n  if (!txt) return \"\";\n  return txt\n    .replace(/\\s+/g, \" \")\n    .replace(/\\u00a0/g, \" \")\n    .trim();\n}\n\nfunction extractJSONLD(doc) {\n  const scripts = [\n    ...doc.querySelectorAll('script[type=\"application/ld+json\"]'),\n  ];\n  const bodies = [];\n  for (const s of scripts) {\n    try {\n      const json = JSON.parse(s.textContent || \"{}\");\n      const items = Array.isArray(json) ? json : [json];\n      for (const item of items) {\n        if (item && typeof item === \"object\") {\n          if (item.articleBody) bodies.push(item.articleBody);\n          else if (item.description && item.description.length > 120)\n            bodies.push(item.description);\n        }\n      }\n    } catch (_) {\n      // ignore parse errors\n    }\n  }\n  const combined = bodies.join(\"\\n\\n\");\n  return normalizeText(combined);\n}\n\nfunction extractStructuredMeta(doc) {\n  const ogDesc =\n    doc\n      .querySelector('meta[property=\"og:description\"]')\n      ?.getAttribute(\"content\") || \"\";\n  const metaDesc =\n    doc.querySelector('meta[name=\"description\"]')?.getAttribute(\"content\") ||\n    \"\";\n  let candidate = ogDesc.length > metaDesc.length ? ogDesc : metaDesc;\n  candidate = normalizeText(candidate);\n  return candidate;\n}\n\nfunction extractBySelectors(doc) {\n  const containers = [];\n  const SELECTORS = [\n    \"article\",\n    \"main\",\n    \"div[itemprop='articleBody']\",\n    \"section[role='main']\",\n    \"div[id*='article']\",\n    \"div[class*='article']\",\n  ];\n  for (const sel of SELECTORS) {\n    const el = doc.querySelector(sel);\n    if (el) containers.push(el);\n  }\n  const paragraphs = [];\n  containers.forEach((c) => {\n    c.querySelectorAll(\"p\").forEach((p) => {\n      const t = normalizeText(p.textContent || \"\");\n      if (t.length > 40) paragraphs.push(t);\n    });\n  });\n  // Deduplicate successive duplicates\n  const deduped = paragraphs.filter((p, i) => p && p !== paragraphs[i - 1]);\n  return deduped.join(\"\\n\\n\");\n}\n\nfunction pruneDOM(doc) {\n  const REMOVE = [\n    \"script\",\n    \"style\",\n    \"noscript\",\n    \"iframe\",\n    \"header\",\n    \"footer\",\n    \"nav\",\n    \"aside\",\n    \"form\",\n  ].join(\",\");\n  doc.querySelectorAll(REMOVE).forEach((n) => n.remove());\n  // Remove comments\n  const walker = doc.createTreeWalker(doc, 128 /* COMMENT_NODE */);\n  const toRemove = [];\n  while (walker.nextNode()) toRemove.push(walker.currentNode);\n  toRemove.forEach((n) => n.parentNode && n.parentNode.removeChild(n));\n}\n\nfunction extractPageLang(doc) {\n  try {\n    const rawLang =\n      doc.documentElement.getAttribute(\"lang\") ||\n      doc.documentElement.getAttribute(\"xml:lang\") ||\n      \"\";\n    const ogLocale =\n      doc\n        .querySelector('meta[property=\"og:locale\"]')\n        ?.getAttribute(\"content\") || \"\";\n    const httpLang =\n      doc\n        .querySelector('meta[http-equiv=\"content-language\"]')\n        ?.getAttribute(\"content\") || \"\";\n    const candidates = [rawLang, ogLocale, httpLang]\n      .map((s) => (s || \"\").trim())\n      .filter(Boolean);\n    for (const c of candidates) {\n      // og:locale uses underscores often (en_US)\n      const norm = normalizeBcp47(c.replace(/_/g, \"-\"));\n      if (norm) return norm;\n    }\n  } catch (_) {}\n  return null;\n}\n\nexport async function fetchAndExtract(url) {\n  const diagnostics = {\n    url,\n    strategy: null,\n    httpStatus: null,\n    contentType: null,\n    initialHtmlChars: 0,\n    readabilityChars: 0,\n    selectorsChars: 0,\n    jsonldChars: 0,\n    metaDescChars: 0,\n    finalChars: 0,\n    truncated: false,\n    tooShort: false,\n    paywallSuspect: false,\n  };\n  try {\n    const controller = new AbortController();\n    const timer = setTimeout(() => controller.abort(), MAX_FETCH_MS);\n    const resp = await axios.get(url, {\n      timeout: MAX_FETCH_MS,\n      responseType: \"text\",\n      headers: {\n        \"User-Agent\":\n          process.env.FEED_USER_AGENT ||\n          \"InsightFeeder/1.0 (+https://example.com)\",\n        Accept:\n          \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\",\n        \"Accept-Language\": \"en-US,en;q=0.9\",\n      },\n      signal: controller.signal,\n      maxRedirects: 5,\n      validateStatus: (s) => s >= 200 && s < 400,\n    });\n    clearTimeout(timer);\n    diagnostics.httpStatus = resp.status;\n    diagnostics.contentType = resp.headers[\"content-type\"] || null;\n    const html = resp.data || \"\";\n    diagnostics.initialHtmlChars = html.length;\n\n  const dom = new JSDOM(html, { url });\n    pruneDOM(dom.window.document);\n  const pageLang = extractPageLang(dom.window.document);\n\n    // Strategy 1: Readability\n    let bestText = \"\";\n    const reader = new Readability(dom.window.document);\n    let article;\n    try {\n      article = reader.parse();\n    } catch (e) {\n      article = null;\n    }\n    if (article && article.textContent) {\n      bestText = normalizeText(article.textContent);\n      diagnostics.readabilityChars = bestText.length;\n      diagnostics.strategy = \"readability\";\n    }\n\n    // Strategy 2: JSON-LD articleBody\n    const jsonLD = extractJSONLD(dom.window.document);\n    diagnostics.jsonldChars = jsonLD.length;\n    if (jsonLD.length > bestText.length * 1.1 && jsonLD.length > 400) {\n      bestText = jsonLD;\n      diagnostics.strategy = \"jsonld\";\n    }\n\n    // Strategy 3: Selector paragraphs\n    const selectorText = extractBySelectors(dom.window.document);\n    diagnostics.selectorsChars = selectorText.length;\n    if (\n      selectorText.length > bestText.length * 1.05 &&\n      selectorText.length > 500\n    ) {\n      bestText = selectorText;\n      diagnostics.strategy = \"selectors\";\n    }\n\n    // Strategy 4: Meta description fallback (short article only)\n    const metaDesc = extractStructuredMeta(dom.window.document);\n    diagnostics.metaDescChars = metaDesc.length;\n    if (!bestText || bestText.length < 300) {\n      if (metaDesc.length > bestText.length) {\n        bestText = metaDesc;\n        diagnostics.strategy = \"meta\";\n      }\n    }\n\n    // Final normalisation & trimming\n    if (bestText.length > MAX_CHARS) {\n      bestText = bestText.slice(0, MAX_CHARS);\n      diagnostics.truncated = true;\n    }\n    diagnostics.finalChars = bestText.length;\n    diagnostics.tooShort = bestText.length < MIN_USEFUL_CHARS;\n    diagnostics.paywallSuspect =\n      /subscribe|sign in to read|trial access|©/.test(bestText.toLowerCase()) &&\n      bestText.length < 1200;\n\n    if (!bestText) {\n      logger.warn(\"No extractable article text\", { url });\n      return null;\n    }\n\n    return {\n      text: bestText,\n      title: (article && article.title) || dom.window.document.title || null,\n  language: pageLang || null,\n      diagnostics,\n    };\n  } catch (err) {\n    logger.warn(\"Failed to fetch/extract full article\", {\n      url,\n      error: err.message,\n    });\n    return null;\n  }\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/mediaSelector.js",
+    "messages": [
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 131,
+        "column": 17,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 131,
+        "endColumn": 19,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [3798, 3798], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      },
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 573,
+        "column": 19,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 573,
+        "endColumn": 21,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [18218, 18218], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 2,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import axios from \"axios\";\nimport { JSDOM } from \"jsdom\";\nimport probe from \"probe-image-size\";\nimport { createContextLogger } from \"../config/logger.js\";\nimport {\n  supabase,\n  selectRecords,\n  insertRecord,\n  updateRecord,\n} from \"../config/database.js\";\nimport { mirrorImageToStorage } from \"./mediaStorage.js\";\nimport { generateOgCardForArticle } from \"./ogCardGenerator.js\";\nimport { selectStockImage } from \"./stockImages.js\";\nimport { generateContentHash, isValidUrl } from \"../utils/helpers.js\";\nimport { canMirrorMediaForArticle } from \"./policy.js\";\nimport { generateIllustrationForArticle } from \"./aiIllustrator.js\";\n\nconst logger = createContextLogger(\"MediaSelector\");\n\nconst FETCH_TIMEOUT_MS = parseInt(process.env.FETCH_TIMEOUT_MS || \"15000\");\nconst MIN_WIDTH = parseInt(process.env.MEDIA_MIN_WIDTH || \"0\");\nconst ACCEPTED_ASPECTS = (process.env.MEDIA_ACCEPTED_ASPECTS || \"\")\n  .split(\",\")\n  .map((s) => s.trim())\n  .filter(Boolean);\nconst VERIFY_HEAD =\n  (process.env.MEDIA_VERIFY_HEAD || \"false\").toLowerCase() === \"true\";\n\nfunction toAbsolute(url, base) {\n  try {\n    if (!url) return null;\n    const u = new URL(url, base);\n    return u.toString();\n  } catch (_) {\n    return null;\n  }\n}\n\nfunction unique(arr) {\n  return Array.from(new Set(arr.filter(Boolean)));\n}\n\nfunction isAcceptableImageUrl(u) {\n  if (!u || typeof u !== \"string\") return false;\n  if (/^data:/i.test(u)) return false;\n  if (/\\.svg(\\?|#|$)/i.test(u)) return false;\n  if (/\\.gif(\\?|#|$)/i.test(u)) return false;\n  return isValidUrl(u);\n}\n\nfunction hostnameOf(u) {\n  try {\n    return new URL(u).hostname;\n  } catch (_) {\n    return null;\n  }\n}\n\nfunction sameDomainBoost(articleUrl, imgUrl) {\n  const a = hostnameOf(articleUrl);\n  const b = hostnameOf(imgUrl);\n  if (!a || !b) return 0;\n  return a === b ? 2 : 0;\n}\n\nfunction parseAspect(str) {\n  const m = /^\\s*(\\d+)\\s*:\\s*(\\d+)\\s*$/.exec(str || \"\");\n  if (!m) return null;\n  const w = parseInt(m[1], 10);\n  const h = parseInt(m[2], 10);\n  if (!w || !h) return null;\n  return w / h;\n}\n\nfunction withinAcceptedAspect(\n  width,\n  height,\n  accepted = ACCEPTED_ASPECTS,\n  tolerance = 0.12\n) {\n  if (!width || !height) return true; // if unknown, don't block\n  if (!accepted || accepted.length === 0) return true;\n  const ratio = width / height;\n  for (const s of accepted) {\n    const ar = parseAspect(s);\n    if (!ar) continue;\n    const diff = Math.abs(ratio - ar) / ar;\n    if (diff <= tolerance) return true;\n  }\n  return false;\n}\n\nexport function extractMetaImagesFromHtml(html, baseUrl) {\n  const dom = new JSDOM(html, { url: baseUrl });\n  const doc = dom.window.document;\n  const candidates = [];\n\n  const pick = (sel, attr = \"content\") =>\n    doc\n      .querySelectorAll(sel)\n      .forEach((el) => candidates.push(el.getAttribute(attr)));\n\n  // OpenGraph and Twitter\n  pick('meta[property=\"og:image:secure_url\"]');\n  pick('meta[property=\"og:image\"]');\n  pick('meta[name=\"twitter:image:src\"]');\n  pick('meta[name=\"twitter:image\"]');\n\n  // Link rel image_src\n  pick('link[rel=\"image_src\"]', \"href\");\n\n  // JSON-LD images\n  doc.querySelectorAll('script[type=\"application/ld+json\"]').forEach((s) => {\n    try {\n      const json = JSON.parse(s.textContent || \"{}\");\n      const items = Array.isArray(json) ? json : [json];\n      for (const item of items) {\n        if (item && typeof item === \"object\") {\n          const add = (val) => {\n            if (!val) return;\n            if (typeof val === \"string\") candidates.push(val);\n            else if (Array.isArray(val)) val.forEach(add);\n            else if (typeof val === \"object\" && val.url)\n              candidates.push(val.url);\n          };\n          add(item.image);\n          if (item.thumbnailUrl) add(item.thumbnailUrl);\n          if (item.logo) add(item.logo);\n        }\n      }\n    } catch (_) {}\n  });\n\n  // Filter and absolutize\n  const abs = unique(\n    candidates\n      .map((u) => toAbsolute(u, baseUrl))\n      .filter((u) => isAcceptableImageUrl(u))\n  );\n\n  // Lightweight preference: prefer jpg/png, de-prioritize webp; avoid logos/sprites\n  const baseScore = (u) => {\n    let s = 0;\n    if (/\\.jpe?g(\\?|#|$)/i.test(u)) s += 3;\n    if (/\\.png(\\?|#|$)/i.test(u)) s += 2;\n    if (/\\/large|\\/big|\\b1200x|\\b1080x|\\b800x/i.test(u)) s += 1;\n    if (/\\.webp(\\?|#|$)/i.test(u)) s -= 1;\n    if (/logo|sprite|icon/i.test(u)) s -= 2;\n    return s;\n  };\n\n  return abs.sort((a, b) => baseScore(b) - baseScore(a));\n}\n\nasync function fetchPageMetaImages(url) {\n  try {\n    const resp = await axios.get(url, {\n      timeout: FETCH_TIMEOUT_MS,\n      responseType: \"text\",\n      headers: {\n        \"User-Agent\": process.env.FEED_USER_AGENT || \"InsightFeeder/1.0\",\n        Accept:\n          \"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\",\n      },\n      maxRedirects: 5,\n      validateStatus: (s) => s >= 200 && s < 400,\n    });\n    const html = resp.data || \"\";\n    return extractMetaImagesFromHtml(html, url);\n  } catch (e) {\n    logger.warn(\"Failed to fetch page for meta images\", {\n      url,\n      error: e.message,\n    });\n    return [];\n  }\n}\n\nasync function upsertMediaAsset(origin, url) {\n  const id = generateContentHash(origin, url);\n  // Use direct upsert to avoid noisy duplicate key error logs\n  const { data, error } = await supabase\n    .from(\"media_assets\")\n    .upsert({ id, origin, url }, { onConflict: \"id\" })\n    .select()\n    .single();\n  if (error) throw error;\n  return data;\n}\n\nexport async function selectAttachBestImage(article, _opts = {}) {\n  // Default ON so freshly ingested articles attach images without separate backfills\n  const enabled =\n    (process.env.MEDIA_ENABLED || \"true\").toLowerCase() === \"true\";\n  if (!enabled) return null;\n\n  const allowHtmlMeta =\n    (process.env.MEDIA_FROM_HTML_META || \"true\").toLowerCase() === \"true\";\n  const allowFromRss =\n    (process.env.MEDIA_FROM_RSS || \"true\").toLowerCase() === \"true\";\n  const storageEnabled =\n    (process.env.MEDIA_STORAGE_ENABLED || \"true\").toLowerCase() === \"true\";\n  const ogCardEnabled =\n    (process.env.MEDIA_FALLBACK_OGCARD_ENABLED || \"true\").toLowerCase() ===\n    \"true\";\n  const aiEnabled =\n    (process.env.MEDIA_AI_ENABLED || \"false\").toLowerCase() === \"true\";\n  const aiAllowed = (process.env.MEDIA_AI_ALLOWED_CATEGORIES || \"\")\n    .split(\",\")\n    .map((s) => s.trim().toLowerCase())\n    .filter(Boolean);\n\n  const articleUrl = article.canonical_url || article.url;\n\n  let candidates = [];\n  // RSS-provided media candidates (if present on the article object)\n  if (\n    allowFromRss &&\n    Array.isArray(article.media_candidates) &&\n    article.media_candidates.length\n  ) {\n    candidates.push(...article.media_candidates);\n  }\n  if (allowHtmlMeta) {\n    const metas = await fetchPageMetaImages(articleUrl);\n    candidates.push(...metas);\n  }\n\n  candidates = unique(candidates);\n  if (!candidates.length) {\n    logger.debug(\"No media candidates found\", { articleId: article.id });\n    // Optional stock fallback\n    const stockUrl = selectStockImage(article);\n    if (stockUrl) {\n      try {\n        const media = await upsertMediaAsset(\"stock\", stockUrl);\n        if (storageEnabled) {\n          try {\n            const mirrored = await mirrorImageToStorage(stockUrl);\n            if (mirrored?.hash) {\n              const existing = await selectRecords(\"media_assets\", {\n                hash: mirrored.hash,\n              });\n              if (existing && existing[0]) {\n                await insertRecord(\"article_media\", {\n                  article_id: article.id,\n                  media_id: existing[0].id,\n                  role: \"thumbnail\",\n                  position: 0,\n                });\n                return { media: existing[0], url: existing[0].url || stockUrl };\n              } else {\n                await updateRecord(\"media_assets\", media.id, {\n                  storage_path: mirrored.storagePath,\n                  hash: mirrored.hash,\n                });\n              }\n            }\n          } catch (e) {\n            logger.warn(\"Stock mirroring failed\", {\n              url: stockUrl,\n              error: e.message,\n            });\n          }\n        }\n        try {\n          await insertRecord(\"article_media\", {\n            article_id: article.id,\n            media_id: media.id,\n            role: \"thumbnail\",\n            position: 0,\n          });\n        } catch (e) {\n          if (!/duplicate key value/.test(e.message || \"\")) throw e;\n        }\n        logger.info(\"Attached stock fallback\", {\n          articleId: article.id,\n          url: stockUrl,\n        });\n        return { media, url: stockUrl };\n      } catch (e) {\n        logger.warn(\"Failed to attach stock image\", {\n          articleId: article.id,\n          error: e.message,\n        });\n      }\n    }\n    // Optional AI illustration fallback (before OG-card)\n    if (aiEnabled && storageEnabled) {\n      // Only allow for generic categories if configured\n      const cat = String(article.category || \"\").toLowerCase();\n      const aiCategoryOk = aiAllowed.length === 0 || aiAllowed.includes(cat);\n      if (!aiCategoryOk) {\n        logger.debug(\"AI illustration disabled for category\", {\n          category: cat,\n        });\n      }\n      if (!aiCategoryOk) {\n        // skip AI fallback\n      } else {\n        try {\n          const ill = await generateIllustrationForArticle(article);\n          const id = generateContentHash(\n            \"ai_illustration\",\n            article.id,\n            ill.storagePath\n          );\n          let media;\n          try {\n            media = await insertRecord(\"media_assets\", {\n              id,\n              origin: \"ai_generated\",\n              url: ill.publicUrl,\n              storage_path: ill.storagePath,\n              width: ill.width,\n              height: ill.height,\n              caption: ill.caption,\n              license: \"internal\",\n              hash: null,\n            });\n          } catch (e) {\n            if (!/duplicate key value/.test(e.message || \"\")) throw e;\n            const [existing] = await selectRecords(\"media_assets\", { id });\n            media = existing;\n          }\n          try {\n            await insertRecord(\"article_media\", {\n              article_id: article.id,\n              media_id: media.id,\n              role: \"thumbnail\",\n              position: 0,\n            });\n          } catch (e) {\n            if (!/duplicate key value/.test(e.message || \"\")) throw e;\n          }\n          logger.info(\"Attached AI illustration fallback\", {\n            articleId: article.id,\n            url: ill.publicUrl,\n          });\n          return {\n            media,\n            url: ill.publicUrl,\n            width: ill.width,\n            height: ill.height,\n          };\n        } catch (e) {\n          logger.warn(\"AI illustration generation failed\", {\n            articleId: article.id,\n            error: e.message,\n          });\n        }\n      }\n    }\n\n    // Optional OG-card fallback\n    if (ogCardEnabled && storageEnabled) {\n      try {\n        const card = await generateOgCardForArticle(article);\n        const id = generateContentHash(\"og_card\", article.id, card.storagePath);\n        let media;\n        try {\n          media = await insertRecord(\"media_assets\", {\n            id,\n            origin: \"og_card\",\n            url: card.publicUrl,\n            storage_path: card.storagePath,\n            width: 1200,\n            height: 630,\n            caption: \"OG card\",\n            license: \"internal\",\n            hash: null,\n          });\n        } catch (e) {\n          if (!/duplicate key value/.test(e.message || \"\")) throw e;\n          const [existing] = await selectRecords(\"media_assets\", { id });\n          media = existing;\n        }\n        try {\n          await insertRecord(\"article_media\", {\n            article_id: article.id,\n            media_id: media.id,\n            role: \"thumbnail\",\n            position: 0,\n          });\n        } catch (e) {\n          if (!/duplicate key value/.test(e.message || \"\")) throw e;\n        }\n        logger.info(\"Attached OG-card fallback\", {\n          articleId: article.id,\n          url: card.publicUrl,\n        });\n        return { media, url: card.publicUrl, width: 1200, height: 630 };\n      } catch (e) {\n        logger.warn(\"OG-card generation failed\", {\n          articleId: article.id,\n          error: e.message,\n        });\n      }\n    }\n    return null;\n  }\n\n  // Evaluate candidates: verify content-type (optional), probe dimensions (optional), score\n  const evaluated = [];\n  for (const u of candidates) {\n    let ok = true;\n    let reason = null;\n    let width = null;\n    let height = null;\n    let contentType = null;\n    // Optional HEAD to verify content-type is image/*\n    if (ok && VERIFY_HEAD) {\n      try {\n        const head = await axios.head(u, {\n          timeout: Math.min(FETCH_TIMEOUT_MS, 8000),\n          headers: {\n            \"User-Agent\": process.env.FEED_USER_AGENT || \"InsightFeeder/1.0\",\n          },\n          validateStatus: (s) => s >= 200 && s < 400,\n        });\n        contentType = head.headers[\"content-type\"] || null;\n        if (!contentType || !contentType.startsWith(\"image/\")) {\n          ok = false;\n          reason = `non-image content-type: ${contentType || \"unknown\"}`;\n        }\n      } catch (e) {\n        ok = false;\n        reason = `HEAD failed: ${e.message}`;\n      }\n    }\n    // Probe dimensions if min width or aspect filters are configured\n    if (ok && (MIN_WIDTH > 0 || ACCEPTED_ASPECTS.length > 0)) {\n      try {\n        const res = await axios.get(u, {\n          responseType: \"stream\",\n          timeout: Math.min(FETCH_TIMEOUT_MS, 10000),\n          headers: {\n            \"User-Agent\": process.env.FEED_USER_AGENT || \"InsightFeeder/1.0\",\n          },\n          maxRedirects: 3,\n          validateStatus: (s) => s >= 200 && s < 400,\n        });\n        const meta = await probe(res.data);\n        width = meta.width || null;\n        height = meta.height || null;\n        contentType =\n          contentType || meta.type ? `image/${meta.type}` : contentType;\n        if (MIN_WIDTH > 0 && width && width < MIN_WIDTH) {\n          ok = false;\n          reason = `too narrow: ${width}px < ${MIN_WIDTH}px`;\n        }\n        if (ok && !withinAcceptedAspect(width, height)) {\n          ok = false;\n          reason = `aspect not accepted: ${width}x${height}`;\n        }\n      } catch (e) {\n        ok = false;\n        reason = `probe failed: ${e.message}`;\n      }\n    }\n    const score =\n      (u.includes(\".jpg\") || u.includes(\".jpeg\") ? 1 : 0) +\n      sameDomainBoost(articleUrl, u);\n    evaluated.push({ url: u, ok, reason, width, height, contentType, score });\n  }\n\n  // Prefer ok=true, highest score; fallback to first candidate if none ok\n  evaluated.sort((a, b) => {\n    if (a.ok !== b.ok) return a.ok ? -1 : 1; // ok first\n    return b.score - a.score;\n  });\n\n  const chosen = evaluated.find((e) => e.ok) || evaluated[0];\n  if (!chosen) return null;\n\n  if (!chosen.ok) {\n    logger.debug(\n      \"No verified media passed checks; using first candidate anyway\",\n      {\n        articleId: article.id,\n        candidate: chosen.url,\n        reason: chosen.reason,\n      }\n    );\n  }\n\n  try {\n    let media = await upsertMediaAsset(\"publisher\", chosen.url);\n    // Optional: mirror to storage and dedupe by hash\n    if (storageEnabled) {\n      // Respect policy: only mirror publisher media when allowed\n      const allowMirror = await canMirrorMediaForArticle(article);\n      if (!allowMirror) {\n        logger.info(\n          \"Policy: mirroring not allowed for this article/source; skipping mirror\",\n          {\n            articleId: article.id,\n            url: chosen.url,\n          }\n        );\n      } else {\n        try {\n          const mirrored = await mirrorImageToStorage(chosen.url);\n          if (mirrored?.hash) {\n            // Try find existing by hash\n            const existing = await selectRecords(\"media_assets\", {\n              hash: mirrored.hash,\n            });\n            if (existing && existing[0]) {\n              media = existing[0];\n            } else {\n              // Update current media with storage info and hash\n              await updateRecord(\"media_assets\", media.id, {\n                storage_path: mirrored.storagePath,\n                hash: mirrored.hash,\n                width: mirrored.width || undefined,\n                height: mirrored.height || undefined,\n              });\n            }\n            // Prefer returning mirrored public URL if present\n            if (mirrored.publicUrl) {\n              chosen.url = mirrored.publicUrl;\n            }\n            if (mirrored.width && mirrored.height) {\n              chosen.width = chosen.width || mirrored.width;\n              chosen.height = chosen.height || mirrored.height;\n            }\n            if (Array.isArray(mirrored.variants) && mirrored.variants.length) {\n              // Persist variant references if table exists\n              for (const v of mirrored.variants) {\n                try {\n                  await insertRecord(\"media_variants\", {\n                    media_id: media.id,\n                    width: v.width,\n                    storage_path: v.storagePath,\n                    public_url: v.publicUrl,\n                    bytes: v.bytes,\n                  });\n                } catch (ve) {\n                  // ignore if table doesn't exist or pk conflict\n                  if (\n                    !/duplicate key value|relation .* does not exist/i.test(\n                      ve.message || \"\"\n                    )\n                  ) {\n                    logger.debug(\"Variant persist skipped\", {\n                      error: ve.message,\n                    });\n                  }\n                }\n              }\n            }\n          }\n        } catch (e) {\n          logger.warn(\"Mirroring failed\", {\n            url: chosen.url,\n            error: e.message,\n          });\n        }\n      }\n    }\n    // Persist dimensions if we have them and media lacks\n    if (\n      (chosen.width || chosen.height) &&\n      media &&\n      (!media.width || !media.height)\n    ) {\n      try {\n        await updateRecord(\"media_assets\", media.id, {\n          width: chosen.width,\n          height: chosen.height,\n        });\n      } catch (_) {}\n    }\n    try {\n      await insertRecord(\"article_media\", {\n        article_id: article.id,\n        media_id: media.id,\n        role: \"thumbnail\",\n        position: 0,\n      });\n    } catch (e) {\n      if (!/duplicate key value/.test(e.message || \"\")) throw e;\n    }\n    logger.info(\"Attached media to article\", {\n      articleId: article.id,\n      mediaId: media.id,\n      url: chosen.url,\n      width: chosen.width,\n      height: chosen.height,\n      contentType: chosen.contentType,\n    });\n    return {\n      media,\n      url: chosen.url,\n      width: chosen.width,\n      height: chosen.height,\n    };\n  } catch (e) {\n    logger.warn(\"Failed to attach media\", {\n      articleId: article.id,\n      error: e.message,\n    });\n    return null;\n  }\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/mediaStorage.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/mediaTextTranslator.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/ogCardGenerator.js",
+    "messages": [
+      {
+        "ruleId": "no-control-regex",
+        "severity": 2,
+        "message": "Unexpected control character(s) in regular expression: \\x00, \\x1f.",
+        "line": 9,
+        "column": 14,
+        "nodeType": "Literal",
+        "messageId": "unexpected",
+        "endLine": 9,
+        "endColumn": 32
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { createContextLogger } from \"../config/logger.js\";\nimport { supabase } from \"../config/database.js\";\n\nconst logger = createContextLogger(\"OgCard\");\n\nfunction sanitize(str, max = 140) {\n  if (!str) return \"\";\n  return String(str)\n    .replace(/[\\u0000-\\u001F]/g, \"\")\n    .slice(0, max);\n}\n\nfunction svgEscape(text) {\n  return text\n    .replace(/&/g, \"&amp;\")\n    .replace(/</g, \"&lt;\")\n    .replace(/>/g, \"&gt;\")\n    .replace(/\"/g, \"&quot;\")\n    .replace(/'/g, \"&#39;\");\n}\n\nfunction buildSvg({\n  title,\n  source,\n  width = 1200,\n  height = 630,\n  bg = \"#0F172A\",\n  fg = \"#FFFFFF\",\n  accent = \"#38BDF8\",\n}) {\n  const safeTitle = svgEscape(sanitize(title, 160));\n  const safeSource = svgEscape(sanitize(source, 60));\n  return `<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n  <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"${width}\" height=\"${height}\" viewBox=\"0 0 ${width} ${height}\">\n    <defs>\n      <linearGradient id=\"g\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\">\n        <stop offset=\"0%\" stop-color=\"${bg}\"/>\n        <stop offset=\"100%\" stop-color=\"${accent}\" stop-opacity=\"0.25\"/>\n      </linearGradient>\n    </defs>\n    <rect width=\"100%\" height=\"100%\" fill=\"url(#g)\"/>\n    <circle cx=\"${\n      width - 140\n    }\" cy=\"140\" r=\"100\" fill=\"${accent}\" fill-opacity=\"0.15\"/>\n    <g fill=\"${fg}\">\n      <text x=\"64\" y=\"140\" font-family=\"-apple-system,Segoe UI,Inter,Arial,sans-serif\" font-size=\"28\" font-weight=\"600\" opacity=\"0.85\">${safeSource}</text>\n      <rect x=\"64\" y=\"160\" width=\"72\" height=\"6\" rx=\"3\" fill=\"${accent}\"/>\n      <foreignObject x=\"64\" y=\"200\" width=\"${width - 128}\" height=\"${\n    height - 240\n  }\">\n        <div xmlns=\"http://www.w3.org/1999/xhtml\" style=\"font-family: -apple-system,Segoe UI,Inter,Arial,sans-serif; color: ${fg}; font-size: 54px; line-height: 1.15; font-weight: 800;\">\n          ${safeTitle}\n        </div>\n      </foreignObject>\n    </g>\n  </svg>`;\n}\n\nexport async function generateOgCardForArticle(article, _options = {}) {\n  const bucket = process.env.MEDIA_STORAGE_BUCKET || \"news-media\";\n  const width = parseInt(process.env.OGCARD_WIDTH || \"1200\", 10);\n  const height = parseInt(process.env.OGCARD_HEIGHT || \"630\", 10);\n  const bg = process.env.OGCARD_BG || \"#0F172A\";\n  const fg = process.env.OGCARD_FG || \"#FFFFFF\";\n  const accent = process.env.OGCARD_ACCENT || \"#38BDF8\";\n\n  const title = article.title || article.snippet || \"News\";\n  const source = article.source_name || \"Insight\";\n\n  const svg = buildSvg({ title, source, width, height, bg, fg, accent });\n  const bytes = Buffer.from(svg, \"utf8\");\n\n  const y = new Date().getUTCFullYear();\n  const m = String(new Date().getUTCMonth() + 1).padStart(2, \"0\");\n  const id = `${article.id}-ogcard.svg`;\n  const storagePath = `${y}/${m}/${id}`;\n\n  const { error } = await supabase.storage\n    .from(bucket)\n    .upload(storagePath, bytes, {\n      contentType: \"image/svg+xml\",\n      upsert: true,\n    });\n  if (error) throw error;\n\n  const { data: pub } = supabase.storage.from(bucket).getPublicUrl(storagePath);\n  logger.info(\"OG card generated\", {\n    articleId: article.id,\n    path: storagePath,\n    publicUrl: pub?.publicUrl,\n  });\n  return {\n    storagePath,\n    publicUrl: pub?.publicUrl || null,\n    contentType: \"image/svg+xml\",\n    bytes: bytes.length,\n  };\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/policy.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/pretranslator.js",
+    "messages": [
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 48,
+        "column": 15,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 48,
+        "endColumn": 17,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [1644, 1644], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      },
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 387,
+        "column": 15,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 387,
+        "endColumn": 17,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [12264, 12264], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      },
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 401,
+        "column": 23,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 401,
+        "endColumn": 25,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [12654, 12654], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      },
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 457,
+        "column": 21,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 457,
+        "endColumn": 23,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [14315, 14315], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      },
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 459,
+        "column": 17,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 459,
+        "endColumn": 19,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [14342, 14342], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      },
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 479,
+        "column": 19,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 479,
+        "endColumn": 21,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [14842, 14842], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      },
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 498,
+        "column": 19,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 498,
+        "endColumn": 21,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [15373, 15373], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 7,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import { supabase, insertRecord, updateRecord } from \"../config/database.js\";\nimport { createContextLogger } from \"../config/logger.js\";\nimport { normalizeBcp47 } from \"../utils/lang.js\";\nimport { translateFields } from \"./translationHelper.js\";\nimport crypto from \"node:crypto\";\n\nconst logger = createContextLogger(\"Pretranslator\");\nexport const pretranslateMetrics = {\n  cycles: 0,\n  clustersChecked: 0,\n  jobsCreated: 0,\n  translationsInserted: 0,\n  skippedFresh: 0,\n  jobTimeouts: 0,\n};\n\n// Lightweight process-level idempotency guard to avoid duplicate work within a single run\n// Idempotency key format (per plan): `${clusterId}|${targetLang}|${pivotHash}`\nconst _doneKeys = new Map(); // key -> ts\nconst DONE_MAX = 10_000; // cap entries\nfunction markDone(key) {\n  if (_doneKeys.size >= DONE_MAX) {\n    // drop oldest inserted\n    const first = _doneKeys.keys().next().value;\n    if (first) _doneKeys.delete(first);\n  }\n  _doneKeys.set(key, Date.now());\n}\nfunction isDone(key) {\n  return _doneKeys.has(key);\n}\n\n// In-memory, lightweight queue of jobs (durable queue deferred as per plan)\n// Each job carries only minimal payload per spec: cluster_id, target_lang, pivot_hash\nconst _jobQueue = [];\nconst _jobKeys = new Set(); // for enqueue-time idempotency\n\nfunction enqueueJob(job) {\n  const key = `${job.cluster_id}|${job.target_lang}|${job.pivot_hash}`;\n  if (_jobKeys.has(key) || isDone(key)) return false; // skip duplicates within run\n  _jobKeys.add(key);\n  _jobQueue.push(job);\n  try {\n    logger.debug(\"metric: pretranslate.enqueued\", {\n      clusterId: job.cluster_id,\n      target_lang: job.target_lang,\n    });\n  } catch (_) {}\n  return true;\n}\n\nfunction dequeueJob() {\n  return _jobQueue.shift();\n}\n\nasync function withRetry(fn, attempts = 2, backoffMs = 200) {\n  let lastErr;\n  for (let i = 0; i < attempts; i++) {\n    try {\n      return await fn();\n    } catch (e) {\n      lastErr = e;\n      if (i < attempts - 1) {\n        await new Promise((r) => setTimeout(r, backoffMs * Math.pow(2, i)));\n      }\n    }\n  }\n  throw lastErr;\n}\n\nexport async function runPretranslationCycle(options = {}) {\n  const {\n    recentHours = parseInt(process.env.PRETRANS_RECENT_HOURS || \"24\", 10),\n    maxClusters = parseInt(process.env.PRETRANS_MAX_CLUSTERS || \"200\", 10),\n    concurrency = parseInt(process.env.PRETRANS_CONCURRENCY || \"4\", 10),\n    // Default timeout was 2000ms which is often too tight for 3 parallel MT calls; bump to 8000ms\n    perItemTimeoutMs = parseInt(\n      process.env.PRETRANS_ITEM_TIMEOUT_MS || \"8000\",\n      10\n    ),\n  } = options;\n\n  try {\n    const marketFilter = (process.env.MARKET || \"\").trim();\n    const markets = await loadMarkets(marketFilter);\n    if (!markets.length) {\n      logger.info(\"No enabled app_markets found; skipping pretranslation\");\n      return { clustersChecked: 0, translationsInserted: 0, skippedFresh: 0 };\n    }\n    const globalTargets = computeGlobalPretranslate(markets);\n    const pivotDefault = pickPivot(markets);\n\n    // Fetch candidate clusters (robust to schemas where updated_at isn't maintained)\n    let list = [];\n    try {\n      // Prefer last_seen when available\n      const { data: clusters1, error: e1 } = await supabase\n        .from(\"clusters\")\n        .select(\"id, last_seen\")\n        .order(\"last_seen\", { ascending: false })\n        .limit(maxClusters);\n      if (e1) throw e1;\n      list = clusters1 || [];\n    } catch (_) {\n      try {\n        // Fallback: order by updated_at desc if present\n        const { data: clusters2, error: e2 } = await supabase\n          .from(\"clusters\")\n          .select(\"id, updated_at\")\n          .order(\"updated_at\", { ascending: false })\n          .limit(maxClusters);\n        if (e2) throw e2;\n        list = clusters2 || [];\n      } catch (_) {\n        // Final fallback: order by id desc (recency proxy)\n        const { data: clusters3 } = await supabase\n          .from(\"clusters\")\n          .select(\"id\")\n          .order(\"id\", { ascending: false })\n          .limit(maxClusters);\n        list = clusters3 || [];\n      }\n    }\n    logger.info(\"Pretranslation scan\", {\n      markets: markets.map((m) => m.market_code || m.id),\n      pivotDefault,\n      targetCount: globalTargets.size,\n      recentHours,\n      candidates: list.length,\n    });\n\n    let translationsInserted = 0;\n    let skippedFresh = 0;\n    let clustersChecked = 0;\n    let jobsCreated = 0;\n\n    // Simple concurrency pool\n    const queue = [...list];\n    const workers = Array.from(\n      { length: Math.max(1, Math.min(concurrency, 16)) },\n      () =>\n        (async () => {\n          while (queue.length) {\n            const c = queue.shift();\n            if (!c) break;\n            clustersChecked++;\n            try {\n              const { enqueued, skipped } = await collectJobsForCluster(\n                c.id,\n                globalTargets,\n                pivotDefault\n              );\n              jobsCreated += enqueued;\n              skippedFresh += skipped;\n            } catch (e) {\n              logger.warn(\"Collect jobs failed\", {\n                clusterId: c.id,\n                error: e.message,\n              });\n            }\n          }\n        })()\n    );\n    await Promise.all(workers);\n\n    // Now process the queued jobs with bounded concurrency\n    const { inserted: insertedFromJobs } = await processJobQueue(\n      Math.max(1, Math.min(concurrency, 16)),\n      perItemTimeoutMs\n    );\n    translationsInserted += insertedFromJobs;\n\n    logger.info(\"Pretranslation done\", {\n      clustersChecked,\n      jobsCreated,\n      translationsInserted,\n      skippedFresh,\n    });\n    pretranslateMetrics.cycles += 1;\n    pretranslateMetrics.clustersChecked += clustersChecked;\n    pretranslateMetrics.jobsCreated += jobsCreated;\n    pretranslateMetrics.translationsInserted += translationsInserted;\n    pretranslateMetrics.skippedFresh += skippedFresh;\n    return { clustersChecked, jobsCreated, translationsInserted, skippedFresh };\n  } catch (error) {\n    logger.error(\"Pretranslation cycle error\", { error: error.message });\n    return {\n      clustersChecked: 0,\n      translationsInserted: 0,\n      skippedFresh: 0,\n      error: error.message,\n    };\n  }\n}\n\nasync function loadMarkets(marketCode) {\n  try {\n    // Be resilient to schema differences: select all and filter in JS\n    const { data, error } = await supabase.from(\"app_markets\").select(\"*\");\n    if (error) throw error;\n    let rows = data || [];\n    if (marketCode)\n      rows = rows.filter(\n        (r) =>\n          String(r.market_code || r.code || r.id || \"\").trim() === marketCode\n      );\n    // enabled default true if field missing\n    rows = rows.filter((r) => r.enabled !== false);\n    return rows;\n  } catch (e) {\n    logger.warn(\"Failed to load app_markets\", { error: e.message });\n    return [];\n  }\n}\n\nfunction parseLangList(raw) {\n  if (!raw) return [];\n  if (Array.isArray(raw))\n    return raw.map((s) => normalizeBcp47(s)).filter(Boolean);\n  // Handle Postgres text[] returned as string with braces: {de,fr}\n  return String(raw)\n    .replace(/[{}]/g, \"\")\n    .split(/[\\s,]+/)\n    .map((s) => normalizeBcp47(s))\n    .filter(Boolean);\n}\n\nfunction computeGlobalPretranslate(markets) {\n  const set = new Set();\n  for (const m of markets) {\n    const langs = parseLangList(m.pretranslate_langs || m.show_langs || \"\");\n    langs.forEach((l) => set.add(l));\n  }\n  return set;\n}\n\nfunction pickPivot(markets) {\n  // If MARKET specified, prefer its pivot; else take the first enabled's pivot; fallback to en\n  for (const m of markets) {\n    const p = normalizeBcp47(m.pivot_lang || \"\");\n    if (p) return p;\n  }\n  return \"en\";\n}\n\nasync function collectJobsForCluster(clusterId, globalTargets, pivotDefault) {\n  // Pick pivot: prefer market pivot if a current AI exists in it; else any current; else skip\n  const { data: currents, error } = await supabase\n    .from(\"cluster_ai\")\n    .select(\n      \"id, lang, ai_title, ai_summary, ai_details, is_current, created_at, pivot_hash, model\"\n    )\n    .eq(\"cluster_id\", clusterId)\n    .eq(\"is_current\", true);\n  if (error) throw error;\n  const rows = currents || [];\n  if (!rows.length) return { enqueued: 0, skipped: 0 }; // pivot not ready yet\n\n  const norm = (l) => (l || \"\").split(\"-\")[0].toLowerCase();\n  const pivotRow =\n    rows.find((r) => normalizeBcp47(r.lang) === normalizeBcp47(pivotDefault)) ||\n    rows[0];\n  const pivotLang = normalizeBcp47(pivotRow.lang);\n  const pivotSig = crypto\n    .createHash(\"sha1\")\n    .update(\n      `${pivotRow.ai_title || \"\"}\\n${pivotRow.ai_summary || \"\"}\\n${\n        pivotRow.ai_details || \"\"\n      }`\n    )\n    .digest(\"hex\")\n    .slice(0, 10);\n\n  // Build target set minus pivot and minus already fresh langs.\n  // Freshness priority:\n  //  1) pivot_hash matches current pivotSig OR model tag contains #ph=<pivotSig>\n  //  2) fallback: created_at >= pivot created_at (legacy when no pivot_hash)\n  const pivotCreated = Date.parse(pivotRow.created_at || 0) || 0;\n  const freshBySig = new Set(\n    rows\n      .filter(\n        (r) =>\n          (r.pivot_hash && r.pivot_hash === pivotSig) ||\n          (r.model || \"\").includes(`#ph=${pivotSig}`)\n      )\n      .map((r) => normalizeBcp47(r.lang))\n  );\n  const freshByTime = new Set(\n    rows\n      .filter((r) => (Date.parse(r.created_at || 0) || 0) >= pivotCreated)\n      .map((r) => normalizeBcp47(r.lang))\n  );\n  const haveFresh = (lang) => freshBySig.has(lang) || freshByTime.has(lang);\n  const targets = [...globalTargets]\n    .map((l) => normalizeBcp47(l))\n    .filter((l) => l && norm(l) !== norm(pivotLang) && !haveFresh(l));\n  if (!targets.length) return { enqueued: 0, skipped: 1 };\n\n  let enqueued = 0;\n  for (const dst of targets) {\n    const ok = enqueueJob({\n      cluster_id: clusterId,\n      target_lang: dst,\n      pivot_hash: pivotSig,\n    });\n    if (ok) enqueued++;\n  }\n  return { enqueued, skipped: enqueued ? 0 : 1 };\n}\n\nasync function processJob(job, perItemTimeoutMs) {\n  const idempotencyKey = `${job.cluster_id}|${job.target_lang}|${job.pivot_hash}`;\n  if (isDone(idempotencyKey)) return { inserted: 0, skipped: 1 };\n\n  // Fetch latest current rows to find the pivot row matching this pivot_hash\n  const { data: rows, error } = await supabase\n    .from(\"cluster_ai\")\n    .select(\n      \"id, lang, ai_title, ai_summary, ai_details, is_current, created_at, pivot_hash, model\"\n    )\n    .eq(\"cluster_id\", job.cluster_id)\n    .eq(\"is_current\", true);\n  if (error) throw error;\n  const currents = rows || [];\n  // Try to locate pivot row by stored pivot_hash/model tag; if absent (legacy rows), recompute signatures\n  let pivotRow = currents.find(\n    (r) =>\n      r.pivot_hash === job.pivot_hash ||\n      (r.model || \"\").includes(`#ph=${job.pivot_hash}`)\n  );\n  if (!pivotRow) {\n    for (const r of currents) {\n      const sig = crypto\n        .createHash(\"sha1\")\n        .update(\n          `${r.ai_title || \"\"}\\n${r.ai_summary || \"\"}\\n${r.ai_details || \"\"}`\n        )\n        .digest(\"hex\")\n        .slice(0, 10);\n      if (sig === job.pivot_hash) {\n        pivotRow = r;\n        break;\n      }\n    }\n  }\n  if (!pivotRow) {\n    // Pivot changed or missing; skip per plan (a new job will be created next loop)\n    markDone(idempotencyKey);\n    return { inserted: 0, skipped: 1 };\n  }\n  // Recompute signature and ensure it matches\n  const latestSig = crypto\n    .createHash(\"sha1\")\n    .update(\n      `${pivotRow.ai_title || \"\"}\\n${pivotRow.ai_summary || \"\"}\\n${\n        pivotRow.ai_details || \"\"\n      }`\n    )\n    .digest(\"hex\")\n    .slice(0, 10);\n  if (latestSig !== job.pivot_hash) {\n    markDone(idempotencyKey);\n    return { inserted: 0, skipped: 1 };\n  }\n\n  const pivotLang = normalizeBcp47(pivotRow.lang);\n  const dst = normalizeBcp47(job.target_lang);\n\n  // Short-circuit if we already have a current row for dst with same pivot sig\n  try {\n    const { data: existing } = await supabase\n      .from(\"cluster_ai\")\n      .select(\"id,pivot_hash,model\")\n      .eq(\"cluster_id\", job.cluster_id)\n      .eq(\"lang\", dst)\n      .eq(\"is_current\", true);\n    if (\n      (existing || []).some(\n        (r) =>\n          r.pivot_hash === job.pivot_hash ||\n          (r.model || \"\").includes(`#ph=${job.pivot_hash}`)\n      )\n    ) {\n      markDone(idempotencyKey);\n      return { inserted: 0, skipped: 1 };\n    }\n  } catch (_) {}\n\n  const to = (p, ms) =>\n    Promise.race([\n      p,\n      new Promise((_, rej) =>\n        setTimeout(() => {\n          try {\n            pretranslateMetrics.jobTimeouts += 1;\n            logger.warn(\"metric: pretranslate.timeout\", {\n              clusterId: job.cluster_id,\n              target_lang: job.target_lang,\n              timeout_ms: ms,\n            });\n          } catch (_) {}\n          rej(new Error(\"timeout\"));\n        }, ms)\n      ),\n    ]);\n\n  try {\n    const {\n      title: cTitle,\n      summary: cSummary,\n      details: cDetails,\n    } = await to(\n      withRetry(\n        () =>\n          translateFields(\n            {\n              title: pivotRow.ai_title || \"\",\n              summary: pivotRow.ai_summary || \"\",\n              details: pivotRow.ai_details || pivotRow.ai_summary || \"\",\n            },\n            { srcLang: pivotLang, dstLang: dst }\n          ),\n        2,\n        200\n      ),\n      perItemTimeoutMs\n    );\n\n    const clean = (v) => (v || \"\").trim();\n    // Guard: if nothing actually translated, skip insert to avoid creating fake target rows with pivot text\n    if (!clean(cTitle) && !clean(cSummary) && !clean(cDetails)) {\n      logger.debug(\"Skip insert: no translations produced\", {\n        clusterId: job.cluster_id,\n        dst,\n      });\n      markDone(idempotencyKey);\n      return { inserted: 0, skipped: 1 };\n    }\n    const ai_title = clean(cTitle) || clean(pivotRow.ai_title);\n    const ai_summary = clean(cSummary) || clean(pivotRow.ai_summary);\n    const ai_details =\n      clean(cDetails) ||\n      clean(pivotRow.ai_details) ||\n      clean(pivotRow.ai_summary);\n\n    // Flip previous current for this lang, then insert new current\n    try {\n      const { data: existing } = await supabase\n        .from(\"cluster_ai\")\n        .select(\"id\")\n        .eq(\"cluster_id\", job.cluster_id)\n        .eq(\"lang\", dst)\n        .eq(\"is_current\", true);\n      for (const row of existing || []) {\n        try {\n          await updateRecord(\"cluster_ai\", row.id, { is_current: false });\n        } catch (_) {}\n      }\n    } catch (_) {}\n\n    try {\n      await insertRecord(\"cluster_ai\", {\n        cluster_id: job.cluster_id,\n        lang: dst,\n        ai_title,\n        ai_summary,\n        ai_details,\n        model: `${process.env.MT_PROVIDER || \"pretranslator\"}#ph=${\n          job.pivot_hash\n        }`,\n        pivot_hash: job.pivot_hash,\n        is_current: true,\n      });\n      try {\n        logger.info(\"metric: pretranslate.inserted\", {\n          clusterId: job.cluster_id,\n          lang: dst,\n        });\n      } catch (_) {}\n    } catch (insErr) {\n      // Fallback when pivot_hash column doesn't exist\n      await insertRecord(\"cluster_ai\", {\n        cluster_id: job.cluster_id,\n        lang: dst,\n        ai_title,\n        ai_summary,\n        ai_details,\n        model: `${process.env.MT_PROVIDER || \"pretranslator\"}#ph=${\n          job.pivot_hash\n        }`,\n        is_current: true,\n      });\n      try {\n        logger.info(\"metric: pretranslate.inserted\", {\n          clusterId: job.cluster_id,\n          lang: dst,\n        });\n      } catch (_) {}\n    }\n    markDone(idempotencyKey);\n    return { inserted: 1, skipped: 0 };\n  } catch (e) {\n    logger.debug(\"Job processing skipped\", {\n      clusterId: job.cluster_id,\n      dst,\n      reason: e.message,\n    });\n    return { inserted: 0, skipped: 1 };\n  }\n}\n\nasync function processJobQueue(concurrency, perItemTimeoutMs) {\n  let inserted = 0;\n  const workers = Array.from({ length: concurrency }, () =>\n    (async () => {\n      while (_jobQueue.length) {\n        const job = dequeueJob();\n        if (!job) break;\n        try {\n          const res = await processJob(job, perItemTimeoutMs);\n          inserted += res.inserted;\n        } catch (e) {\n          logger.debug(\"Job failed\", { job, error: e.message });\n        }\n      }\n    })()\n  );\n  await Promise.all(workers);\n  return { inserted };\n}\n\n// Note: To harden against concurrent inserts, consider adding in your DB:\n// CREATE UNIQUE INDEX IF NOT EXISTS uq_cluster_ai_current\n//   ON public.cluster_ai (cluster_id, lang)\n//   WHERE is_current = true;\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/stockImages.js",
+    "messages": [
+      {
+        "ruleId": "no-empty",
+        "severity": 2,
+        "message": "Empty block statement.",
+        "line": 63,
+        "column": 17,
+        "nodeType": "BlockStatement",
+        "messageId": "unexpected",
+        "endLine": 63,
+        "endColumn": 19,
+        "suggestions": [
+          {
+            "messageId": "suggestComment",
+            "data": { "type": "block" },
+            "fix": { "range": [1978, 1978], "text": " /* empty */ " },
+            "desc": "Add comment inside empty block statement."
+          }
+        ]
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import fs from \"node:fs\";\nimport path from \"node:path\";\nimport { createContextLogger } from \"../config/logger.js\";\nimport { isValidUrl } from \"../utils/helpers.js\";\n\nconst logger = createContextLogger(\"StockImages\");\nlet cachedConfig = null;\nlet cachedPath = null;\n\nfunction readJsonSafe(filePath) {\n  try {\n    const raw = fs.readFileSync(filePath, \"utf8\");\n    return JSON.parse(raw);\n  } catch (e) {\n    return null;\n  }\n}\n\nexport function loadStockConfig() {\n  const cfgPath =\n    process.env.STOCK_CONFIG_PATH ||\n    path.resolve(process.cwd(), \"stock-config.json\");\n  if (cachedConfig && cachedPath === cfgPath) return cachedConfig;\n  const exists = fs.existsSync(cfgPath);\n  if (!exists) {\n    logger.debug(\n      \"Stock config not found; stock fallback disabled unless provided\",\n      { cfgPath }\n    );\n    cachedConfig = { matchers: [], default: [] };\n    cachedPath = cfgPath;\n    return cachedConfig;\n  }\n  const json = readJsonSafe(cfgPath) || { matchers: [], default: [] };\n  // normalize\n  json.matchers = Array.isArray(json.matchers) ? json.matchers : [];\n  json.default = Array.isArray(json.default) ? json.default : [];\n  cachedConfig = json;\n  cachedPath = cfgPath;\n  logger.info(\"Loaded stock config\", {\n    cfgPath,\n    matchers: json.matchers.length,\n    defaultCount: json.default.length,\n  });\n  return cachedConfig;\n}\n\nexport function selectStockImage(article) {\n  // Default ON: safer UX during resets and sparse feeds; can be disabled in prod env\n  const enabled =\n    (process.env.MEDIA_STOCK_ENABLED || \"true\").toLowerCase() === \"true\";\n  if (!enabled) return null;\n  const cfg = loadStockConfig();\n  const text = `${article.title || \"\"} ${article.snippet || \"\"}`;\n  const hits = [];\n  for (const m of cfg.matchers) {\n    if (!m?.pattern || !Array.isArray(m?.urls)) continue;\n    try {\n      const re = new RegExp(m.pattern, \"i\");\n      if (re.test(text)) {\n        for (const u of m.urls) if (isValidUrl(u)) hits.push(u);\n      }\n    } catch (_) {}\n  }\n  const pool = hits.length ? hits : cfg.default.filter(isValidUrl);\n  if (!pool.length) return null;\n  // simple deterministic pick using article id hash\n  const idx =\n    Math.abs(\n      (article.id || \"\")\n        .split(\"-\")\n        .join(\"\")\n        .split(\"\")\n        .reduce((a, c) => a + c.charCodeAt(0), 0)\n    ) % pool.length;\n  return pool[idx];\n}\n",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/translationHelper.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/services/updateExtractor.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/utils/helpers.js",
+    "messages": [
+      {
+        "ruleId": "no-control-regex",
+        "severity": 2,
+        "message": "Unexpected control character(s) in regular expression: \\x00, \\x1f.",
+        "line": 16,
+        "column": 14,
+        "nodeType": "Literal",
+        "messageId": "unexpected",
+        "endLine": 16,
+        "endColumn": 32
+      }
+    ],
+    "suppressedMessages": [],
+    "errorCount": 1,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "source": "import crypto from 'crypto';\n\nexport const generateContentHash = (title = '', snippet = '') => {\n  const content = `${title}${snippet}`.trim();\n  return crypto.createHash('sha256').update(content).digest('hex').substring(0, 16);\n};\n\nexport const generateUUID = () => {\n  return crypto.randomUUID();\n};\n\nexport const sanitizeText = (text) => {\n  if (!text) return '';\n  \n  return text\n    .replace(/[\\x00-\\x1F\\x7F]/g, '') // Remove control characters\n    .replace(/\\s+/g, ' ') // Normalize whitespace\n    .trim()\n    .substring(0, 5000); // Limit length\n};\n\nexport const isValidUrl = (string) => {\n  try {\n    new URL(string);\n    return true;\n  } catch (_) {\n    return false;\n  }\n};\n\nexport const extractDomain = (url) => {\n  try {\n    return new URL(url).hostname;\n  } catch (_) {\n    return null;\n  }\n};\n\nexport const sleep = (ms) => {\n  return new Promise(resolve => setTimeout(resolve, ms));\n};\n\nexport const retry = async (fn, maxAttempts = 3, delay = 1000) => {\n  let lastError;\n  \n  for (let attempt = 1; attempt <= maxAttempts; attempt++) {\n    try {\n      return await fn();\n    } catch (error) {\n      lastError = error;\n      \n      if (attempt === maxAttempts) {\n        throw lastError;\n      }\n      \n      await sleep(delay * attempt);\n    }\n  }\n};\n\nexport const chunk = (array, size) => {\n  const chunks = [];\n  for (let i = 0; i < array.length; i += size) {\n    chunks.push(array.slice(i, i + size));\n  }\n  return chunks;\n};\n\nexport const formatDate = (date) => {\n  if (!date) return null;\n  \n  try {\n    return new Date(date).toISOString();\n  } catch (_) {\n    return null;\n  }\n};\n\nexport const parseBoolean = (value) => {\n  if (typeof value === 'boolean') return value;\n  if (typeof value === 'string') {\n    return value.toLowerCase() === 'true' || value === '1';\n  }\n  return Boolean(value);\n};\n\nexport const validateEmail = (email) => {\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return emailRegex.test(email);\n};\n\nexport const truncateText = (text, maxLength = 100) => {\n  if (!text || text.length <= maxLength) return text;\n  \n  return text.substring(0, maxLength - 3) + '...';\n};\n\nexport const normalizeLanguageCode = (lang) => {\n  if (!lang) return 'en';\n  \n  // Convert to lowercase and take first 2 characters\n  const normalized = lang.toLowerCase().substring(0, 2);\n  \n  // Map common variations\n  const langMap = {\n    'en': 'en',\n    'es': 'es',\n    'fr': 'fr',\n    'de': 'de',\n    'it': 'it',\n    'pt': 'pt',\n    'ru': 'ru',\n    'zh': 'zh',\n    'ja': 'ja',\n    'ko': 'ko',\n    'ar': 'ar'\n  };\n  \n  return langMap[normalized] || 'en';\n};\n\nexport const createRateLimiter = (maxRequests, windowMs) => {\n  const requests = new Map();\n  \n  return (key) => {\n    const now = Date.now();\n    const windowStart = now - windowMs;\n    \n    // Clean old requests\n    if (requests.has(key)) {\n      requests.set(key, requests.get(key).filter(time => time > windowStart));\n    } else {\n      requests.set(key, []);\n    }\n    \n    const requestTimes = requests.get(key);\n    \n    if (requestTimes.length >= maxRequests) {\n      return false; // Rate limit exceeded\n    }\n    \n    requestTimes.push(now);\n    return true; // Request allowed\n  };\n};",
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/utils/lang.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  },
+  {
+    "filePath": "/Users/oktay.copurlu/Desktop/insight-implementation/insight-news-collector/src/utils/llmLogger.js",
+    "messages": [],
+    "suppressedMessages": [],
+    "errorCount": 0,
+    "fatalErrorCount": 0,
+    "warningCount": 0,
+    "fixableErrorCount": 0,
+    "fixableWarningCount": 0,
+    "usedDeprecatedRules": []
+  }
+]

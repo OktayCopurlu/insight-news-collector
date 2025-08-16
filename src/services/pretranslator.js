@@ -45,7 +45,9 @@ function enqueueJob(job) {
       clusterId: job.cluster_id,
       target_lang: job.target_lang,
     });
-  } catch (_) {}
+  } catch (_) {
+    /* metrics log may fail; continue */
+  }
   return true;
 }
 
@@ -384,7 +386,9 @@ async function processJob(job, perItemTimeoutMs) {
       markDone(idempotencyKey);
       return { inserted: 0, skipped: 1 };
     }
-  } catch (_) {}
+  } catch (_) {
+    /* ignore existing check failure */
+  }
 
   const to = (p, ms) =>
     Promise.race([
@@ -398,7 +402,9 @@ async function processJob(job, perItemTimeoutMs) {
               target_lang: job.target_lang,
               timeout_ms: ms,
             });
-          } catch (_) {}
+          } catch (_) {
+            /* ignore log failure */
+          }
           rej(new Error("timeout"));
         }, ms)
       ),
@@ -454,9 +460,13 @@ async function processJob(job, perItemTimeoutMs) {
       for (const row of existing || []) {
         try {
           await updateRecord("cluster_ai", row.id, { is_current: false });
-        } catch (_) {}
+        } catch (_) {
+          /* ignore flip failure */
+        }
       }
-    } catch (_) {}
+    } catch (_) {
+      /* ignore select failure */
+    }
 
     try {
       await insertRecord("cluster_ai", {
@@ -476,7 +486,9 @@ async function processJob(job, perItemTimeoutMs) {
           clusterId: job.cluster_id,
           lang: dst,
         });
-      } catch (_) {}
+      } catch (_) {
+        /* ignore update failure */
+      }
     } catch (insErr) {
       // Fallback when pivot_hash column doesn't exist
       await insertRecord("cluster_ai", {
@@ -495,7 +507,9 @@ async function processJob(job, perItemTimeoutMs) {
           clusterId: job.cluster_id,
           lang: dst,
         });
-      } catch (_) {}
+      } catch (_) {
+        /* ignore log failure */
+      }
     }
     markDone(idempotencyKey);
     return { inserted: 1, skipped: 0 };

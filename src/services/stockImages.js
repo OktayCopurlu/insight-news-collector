@@ -16,7 +16,7 @@ function readJsonSafe(filePath) {
   }
 }
 
-export function loadStockConfig() {
+function loadStockConfig() {
   const cfgPath =
     process.env.STOCK_CONFIG_PATH ||
     path.resolve(process.cwd(), "stock-config.json");
@@ -60,7 +60,9 @@ export function selectStockImage(article) {
       if (re.test(text)) {
         for (const u of m.urls) if (isValidUrl(u)) hits.push(u);
       }
-    } catch (_) {}
+    } catch (_) {
+      /* ignore invalid regex or URLs */
+    }
   }
   const pool = hits.length ? hits : cfg.default.filter(isValidUrl);
   if (!pool.length) return null;

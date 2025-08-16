@@ -13,9 +13,15 @@ function buildAbstractSvg({ title, width = 1200, height = 630, hue = 200 }) {
   const bg = `hsl(${hue}, 55%, 14%)`;
   const fg = `hsl(${(hue + 180) % 360}, 90%, 92%)`;
   const acc = `hsl(${(hue + 20) % 360}, 85%, 55%)`;
-  const safeTitle = String(title || "Illustration")
-    .replace(/[\u0000-\u001F]/g, "")
-    .slice(0, 90);
+  const stripControlChars = (s) =>
+    String(s || "")
+      .split("")
+      .filter((ch) => {
+        const code = ch.charCodeAt(0);
+        return code >= 32 && code !== 127; // keep printable ASCII; drop C0 and DEL
+      })
+      .join("");
+  const safeTitle = stripControlChars(title || "Illustration").slice(0, 90);
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
   <defs>

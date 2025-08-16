@@ -1,5 +1,4 @@
 import { selectRecords, insertRecord } from "../config/database.js";
-import { categorizeArticle } from "./gemini.js";
 import { fetchAndExtract } from "./htmlExtractor.js";
 import { normalizeBcp47 } from "../utils/lang.js";
 import { createContextLogger } from "../config/logger.js";
@@ -86,7 +85,9 @@ export const processArticle = async (articleData, sourceId) => {
                 too_short: tooShort || false,
               },
             });
-          } catch (_) {}
+          } catch (_) {
+            /* log best-effort event failure ignored */
+          }
           return null; // signal skipped
         }
       } catch (e) {
@@ -104,7 +105,9 @@ export const processArticle = async (articleData, sourceId) => {
               response_raw: "",
               meta: { url: articleData.url, reason: "error", error: e.message },
             });
-          } catch (_) {}
+          } catch (_) {
+            /* log best-effort event failure ignored */
+          }
           return null;
         }
       }
@@ -211,55 +214,9 @@ export const processArticle = async (articleData, sourceId) => {
 
 // processArticleAI removed — deprecated
 
-export const processArticleCategories = async (article) => {
-  try {
-    logger.debug("Processing article categorization", {
-      articleId: article.id,
-    });
+// processArticleCategories removed (unused)
 
-    const categories = await categorizeArticle(article);
-
-    for (const category of categories) {
-      // Find or create category
-      let categoryRecord = await selectRecords("categories", {
-        path: category.path,
-      });
-
-      if (categoryRecord.length === 0) {
-        categoryRecord = [
-          await insertRecord("categories", { path: category.path }),
-        ];
-      }
-
-      // Insert article-category relationship
-      try {
-        await insertRecord("article_categories", {
-          article_id: article.id,
-          category_id: categoryRecord[0].id,
-          confidence: category.confidence,
-        });
-      } catch (error) {
-        // Ignore duplicate key errors
-        if (!error.message.includes("duplicate key")) {
-          throw error;
-        }
-      }
-    }
-
-    logger.info("Article categorization completed", {
-      articleId: article.id,
-      categoryCount: categories.length,
-    });
-  } catch (error) {
-    logger.error("Categorization failed", {
-      articleId: article.id,
-      error: error.message,
-    });
-    // Don't throw - categorization failure shouldn't stop article processing
-  }
-};
-
-export const calculateArticleScore = async (article) => {
+const calculateArticleScore = async (article) => {
   try {
     const factors = {
       recency: calculateRecencyScore(article.published_at),

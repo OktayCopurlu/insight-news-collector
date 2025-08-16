@@ -5,9 +5,15 @@ const logger = createContextLogger("OgCard");
 
 function sanitize(str, max = 140) {
   if (!str) return "";
-  return String(str)
-    .replace(/[\u0000-\u001F]/g, "")
-    .slice(0, max);
+  // Strip ASCII control characters from text embedded in SVG; intentional and safe
+  const cleaned = String(str)
+    .split("")
+    .filter((ch) => {
+      const code = ch.charCodeAt(0);
+      return code >= 32 && code !== 127;
+    })
+    .join("");
+  return cleaned.slice(0, max);
 }
 
 function svgEscape(text) {

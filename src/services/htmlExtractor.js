@@ -36,7 +36,7 @@ function extractJSONLD(doc) {
         }
       }
     } catch (_) {
-      // ignore parse errors
+      // ignore parse errors intentionally
     }
   }
   const combined = bodies.join("\n\n");
@@ -124,7 +124,9 @@ function extractPageLang(doc) {
       const norm = normalizeBcp47(c.replace(/_/g, "-"));
       if (norm) return norm;
     }
-  } catch (_) {}
+  } catch (_) {
+    /* ignore lang extraction errors */
+  }
   return null;
 }
 
@@ -168,9 +170,9 @@ export async function fetchAndExtract(url) {
     const html = resp.data || "";
     diagnostics.initialHtmlChars = html.length;
 
-  const dom = new JSDOM(html, { url });
+    const dom = new JSDOM(html, { url });
     pruneDOM(dom.window.document);
-  const pageLang = extractPageLang(dom.window.document);
+    const pageLang = extractPageLang(dom.window.document);
 
     // Strategy 1: Readability
     let bestText = "";
@@ -235,7 +237,7 @@ export async function fetchAndExtract(url) {
     return {
       text: bestText,
       title: (article && article.title) || dom.window.document.title || null,
-  language: pageLang || null,
+      language: pageLang || null,
       diagnostics,
     };
   } catch (err) {

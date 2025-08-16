@@ -1,22 +1,27 @@
-import crypto from 'crypto';
+import crypto from "crypto";
 
-export const generateContentHash = (title = '', snippet = '') => {
+export const generateContentHash = (title = "", snippet = "") => {
   const content = `${title}${snippet}`.trim();
-  return crypto.createHash('sha256').update(content).digest('hex').substring(0, 16);
+  return crypto
+    .createHash("sha256")
+    .update(content)
+    .digest("hex")
+    .substring(0, 16);
 };
 
-export const generateUUID = () => {
-  return crypto.randomUUID();
-};
+// (removed) _generateUUID was unused
 
 export const sanitizeText = (text) => {
-  if (!text) return '';
-  
-  return text
-    .replace(/[\x00-\x1F\x7F]/g, '') // Remove control characters
-    .replace(/\s+/g, ' ') // Normalize whitespace
-    .trim()
-    .substring(0, 5000); // Limit length
+  if (!text) return "";
+  // Remove ASCII control chars (U+0000..U+001F, U+007F) without regex literals
+  const cleaned = String(text)
+    .split("")
+    .filter((ch) => {
+      const code = ch.charCodeAt(0);
+      return code >= 32 && code !== 127;
+    })
+    .join("");
+  return cleaned.replace(/\s+/g, " ").trim().substring(0, 5000);
 };
 
 export const isValidUrl = (string) => {
@@ -36,27 +41,7 @@ export const extractDomain = (url) => {
   }
 };
 
-export const sleep = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
-
-export const retry = async (fn, maxAttempts = 3, delay = 1000) => {
-  let lastError;
-  
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    try {
-      return await fn();
-    } catch (error) {
-      lastError = error;
-      
-      if (attempt === maxAttempts) {
-        throw lastError;
-      }
-      
-      await sleep(delay * attempt);
-    }
-  }
-};
+// (removed) sleep/_retry were unused
 
 export const chunk = (array, size) => {
   const chunks = [];
@@ -66,79 +51,71 @@ export const chunk = (array, size) => {
   return chunks;
 };
 
-export const formatDate = (date) => {
-  if (!date) return null;
-  
-  try {
-    return new Date(date).toISOString();
-  } catch (_) {
-    return null;
-  }
-};
+// (removed) _formatDate was unused
 
 export const parseBoolean = (value) => {
-  if (typeof value === 'boolean') return value;
-  if (typeof value === 'string') {
-    return value.toLowerCase() === 'true' || value === '1';
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") {
+    return value.toLowerCase() === "true" || value === "1";
   }
   return Boolean(value);
 };
 
-export const validateEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
+// (removed) _validateEmail was unused
 
 export const truncateText = (text, maxLength = 100) => {
   if (!text || text.length <= maxLength) return text;
-  
-  return text.substring(0, maxLength - 3) + '...';
+
+  return text.substring(0, maxLength - 3) + "...";
 };
 
 export const normalizeLanguageCode = (lang) => {
-  if (!lang) return 'en';
-  
+  if (!lang) return "en";
+
   // Convert to lowercase and take first 2 characters
   const normalized = lang.toLowerCase().substring(0, 2);
-  
+
   // Map common variations
   const langMap = {
-    'en': 'en',
-    'es': 'es',
-    'fr': 'fr',
-    'de': 'de',
-    'it': 'it',
-    'pt': 'pt',
-    'ru': 'ru',
-    'zh': 'zh',
-    'ja': 'ja',
-    'ko': 'ko',
-    'ar': 'ar'
+    en: "en",
+    es: "es",
+    fr: "fr",
+    de: "de",
+    it: "it",
+    pt: "pt",
+    ru: "ru",
+    zh: "zh",
+    ja: "ja",
+    ko: "ko",
+    ar: "ar",
   };
-  
-  return langMap[normalized] || 'en';
+
+  return langMap[normalized] || "en";
 };
 
 export const createRateLimiter = (maxRequests, windowMs) => {
   const requests = new Map();
-  
+
   return (key) => {
     const now = Date.now();
     const windowStart = now - windowMs;
-    
+
     // Clean old requests
     if (requests.has(key)) {
-      requests.set(key, requests.get(key).filter(time => time > windowStart));
+      requests.set(
+        key,
+        requests.get(key).filter((time) => time > windowStart)
+      );
     } else {
       requests.set(key, []);
     }
-    
+
     const requestTimes = requests.get(key);
-    
+
     if (requestTimes.length >= maxRequests) {
       return false; // Rate limit exceeded
     }
-    
+
     requestTimes.push(now);
     return true; // Request allowed
   };

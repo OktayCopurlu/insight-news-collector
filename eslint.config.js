@@ -1,7 +1,7 @@
 // ESLint flat config for Node ESM project
 import js from "@eslint/js";
 import globals from "globals";
-import importPlugin from 'eslint-plugin-import';
+import importPlugin from "eslint-plugin-import";
 
 export default [
   js.configs.recommended,
@@ -47,7 +47,8 @@ export default [
           src: [
             "./src/**/*.js",
             "./scripts/**/*.js",
-            "./tests/**/*.js"
+            "./tests/**/*.js",
+            "./index.js",
           ],
           // Ignore files that are purely executable/entry points
           ignoreExports: [
@@ -56,6 +57,8 @@ export default [
             "manual-setup.js",
             "setup-database.js",
             "scripts/**",
+            // Allow utilities verified only in tests
+            "src/utils/helpers.js",
           ],
         },
       ],
@@ -71,7 +74,7 @@ export default [
     },
     rules: {
       // Tests don't export modules; keep import/no-unused-modules off here
-      'import/no-unused-modules': 'off',
+      "import/no-unused-modules": "off",
     },
   },
 ];

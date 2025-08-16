@@ -114,8 +114,4 @@ const cleanupOldLogs = async () => {
   }
 };
 
-export const stopCronJobs = () => {
-  logger.info("Stopping cron jobs");
-  cron.getTasks().forEach((task) => task.stop());
-  logger.info("All cron jobs stopped");
-};
+// stopCronJobs removed (unused)

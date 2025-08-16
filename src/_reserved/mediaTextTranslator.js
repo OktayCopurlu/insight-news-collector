@@ -3,7 +3,7 @@
 import { translateText } from "../services/translationHelper.js";
 
 // Translate image alt/caption when needed; returns object with fields if translated or original if not.
-export async function translateMediaText({ alt, caption, srcLang, dstLang }) {
+async function _translateMediaText({ alt, caption, srcLang, dstLang }) {
   if (!dstLang) return { alt, caption, isTranslated: false };
   const out = { alt, caption, isTranslated: false };
   const tAlt = alt ? await translateText(alt, { srcLang, dstLang }) : null;

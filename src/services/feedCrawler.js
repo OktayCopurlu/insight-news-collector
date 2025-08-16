@@ -10,7 +10,7 @@ import { isValidUrl } from "../utils/helpers.js";
 
 const logger = createContextLogger("FeedCrawler");
 
-export const crawlFeed = async (feed) => {
+const crawlFeed = async (feed) => {
   const crawlLogger = createContextLogger(`FeedCrawler:${feed.id}`);
 
   try {
