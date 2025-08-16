@@ -18,6 +18,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+/# Log directories (ignored, but keep folders with .gitkeep)
+/llm-logs/
+/rss-logs/
+!llm-logs/.gitkeep
+!rss-logs/.gitkeep
 
 # Runtime data
 pids
