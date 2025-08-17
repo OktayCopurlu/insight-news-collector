@@ -1,4 +1,4 @@
-import { selectRecords, insertRecord } from "../config/database.js";
+import { selectRecords, insertRecord, supabase } from "../config/database.js";
 import { fetchAndExtract } from "./htmlExtractor.js";
 import { normalizeBcp47 } from "../utils/lang.js";
 import { createContextLogger } from "../config/logger.js";
@@ -6,6 +6,7 @@ import { generateContentHash } from "../utils/helpers.js";
 import { logLLMEvent } from "../utils/llmLogger.js";
 import { assignClusterForArticle } from "./clusterer.js";
 import { selectAttachBestImage } from "./mediaSelector.js";
+import { categorizeArticle } from "./gemini.js";
 
 const logger = createContextLogger("ArticleProcessor");
 
@@ -202,6 +203,18 @@ export const processArticle = async (articleData, sourceId) => {
       })
     );
 
+    // Categorize article and persist links (non-blocking best-effort)
+    persistArticleCategories(article, {
+      title: article.title,
+      snippet: article.snippet,
+      language: article.language,
+    }).catch((e) =>
+      logger.warn("Categorization failed (non-fatal)", {
+        articleId: article.id,
+        error: e.message,
+      })
+    );
+
     return article;
   } catch (error) {
     logger.error("Failed to process article", {
@@ -215,6 +228,73 @@ export const processArticle = async (articleData, sourceId) => {
 // processArticleAI removed — deprecated
 
 // processArticleCategories removed (unused)
+async function persistArticleCategories(article, minimal) {
+  try {
+    const enabled = (process.env.CATEGORIZATION_ENABLED || "true")
+      .toString()
+      .toLowerCase() !== "false";
+    if (!enabled) return;
+
+    // Skip if already categorized
+    try {
+      const existing = await selectRecords("article_categories", {
+        article_id: article.id,
+      });
+      if (existing && existing.length) return;
+    } catch (_) {
+      /* ignore missing table or select failure; proceed to attempt insert */
+    }
+
+    // Ask LLM for categories; gemini helper will fallback to general on errors
+    const suggestion = await categorizeArticle({
+      id: article.id,
+      title: minimal.title || "",
+      snippet: minimal.snippet || "",
+      language: minimal.language || "",
+    });
+    const cats = Array.isArray(suggestion) ? suggestion : [];
+    if (!cats.length) return;
+    const paths = [...new Set(cats.map((c) => c.path).filter(Boolean))];
+    if (!paths.length) return;
+
+    // Map category paths to IDs (assume taxonomy seeded via migrations)
+    const { data: catRows, error: catErr } = await supabase
+      .from("categories")
+      .select("id,path")
+      .in("path", paths);
+    if (catErr) throw catErr;
+    const idByPath = new Map((catRows || []).map((r) => [r.path, r.id]));
+    const records = [];
+    for (const { path, confidence } of cats) {
+      const id = idByPath.get(path);
+      if (!id) continue; // skip unknown paths
+      records.push({
+        article_id: article.id,
+        category_id: id,
+        confidence:
+          typeof confidence === "number" && confidence >= 0 && confidence <= 1
+            ? confidence
+            : 0.5,
+      });
+    }
+    if (!records.length) return;
+    // Upsert to avoid duplicate-key races on (article_id, category_id)
+    const { error: upErr } = await supabase
+      .from("article_categories")
+      .upsert(records, { onConflict: "article_id,category_id" });
+    if (upErr) throw upErr;
+    logger.debug("Article categories persisted", {
+      articleId: article.id,
+      count: records.length,
+    });
+  } catch (error) {
+    // Non-fatal; keep ingesting
+    logger.warn("Article categorization skipped", {
+      articleId: article?.id,
+      error: error.message,
+    });
+  }
+}
 
 const calculateArticleScore = async (article) => {
   try {
