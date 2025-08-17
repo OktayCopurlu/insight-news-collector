@@ -48,7 +48,10 @@ const FALLBACK_ORDER = [
 async function confirm() {
   if (process.env.RUN_NON_INTERACTIVE === "1") return true;
   return new Promise((resolve) => {
-    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
     rl.question(
       "This will DELETE all news content (articles, clusters, logs). Continue? (yes/no) ",
       (ans) => {
@@ -60,7 +63,9 @@ async function confirm() {
 }
 
 async function truncateAll() {
-  const sql = `TRUNCATE ${TRUNCATE_ROOT_TABLES.join(", ")} RESTART IDENTITY CASCADE;`;
+  const sql = `TRUNCATE ${TRUNCATE_ROOT_TABLES.join(
+    ", "
+  )} RESTART IDENTITY CASCADE;`;
   logger.info("Attempting TRUNCATE CASCADE", { sql });
   const { error } = await supabase.rpc("exec_sql", { sql });
   if (error) throw error;
@@ -112,7 +117,9 @@ async function run() {
     await truncateAll();
     truncated = true;
   } catch (e) {
-    logger.warn("TRUNCATE failed, falling back to iterative deletes", { error: e.message });
+    logger.warn("TRUNCATE failed, falling back to iterative deletes", {
+      error: e.message,
+    });
   }
 
   if (!truncated) {
@@ -120,7 +127,10 @@ async function run() {
       try {
         await clearTableFallback(t);
       } catch (e) {
-        logger.warn("Failed to clear table in fallback", { table: t, error: e.message });
+        logger.warn("Failed to clear table in fallback", {
+          table: t,
+          error: e.message,
+        });
       }
     }
   }

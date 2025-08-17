@@ -230,9 +230,10 @@ export const processArticle = async (articleData, sourceId) => {
 // processArticleCategories removed (unused)
 async function persistArticleCategories(article, minimal) {
   try {
-    const enabled = (process.env.CATEGORIZATION_ENABLED || "true")
-      .toString()
-      .toLowerCase() !== "false";
+    const enabled =
+      (process.env.CATEGORIZATION_ENABLED || "true")
+        .toString()
+        .toLowerCase() !== "false";
     if (!enabled) return;
 
     // Skip if already categorized

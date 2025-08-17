@@ -72,7 +72,7 @@ export const startCronJobs = () => {
 
   // Pretranslation cycle every 5 minutes
   cron.schedule(
-  pretransExpr,
+    pretransExpr,
     async () => {
       try {
         const enabled =
@@ -90,7 +90,7 @@ export const startCronJobs = () => {
 
   // Cleanup old logs daily at 2 AM
   cron.schedule(
-  cleanupExpr,
+    cleanupExpr,
     async () => {
       try {
         logger.info("Starting scheduled cleanup");
