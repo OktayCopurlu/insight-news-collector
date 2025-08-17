@@ -11,13 +11,27 @@ const logger = createContextLogger("CronScheduler");
 export const startCronJobs = () => {
   logger.info("Starting cron jobs");
 
-  // Crawl feeds every 5 minutes
+  // Resolve cron expressions from env (defaults)
+  const crawlExpr = process.env.CRON_CRAWL_EXPR || "*/5 * * * *";
+  const pretransExpr = process.env.CRON_PRETRANS_EXPR || "*/5 * * * *";
+  const cleanupExpr = process.env.CRON_CLEANUP_EXPR || "0 2 * * *";
+
+  // Crawl feeds on schedule
   cron.schedule(
-    "*/5 * * * *",
+    crawlExpr,
     async () => {
       try {
         logger.info("Starting scheduled feed crawl");
-        const results = await crawlAllFeeds();
+        const perFeedLimit = process.env.CRAWL_PER_FEED_LIMIT
+          ? parseInt(process.env.CRAWL_PER_FEED_LIMIT, 10)
+          : null;
+        const totalLimit = process.env.CRAWL_TOTAL_LIMIT
+          ? parseInt(process.env.CRAWL_TOTAL_LIMIT, 10)
+          : null;
+        const opts = {};
+        if (Number.isFinite(perFeedLimit)) opts.perFeedLimit = perFeedLimit;
+        if (Number.isFinite(totalLimit)) opts.totalLimit = totalLimit;
+        const results = await crawlAllFeeds(opts);
         logger.info("Scheduled feed crawl completed", results);
         // Optionally enrich clusters after crawl
         const enabled =
@@ -58,7 +72,7 @@ export const startCronJobs = () => {
 
   // Pretranslation cycle every 5 minutes
   cron.schedule(
-    "*/5 * * * *",
+  pretransExpr,
     async () => {
       try {
         const enabled =
@@ -76,7 +90,7 @@ export const startCronJobs = () => {
 
   // Cleanup old logs daily at 2 AM
   cron.schedule(
-    "0 2 * * *",
+  cleanupExpr,
     async () => {
       try {
         logger.info("Starting scheduled cleanup");
