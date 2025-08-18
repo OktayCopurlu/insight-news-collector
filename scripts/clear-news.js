@@ -21,8 +21,12 @@ import { createContextLogger } from "../src/config/logger.js";
 dotenv.config();
 const logger = createContextLogger("ClearNews");
 
-// Minimal set for TRUNCATE (CASCADE will include FK dependents of articles)
+// Minimal set for TRUNCATE (CASCADE will include FK dependents of these roots)
+// Include media_assets so that media_variants and article_media referencing it are truncated too.
+// Include translations (cache) to purge stale translation rows.
 const TRUNCATE_ROOT_TABLES = [
+  "translations", // cache table
+  "media_assets", // will cascade to media_variants and article_media
   "cluster_ai",
   "cluster_updates",
   "crawl_log",
@@ -32,12 +36,15 @@ const TRUNCATE_ROOT_TABLES = [
 
 // Broader list for fallback iterative deletes (order: children -> parents)
 const FALLBACK_ORDER = [
+  "media_variants",
   "article_media",
   "article_categories",
   "article_places",
   "article_entities",
   "article_scores",
   "article_policy",
+  "translations",
+  "media_assets",
   "cluster_updates",
   "cluster_ai",
   "crawl_log",
@@ -77,6 +84,9 @@ async function clearTableFallback(name) {
   let query = supabase.from(name).delete();
   // Provide an always-true style filter per table (required by supabase-js)
   switch (name) {
+    case "media_variants":
+      query = query.not("media_id", "is", null);
+      break;
     case "article_media":
     case "article_categories":
     case "article_places":
@@ -84,6 +94,12 @@ async function clearTableFallback(name) {
     case "article_scores":
     case "article_policy":
       query = query.not("article_id", "is", null);
+      break;
+    case "media_assets":
+      query = query.not("id", "is", null);
+      break;
+    case "translations":
+      query = query.not("key", "is", null);
       break;
     case "crawl_log":
     case "articles":

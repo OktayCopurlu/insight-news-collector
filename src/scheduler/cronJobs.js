@@ -1,5 +1,6 @@
 import cron from "node-cron";
 import { crawlAllFeeds } from "../services/feedCrawler.js";
+import { crawlNewsdataOnly } from "../services/newsdataCrawler.js";
 import { enrichPendingClusters } from "../services/clusterEnricher.js";
 import { runPretranslationCycle } from "../services/pretranslator.js";
 // Per-article AI removed — no longer importing queue processors
@@ -31,11 +32,15 @@ export const startCronJobs = () => {
         const opts = {};
         if (Number.isFinite(perFeedLimit)) opts.perFeedLimit = perFeedLimit;
         if (Number.isFinite(totalLimit)) opts.totalLimit = totalLimit;
-        const results = await crawlAllFeeds(opts);
+        const mode = (process.env.SOURCE_MODE || "rss").toLowerCase();
+        const results =
+          mode === "newsdata"
+            ? await crawlNewsdataOnly()
+            : await crawlAllFeeds(opts);
         logger.info("Scheduled feed crawl completed", results);
         // Optionally enrich clusters after crawl
         const enabled =
-          (process.env.CLUSTER_ENRICH_ENABLED || "false").toLowerCase() ===
+          (process.env.CLUSTER_ENRICH_ENABLED || "true").toLowerCase() ===
           "true";
         if (enabled) {
           const langs = (

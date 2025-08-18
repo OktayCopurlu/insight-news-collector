@@ -137,6 +137,7 @@ export async function fetchAndExtract(url) {
     httpStatus: null,
     contentType: null,
     initialHtmlChars: 0,
+    mercuryChars: 0,
     readabilityChars: 0,
     selectorsChars: 0,
     jsonldChars: 0,
@@ -147,6 +148,47 @@ export async function fetchAndExtract(url) {
     paywallSuspect: false,
   };
   try {
+    // Helper to strip HTML tags from a string (simple)
+    const stripHtml = (html) => (html || "").replace(/<[^>]+>/g, " ");
+
+    // Strategy 0: Mercury Parser (fetches and parses remotely)
+    // Enabled by default; disable with ENABLE_MERCURY_EXTRACTION=false
+    if (
+      (process.env.ENABLE_MERCURY_EXTRACTION || "true").toLowerCase() !==
+      "false"
+    ) {
+      try {
+        // dynamic import to play well with ESM/CJS interop
+        const mod = await import("@postlight/mercury-parser");
+        const Mercury = mod?.default || mod;
+        if (Mercury && typeof Mercury.parse === "function") {
+          const r = await Mercury.parse(url);
+          const html = r?.content || "";
+          const text = normalizeText(stripHtml(html));
+          diagnostics.mercuryChars = text.length;
+          if (text && text.length >= MIN_USEFUL_CHARS) {
+            diagnostics.strategy = "mercury";
+            if (text.length > MAX_CHARS) {
+              diagnostics.truncated = true;
+            }
+            const trimmed = text.slice(0, MAX_CHARS);
+            diagnostics.finalChars = trimmed.length;
+            return {
+              text: trimmed,
+              title: r?.title || null,
+              language: normalizeBcp47(r?.lang || r?.language || "") || null,
+              diagnostics,
+            };
+          }
+        }
+      } catch (e) {
+        logger.warn("Mercury parse failed, will fallback to local extraction", {
+          url,
+          error: e?.message || String(e),
+        });
+      }
+    }
+
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), MAX_FETCH_MS);
     const resp = await axios.get(url, {

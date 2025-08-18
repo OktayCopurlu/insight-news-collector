@@ -22,6 +22,11 @@ A comprehensive news aggregation and AI enhancement system built with Node.js, S
    ```bash
    cp .env.example .env
    # Edit .env with your actual values
+
+   # To fetch only from Newsdata.io and disable RSS feeds temporarily:
+   # SOURCE_MODE=newsdata
+   # NEWSDATA_API_KEY=your_key_here
+   # NEWSDATA_DAILY_LIMIT=200
    ```
 
 4. Set up the database:
