@@ -26,6 +26,8 @@
     "media:backfill": "MEDIA_ENABLED=true node scripts/backfill-media.js",
     "media:audit": "node scripts/run-audit-media.js",
     "storage:verify": "node scripts/verify-storage.js",
+    "categories:verify": "node scripts/verify-categories.js",
+    "translations:verify": "node scripts/verify-translations.js",
     "clusters:backfill": "node scripts/backfill-clusters.js",
     "source:policy": "node scripts/source-policy-set.js",
     "acl:smoke": "node scripts/acl-smoke.js",
@@ -36,7 +38,10 @@
     "pretranslate": "node scripts/run-pretranslation.js",
     "test": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --forceExit",
     "test:watch": "NODE_ENV=test node --experimental-vm-modules ./node_modules/jest/bin/jest.js --runInBand --watch",
-    "lint": "eslint \"src/**/*.js\" \"scripts/**/*.js\" --max-warnings=0"
+    "lint": "eslint \"src/**/*.js\" \"scripts/**/*.js\" --max-warnings=0",
+    "markets:print": "node scripts/print-markets.js",
+    "markets:set": "node scripts/set-market-langs.js",
+    "clusters:sample": "node scripts/sample-cluster-ai.js"
   },
   "keywords": [
     "news",

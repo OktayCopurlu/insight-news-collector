@@ -228,6 +228,60 @@ export const processArticle = async (articleData, sourceId) => {
 // processArticleAI removed — deprecated
 
 // processArticleCategories removed (unused)
+
+// Ensure category paths exist in DB (auto-create missing paths and parents)
+async function ensureCategoryPaths(paths) {
+  try {
+    const enabled =
+      (process.env.CATEGORIES_AUTO_CREATE || "true")
+        .toString()
+        .toLowerCase() !== "false";
+    if (!enabled) return;
+    const uniq = Array.from(new Set((paths || []).filter(Boolean)));
+    if (!uniq.length) return;
+
+    // Expand to include parent levels, e.g., sports.transfer -> ["sports", "sports.transfer"]
+    const expand = (p) => {
+      const parts = String(p).split(".").filter(Boolean);
+      const acc = [];
+      for (let i = 0; i < parts.length; i++)
+        acc.push(parts.slice(0, i + 1).join("."));
+      return acc;
+    };
+    const allLevelsSet = new Set();
+    for (const p of uniq) expand(p).forEach((lv) => allLevelsSet.add(lv));
+    const allLevels = Array.from(allLevelsSet);
+
+    // Fetch existing
+    let existing = [];
+    try {
+      const { data } = await supabase
+        .from("categories")
+        .select("path")
+        .in("path", allLevels.length ? allLevels : ["__none__"]);
+      existing = data || [];
+    } catch (_) {
+      // ignore fetch errors; we'll attempt inserts and rely on upsert conflicts to no-op
+    }
+    const have = new Set((existing || []).map((r) => r.path));
+    const missing = allLevels.filter((p) => !have.has(p));
+    if (!missing.length) return;
+
+    // Build rows with parent_path
+    const rows = missing.map((p) => ({
+      path: p,
+      parent_path: p.includes(".") ? p.slice(0, p.lastIndexOf(".")) : null,
+    }));
+    // Upsert; ignore conflicts if created concurrently
+    const { error: upErr } = await supabase
+      .from("categories")
+      .upsert(rows, { onConflict: "path" });
+    if (upErr) throw upErr;
+  } catch (e) {
+    // Non-fatal; categorization continues without auto-create
+    logger.warn("ensureCategoryPaths failed", { error: e.message });
+  }
+}
 async function persistArticleCategories(article, minimal) {
   try {
     const enabled =
@@ -257,6 +311,9 @@ async function persistArticleCategories(article, minimal) {
     if (!cats.length) return;
     const paths = [...new Set(cats.map((c) => c.path).filter(Boolean))];
     if (!paths.length) return;
+
+    // Ensure taxonomy contains these paths (and parents)
+    await ensureCategoryPaths(paths);
 
     // Map category paths to IDs (assume taxonomy seeded via migrations)
     const { data: catRows, error: catErr } = await supabase

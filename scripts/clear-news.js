@@ -7,7 +7,10 @@
  * - crawl_log
  *
  * Not touched:
- * - sources, feeds, projects, project_rules, categories, places, entities, app_markets, media tables, etc.
+ * - sources, feeds, projects, project_rules, places, entities, app_markets, media tables, etc.
+ *
+ * Note:
+ * - categories will ALSO be cleared to ensure a fresh taxonomy for the next crawl.
  *
  * Safety:
  * - Requires SUPABASE_SERVICE_ROLE_KEY
@@ -22,16 +25,26 @@ dotenv.config();
 const logger = createContextLogger("ClearNews");
 
 // Minimal set for TRUNCATE (CASCADE will include FK dependents of these roots)
-// Include media_assets so that media_variants and article_media referencing it are truncated too.
 // Include translations (cache) to purge stale translation rows.
+// Include media_assets so that media_variants and article_media referencing it are truncated too.
+// Also include article_* join tables explicitly to be robust even if FK cascade isn't set.
 const TRUNCATE_ROOT_TABLES = [
   "translations", // cache table
   "media_assets", // will cascade to media_variants and article_media
+  "media_variants",
+  // Article-related join tables (explicit)
+  "article_media",
+  "article_categories",
+  "article_places",
+  "article_entities",
+  "article_scores",
+  "article_policy",
   "cluster_ai",
   "cluster_updates",
   "crawl_log",
   "articles",
   "clusters",
+  "categories", // wipe taxonomy so it can be rebuilt fresh
 ];
 
 // Broader list for fallback iterative deletes (order: children -> parents)
@@ -50,6 +63,7 @@ const FALLBACK_ORDER = [
   "crawl_log",
   "articles",
   "clusters",
+  "categories",
 ];
 
 async function confirm() {
@@ -79,6 +93,25 @@ async function truncateAll() {
   logger.info("TRUNCATE succeeded");
 }
 
+async function refreshMaterializedViews() {
+  const stmts = [
+    "REFRESH MATERIALIZED VIEW IF EXISTS public.v_articles_public;",
+    "REFRESH MATERIALIZED VIEW IF EXISTS public.v_articles_reps;",
+  ];
+  for (const sql of stmts) {
+    try {
+      logger.info("Refreshing materialized view (if exists)", { sql });
+      const { error } = await supabase.rpc("exec_sql", { sql });
+      if (error) throw error;
+    } catch (e) {
+      logger.warn("MatView refresh skipped or failed", {
+        sql,
+        error: e.message,
+      });
+    }
+  }
+}
+
 async function clearTableFallback(name) {
   logger.info(`Clearing table (fallback): ${name}`);
   let query = supabase.from(name).delete();
@@ -106,6 +139,7 @@ async function clearTableFallback(name) {
     case "clusters":
     case "cluster_ai":
     case "cluster_updates":
+    case "categories":
       query = query.not("id", "is", null);
       break;
     default:
@@ -127,6 +161,7 @@ async function run() {
   }
 
   logger.info("Starting news/content clear (config tables will be preserved)");
+  logger.info("Note: categories will be cleared as part of this operation");
 
   let truncated = false;
   try {
@@ -150,6 +185,8 @@ async function run() {
       }
     }
   }
+
+  await refreshMaterializedViews();
 
   logger.info("News/content tables cleared.");
 }

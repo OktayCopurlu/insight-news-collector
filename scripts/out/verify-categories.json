@@ -1,0 +1,57 @@
+{
+  "articles": 198,
+  "articleCategoryLinks": 282,
+  "samples": [
+    {
+      "article_id": "e5be2829-8762-4ca4-ad84-bb07e4e66412",
+      "path": "general",
+      "confidence": 1
+    },
+    {
+      "article_id": "8a644727-b6e7-4a62-bf9e-58e50015cc59",
+      "path": "general",
+      "confidence": 1
+    },
+    {
+      "article_id": "8ad2bef6-769e-4f72-8e48-5a54775e5087",
+      "path": "general",
+      "confidence": 1
+    },
+    {
+      "article_id": "d3c0adbd-f1d8-4fb2-876c-0d332e9a7c94",
+      "path": "general",
+      "confidence": 1
+    },
+    {
+      "article_id": "ed876ac4-54d9-419d-9157-9557e1c4f944",
+      "path": "general",
+      "confidence": 1
+    },
+    {
+      "article_id": "fa6c12e9-e368-4884-a585-205ad64a0593",
+      "path": "general",
+      "confidence": 1
+    },
+    {
+      "article_id": "0f6f15a2-922c-4781-bad7-f95a7ba6aa77",
+      "path": "geo.uk",
+      "confidence": 0
+    },
+    {
+      "article_id": "0f6f15a2-922c-4781-bad7-f95a7ba6aa77",
+      "path": "geo",
+      "confidence": 0.8
+    },
+    {
+      "article_id": "0f6f15a2-922c-4781-bad7-f95a7ba6aa77",
+      "path": "general",
+      "confidence": 0.7
+    },
+    {
+      "article_id": "76b6c9af-d461-4a08-b9fc-4662c6473964",
+      "path": "general",
+      "confidence": 1
+    }
+  ],
+  "generatedAt": "2025-08-19T14:17:04.506Z"
+}
