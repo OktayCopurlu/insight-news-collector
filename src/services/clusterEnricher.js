@@ -7,6 +7,7 @@ import {
 import { generateAIContent } from "./gemini.js";
 import { createContextLogger } from "../config/logger.js";
 import { normalizeBcp47 } from "../utils/lang.js";
+import { decodeHtmlEntities } from "../utils/helpers.js";
 
 const logger = createContextLogger("ClusterEnricher");
 
@@ -48,10 +49,7 @@ export async function enrichPendingClusters(lang = "en", options = {}) {
           ).filter(Boolean)
         : [];
     }
-    const minChars = parseInt(
-      process.env.CLUSTER_MIN_DETAILS_CHARS || "400",
-      10
-    );
+    // Removed minChars checks; we now use original article body as details
     let processed = 0;
     for (const c of clusters) {
       // Check if has current ai
@@ -117,32 +115,38 @@ export async function enrichPendingClusters(lang = "en", options = {}) {
       } else {
         title = generateTitleFromUpdates(updates);
         summary = generateSummaryFromUpdates(updates);
-        details = synthesizeDetailsFallback(
-          updates,
-          articles,
-          summary,
-          articleAIs
-        );
       }
 
-      // Ensure details are sufficiently rich; if too short, compose a fuller fallback
-      // Always append timeline and coverage to match expected cluster_ai format
-      details = appendTimelineCoverage(details, updates, articles);
-      const detailsNoWsLen = (details || "").replace(/\s/g, "").length;
-      if (!details || detailsNoWsLen < minChars) {
-        details = synthesizeDetailsFallback(
-          updates,
-          articles,
-          summary,
-          articleAIs
-        );
+      // NEW: Use the representative (or seed) article original full_text as ai_details (no LLM body rewriting)
+      try {
+        const repId = c.rep_article || c.seed_article;
+        if (repId) {
+          const repRow = (await selectRecords("articles", { id: repId }))[0];
+          if (repRow?.full_text) {
+            details = decodeHtmlEntities(repRow.full_text);
+          }
+        }
+      } catch (e) {
+        logger.debug("rep article fetch failed", { error: e.message });
+      }
+      // Fallbacks if no body available
+      if (!details || !String(details).trim()) {
+        // Try longest article body from recent articles
+        const byLen = [...(articles || [])]
+          .filter((a) => (a.full_text || "").trim())
+          .sort(
+            (a, b) => (b.full_text || "").length - (a.full_text || "").length
+          );
+        details = decodeHtmlEntities(byLen[0]?.full_text || summary || "");
       }
 
       // Mark previous as not current
       try {
         await updatePreviousClusterAI(c.id, lang);
-      } catch (_) {
-        /* ignore RPC failure; fallback handled */
+      } catch (e) {
+        logger.debug("updatePreviousClusterAI failed (non-fatal)", {
+          error: e.message,
+        });
       }
 
       // Insert new
@@ -152,7 +156,7 @@ export async function enrichPendingClusters(lang = "en", options = {}) {
         ai_title: title,
         ai_summary: summary,
         ai_details: details,
-        model: process.env.LLM_MODEL || "stub",
+        model: `${process.env.LLM_MODEL || "stub"}#body=orig`,
         is_current: true,
       });
       processed++;
@@ -282,17 +286,30 @@ async function generateAndInsertClusterAI(c, lang) {
     summary = generateSummaryFromUpdates(updates);
     details = synthesizeDetailsFallback(updates, articles, summary, articleAIs);
   }
-  // Always append timeline + coverage
-  details = appendTimelineCoverage(details, updates, articles);
-  const minChars = parseInt(process.env.CLUSTER_MIN_DETAILS_CHARS || "400", 10);
-  const detailsNoWsLen = (details || "").replace(/\s/g, "").length;
-  if (!details || detailsNoWsLen < minChars) {
-    details = synthesizeDetailsFallback(updates, articles, summary, articleAIs);
+  // NEW: Replace ai_details with the representative article's original full_text (no LLM body)
+  try {
+    const repId = c.rep_article || c.seed_article;
+    if (repId) {
+      const repRow = (await selectRecords("articles", { id: repId }))[0];
+      if (repRow?.full_text) {
+        details = decodeHtmlEntities(repRow.full_text);
+      }
+    }
+  } catch (e) {
+    logger.debug("rep article fetch failed", { error: e.message });
+  }
+  if (!details || !String(details).trim()) {
+    const byLen = [...(articles || [])]
+      .filter((a) => (a.full_text || "").trim())
+      .sort((a, b) => (b.full_text || "").length - (a.full_text || "").length);
+    details = decodeHtmlEntities(byLen[0]?.full_text || summary || "");
   }
   try {
     await updatePreviousClusterAI(c.id, lang);
-  } catch (_) {
-    /* ignore language selection failure */
+  } catch (e) {
+    logger.debug("updatePreviousClusterAI failed (non-fatal)", {
+      error: e.message,
+    });
   }
   await insertRecord("cluster_ai", {
     cluster_id: c.id,
@@ -300,7 +317,7 @@ async function generateAndInsertClusterAI(c, lang) {
     ai_title: title,
     ai_summary: summary,
     ai_details: details || summary,
-    model: process.env.LLM_MODEL || "stub",
+    model: `${process.env.LLM_MODEL || "stub"}#body=orig`,
     is_current: true,
   });
 }
@@ -392,37 +409,7 @@ function synthesizeDetailsFallback(
   return parts.filter(Boolean).join("\n\n");
 }
 
-function appendTimelineCoverage(narrative, updates, articles) {
-  const parts = [];
-  if (narrative) parts.push(String(narrative).trim());
-  if (updates && updates.length) {
-    const top = updates.slice(0, 6);
-    parts.push(
-      "Timeline:\n" +
-        top
-          .map(
-            (u) =>
-              `• ${u.source_id || "src"}: ${u.summary || u.claim || "update"}`
-          )
-          .join("\n")
-    );
-  }
-  if (articles && articles.length) {
-    const topA = articles.slice(0, 3);
-    parts.push(
-      "Coverage:\n" +
-        topA
-          .map(
-            (a) =>
-              `• ${a.source_id || "source"} | ${new Date(
-                a.published_at
-              ).toISOString()} \u2014 ${a.title || a.snippet || "article"}`
-          )
-          .join("\n")
-    );
-  }
-  return parts.filter(Boolean).join("\n\n");
-}
+// appendTimelineCoverage removed — no longer used when details come from article body
 
 function generateTitleFromUpdates(updates) {
   if (!updates || !updates.length) return null;
@@ -497,6 +484,17 @@ function buildClusterSummaryPrompt(
         )}`
     )
     .join("\n\n");
+  // Add short content excerpts from article bodies to ground the summary without rewriting originals
+  const contentExcerpts = (articles || [])
+    .slice(0, 3)
+    .map(
+      (a, i) =>
+        `-- Article ${i + 1} excerpt --\n${trimText(
+          (a.full_text || a.snippet || "").toString(),
+          1000
+        )}`
+    )
+    .join("\n\n");
   const base = `You are summarizing a news story cluster for language ${lang}. Use ONLY facts from updates, article snippets, and the provided coverage narratives. Be neutral and factual. Avoid speculation. Use clear, concise language.`;
   if (mode === "narrative") {
     return `${base}
@@ -507,6 +505,8 @@ Constraints for ai_details: 3-5 short paragraphs totaling 1000-1600 characters; 
 Updates:\n${upLines}
 
 Articles:\n${artLines}
+
+Content excerpts (from original articles):\n${contentExcerpts}
 
 Coverage narratives:\n${aiNarratives}`;
   }
@@ -520,6 +520,8 @@ Bullet rules: ${bullets} bullets max, each <= 200 chars, no duplication, no spec
 Updates:\n${upLines}
 
 Articles:\n${artLines}
+
+Content excerpts (from original articles):\n${contentExcerpts}
 
 Coverage narratives:\n${aiNarratives}`;
 }

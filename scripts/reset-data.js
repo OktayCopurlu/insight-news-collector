@@ -12,6 +12,7 @@ import readline from "node:readline";
 import dotenv from "dotenv";
 import { supabase } from "../src/config/database.js";
 import { crawlAllFeeds } from "../src/services/feedCrawler.js";
+import { crawlNewsdataOnly } from "../src/services/newsdataCrawler.js";
 import { enrichPendingClusters } from "../src/services/clusterEnricher.js";
 import { createContextLogger } from "../src/config/logger.js";
 import { selectRecords } from "../src/config/database.js";
@@ -175,18 +176,43 @@ async function reset() {
   // Refresh views after clearing
   await refreshMaterializedViews();
 
-  logger.info("Tables cleared. Re-crawling all enabled feeds...");
-  // Optional limits for a quick reset: set CRAWL_PER_FEED_LIMIT and/or CRAWL_TOTAL_LIMIT
-  const perFeedLimit = process.env.CRAWL_PER_FEED_LIMIT
-    ? parseInt(process.env.CRAWL_PER_FEED_LIMIT, 10)
-    : null;
-  const totalLimit = process.env.CRAWL_TOTAL_LIMIT
-    ? parseInt(process.env.CRAWL_TOTAL_LIMIT, 10)
-    : null;
-  const crawlOpts = {};
-  if (Number.isFinite(perFeedLimit)) crawlOpts.perFeedLimit = perFeedLimit;
-  if (Number.isFinite(totalLimit)) crawlOpts.totalLimit = totalLimit;
-  const crawlResult = await crawlAllFeeds(crawlOpts);
+  logger.info("Tables cleared. Re-crawling sources...");
+  // Decide crawl source based on SOURCE_MODE
+  const sourceMode = (process.env.SOURCE_MODE || "rss").toLowerCase();
+
+  let crawlResult;
+  if (sourceMode === "newsdata") {
+    // For Newsdata, cap the run by default to avoid pulling too much in tests.
+    // Priority: CRAWL_TOTAL_LIMIT (explicit) > RESET_FETCH_LIMIT (default 5). Ignore env NEWSDATA_DAILY_LIMIT during reset.
+    const resetDefault = parseInt(process.env.RESET_FETCH_LIMIT || "5", 10);
+    const totalLimitEnv = process.env.CRAWL_TOTAL_LIMIT
+      ? parseInt(process.env.CRAWL_TOTAL_LIMIT, 5)
+      : null;
+    const effective =
+      Number.isFinite(totalLimitEnv) && totalLimitEnv > 0
+        ? totalLimitEnv
+        : Number.isFinite(resetDefault) && resetDefault > 0
+        ? resetDefault
+        : 5;
+    process.env.NEWSDATA_DAILY_LIMIT = String(effective);
+    logger.info("Setting NEWSDATA_DAILY_LIMIT for this run", {
+      NEWSDATA_DAILY_LIMIT: process.env.NEWSDATA_DAILY_LIMIT,
+    });
+    crawlResult = await crawlNewsdataOnly();
+  } else {
+    // Optional limits for a quick reset: set CRAWL_PER_FEED_LIMIT and/or CRAWL_TOTAL_LIMIT
+    const resetDefault = parseInt(process.env.RESET_FETCH_LIMIT || "5", 10);
+    const perFeedLimit = process.env.CRAWL_PER_FEED_LIMIT
+      ? parseInt(process.env.CRAWL_PER_FEED_LIMIT, 10)
+      : null;
+    const totalLimit = process.env.CRAWL_TOTAL_LIMIT
+      ? parseInt(process.env.CRAWL_TOTAL_LIMIT, 10)
+      : resetDefault;
+    const crawlOpts = {};
+    if (Number.isFinite(perFeedLimit)) crawlOpts.perFeedLimit = perFeedLimit;
+    if (Number.isFinite(totalLimit)) crawlOpts.totalLimit = totalLimit;
+    crawlResult = await crawlAllFeeds(crawlOpts);
+  }
   logger.info("Re-crawl complete", crawlResult);
 
   // Optionally: enrich clusters automatically for configured languages

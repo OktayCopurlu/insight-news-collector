@@ -44,7 +44,7 @@ const TRUNCATE_ROOT_TABLES = [
   "crawl_log",
   "articles",
   "clusters",
-  "categories", // wipe taxonomy so it can be rebuilt fresh
+  "categories",
 ];
 
 // Broader list for fallback iterative deletes (order: children -> parents)

@@ -70,24 +70,40 @@ export const generateAIContent = async (prompt, options = {}) => {
 export const categorizeArticle = async (article) => {
   try {
     const prompt = `
-Categorize this news article. Choose the most relevant categories from this list:
-- general
-- sports
-- sports.football
-- sports.transfer
-- geo
-- geo.uk
-- geo.uk.london
+You are a news taxonomy classifier.
+
+Task:
+- Assign 1-3 hierarchical category paths (dot-separated) that best describe the article.
+- Use concise, widely applicable taxonomy terms.
+- Geographic categories follow this pattern: geo, geo.<country_code>, geo.<country_code>.<region_or_city>
+  - <country_code> is ISO 3166-1 alpha-2 in lowercase (e.g., gb, ch, us).
+- If the geography is unclear, use just "geo" or omit geo entirely.
+- Return only a JSON array of {"path", "confidence"} objects. No extra text.
+
+Examples:
+[
+  // Sports transfer
+  {"path": "sports.football", "confidence": 0.9},
+  {"path": "sports.football.transfer", "confidence": 0.8}
+]
+
+[
+  // City-level event in Zurich, Switzerland
+  {"path": "geo.ch", "confidence": 0.9},
+  {"path": "geo.ch.zurich", "confidence": 0.8}
+]
+
+[
+  // Macroeconomics in the United Kingdom
+  {"path": "business.economy", "confidence": 0.85},
+  {"path": "geo.gb", "confidence": 0.8}
+]
 
 Article:
 Title: ${article.title}
 Content: ${article.snippet}
 
-Respond with a JSON array of category paths with confidence scores (0-1):
-[
-  {"path": "sports.football", "confidence": 0.9},
-  {"path": "geo.uk", "confidence": 0.7}
-]
+Respond with JSON only (array of objects):
 `;
 
     const response = await generateAIContent(prompt);

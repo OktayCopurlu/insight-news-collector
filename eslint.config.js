@@ -59,6 +59,8 @@ export default [
             "scripts/**",
             // Allow utilities verified only in tests
             "src/utils/helpers.js",
+            // Allow service invoked via scripts and reset pipeline
+            "src/services/articlePretranslator.js",
           ],
         },
       ],

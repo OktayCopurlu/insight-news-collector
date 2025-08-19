@@ -2,6 +2,7 @@ import { supabase, insertRecord, updateRecord } from "../config/database.js";
 import { createContextLogger } from "../config/logger.js";
 import { normalizeBcp47 } from "../utils/lang.js";
 import { translateFields } from "./translationHelper.js";
+import { decodeHtmlEntities } from "../utils/helpers.js";
 import crypto from "node:crypto";
 
 const logger = createContextLogger("Pretranslator");
@@ -75,9 +76,9 @@ export async function runPretranslationCycle(options = {}) {
     recentHours = parseInt(process.env.PRETRANS_RECENT_HOURS || "24", 10),
     maxClusters = parseInt(process.env.PRETRANS_MAX_CLUSTERS || "200", 10),
     concurrency = parseInt(process.env.PRETRANS_CONCURRENCY || "4", 10),
-    // Default timeout was 2000ms which is often too tight for 3 parallel MT calls; bump to 8000ms
+    // Default timeout was 2000ms which is often too tight; bump to 15000ms to allow chunked details
     perItemTimeoutMs = parseInt(
-      process.env.PRETRANS_ITEM_TIMEOUT_MS || "8000",
+      process.env.PRETRANS_ITEM_TIMEOUT_MS || "15000",
       10
     ),
   } = options;
@@ -296,6 +297,15 @@ async function collectJobsForCluster(clusterId, globalTargets, pivotDefault) {
   const targets = [...globalTargets]
     .map((l) => normalizeBcp47(l))
     .filter((l) => l && norm(l) !== norm(pivotLang) && !haveFresh(l));
+  // Special-case: when pivot row holds the original body (#body=orig), also
+  // ensure we produce a translated row for the pivot language itself so the BFF
+  // can serve translated content for requests like lang=en. We enqueue this
+  // even if pivotLang isn't listed in market pretranslate targets.
+  const wantsSelfTranslation = (pivotRow.model || "").includes("#body=orig");
+  if (wantsSelfTranslation && !haveFresh(pivotLang)) {
+    // Avoid duplicates in targets
+    if (!targets.includes(pivotLang)) targets.unshift(pivotLang);
+  }
   if (!targets.length) return { enqueued: 0, skipped: 1 };
 
   let enqueued = 0;
@@ -368,6 +378,52 @@ async function processJob(job, perItemTimeoutMs) {
   const pivotLang = normalizeBcp47(pivotRow.lang);
   const dst = normalizeBcp47(job.target_lang);
 
+  // Optionally use the representative article's original full_text as the canonical body
+  // and translate that for non-pivot langs, so BFF can continue reading from cluster_ai.ai_details.
+  const useArticleBody =
+    (process.env.CLUSTER_DETAILS_FROM_ARTICLE || "true").toLowerCase() ===
+    "true";
+  let repArticle = null;
+  if (useArticleBody) {
+    try {
+      // Fetch representative or seed article for this cluster
+      const { data: cluRows } = await supabase
+        .from("clusters")
+        .select("rep_article,seed_article")
+        .eq("id", job.cluster_id)
+        .limit(1);
+      const repId = cluRows?.[0]?.rep_article || cluRows?.[0]?.seed_article;
+      if (repId) {
+        const { data: artRows } = await supabase
+          .from("articles")
+          .select("id,language,full_text,title")
+          .eq("id", repId)
+          .limit(1);
+        repArticle = artRows?.[0] || null;
+      }
+      // If we have original body and pivot row doesn't carry it yet, update pivot row to store original
+      if (
+        repArticle?.full_text &&
+        (!pivotRow.ai_details || pivotRow.ai_details.length < 200)
+      ) {
+        try {
+          const tag = pivotRow.model || "";
+          const modelTag = tag.includes("#body=orig")
+            ? tag
+            : `${tag}#body=orig`;
+          await updateRecord("cluster_ai", pivotRow.id, {
+            ai_details: decodeHtmlEntities(repArticle.full_text),
+            model: modelTag,
+          });
+        } catch (_) {
+          /* non-fatal */
+        }
+      }
+    } catch (_) {
+      /* ignore rep fetch errors */
+    }
+  }
+
   // Short-circuit if we already have a current row for dst with same pivot sig
   try {
     const { data: existing } = await supabase
@@ -411,18 +467,15 @@ async function processJob(job, perItemTimeoutMs) {
     ]);
 
   try {
-    const {
-      title: cTitle,
-      summary: cSummary,
-      details: cDetails,
-    } = await to(
+    // Translate title/summary from pivot language.
+    const baseTranslated = await to(
       withRetry(
         () =>
           translateFields(
             {
               title: pivotRow.ai_title || "",
               summary: pivotRow.ai_summary || "",
-              details: pivotRow.ai_details || pivotRow.ai_summary || "",
+              details: "", // details handled below
             },
             { srcLang: pivotLang, dstLang: dst }
           ),
@@ -431,6 +484,66 @@ async function processJob(job, perItemTimeoutMs) {
       ),
       perItemTimeoutMs
     );
+
+    // Translate body from representative article full_text when available; fallback to pivot details.
+    let bodyTranslated = "";
+    if (useArticleBody && repArticle?.full_text) {
+      const srcBodyLang = normalizeBcp47(repArticle.language || pivotLang);
+      try {
+        const detOut =
+          (await to(
+            withRetry(
+              () =>
+                translateFields(
+                  {
+                    title: "",
+                    summary: "",
+                    details: decodeHtmlEntities(repArticle.full_text || ""),
+                  },
+                  { srcLang: srcBodyLang, dstLang: dst }
+                ),
+              2,
+              200
+            ),
+            perItemTimeoutMs
+          )) || {};
+        bodyTranslated = detOut.details || "";
+      } catch (_) {
+        bodyTranslated = "";
+      }
+    }
+    if (!bodyTranslated) {
+      // Fallback: translate existing AI details
+      try {
+        const det = decodeHtmlEntities(
+          (pivotRow.ai_details || pivotRow.ai_summary || "").trim()
+        );
+        if (det) {
+          const detOut =
+            (await to(
+              withRetry(
+                () =>
+                  translateFields(
+                    { title: "", summary: "", details: det },
+                    { srcLang: pivotLang, dstLang: dst }
+                  ),
+                2,
+                200
+              ),
+              perItemTimeoutMs
+            )) || {};
+          bodyTranslated = detOut.details || "";
+        } else {
+          bodyTranslated = "";
+        }
+      } catch (_) {
+        bodyTranslated = "";
+      }
+    }
+
+    const cTitle = baseTranslated?.title || "";
+    const cSummary = baseTranslated?.summary || "";
+    const cDetails = bodyTranslated || "";
 
     const clean = (v) => (v || "").trim();
     // Guard: if nothing actually translated, skip insert to avoid creating fake target rows with pivot text

@@ -7,6 +7,7 @@ import { logLLMEvent } from "../utils/llmLogger.js";
 import { assignClusterForArticle } from "./clusterer.js";
 import { selectAttachBestImage } from "./mediaSelector.js";
 import { categorizeArticle } from "./gemini.js";
+import { translateFields } from "./translationHelper.js";
 
 const logger = createContextLogger("ArticleProcessor");
 
@@ -215,6 +216,14 @@ export const processArticle = async (articleData, sourceId) => {
       })
     );
 
+    // Pre-translate article content to warm translations cache (non-blocking)
+    pretranslateArticleContent(article).catch((e) =>
+      logger.debug("Article pretranslation skipped", {
+        articleId: article.id,
+        error: e.message,
+      })
+    );
+
     return article;
   } catch (error) {
     logger.error("Failed to process article", {
@@ -282,7 +291,7 @@ async function ensureCategoryPaths(paths) {
     logger.warn("ensureCategoryPaths failed", { error: e.message });
   }
 }
-async function persistArticleCategories(article, minimal) {
+export async function persistArticleCategories(article, minimal, options = {}) {
   try {
     const enabled =
       (process.env.CATEGORIZATION_ENABLED || "true")
@@ -291,13 +300,15 @@ async function persistArticleCategories(article, minimal) {
     if (!enabled) return;
 
     // Skip if already categorized
-    try {
-      const existing = await selectRecords("article_categories", {
-        article_id: article.id,
-      });
-      if (existing && existing.length) return;
-    } catch (_) {
-      /* ignore missing table or select failure; proceed to attempt insert */
+    if (!options.force) {
+      try {
+        const existing = await selectRecords("article_categories", {
+          article_id: article.id,
+        });
+        if (existing && existing.length) return;
+      } catch (_) {
+        /* ignore missing table or select failure; proceed to attempt insert */
+      }
     }
 
     // Ask LLM for categories; gemini helper will fallback to general on errors
@@ -309,7 +320,39 @@ async function persistArticleCategories(article, minimal) {
     });
     const cats = Array.isArray(suggestion) ? suggestion : [];
     if (!cats.length) return;
-    const paths = [...new Set(cats.map((c) => c.path).filter(Boolean))];
+    let paths = [...new Set(cats.map((c) => c.path).filter(Boolean))];
+
+    // Optional: sanitize geo categories to a preferred country when enabled
+    const sanitizeGeo =
+      (process.env.CATEGORY_SANITIZE_GEO || "false")
+        .toString()
+        .toLowerCase() === "true";
+    const preferCountry = sanitizeGeo
+      ? (
+          process.env.PREFERRED_GEO_COUNTRY ||
+          process.env.NEWSDATA_COUNTRY ||
+          ""
+        )
+          .toString()
+          .trim()
+          .toLowerCase()
+      : "";
+    if (sanitizeGeo && preferCountry) {
+      paths = paths.map((p) => {
+        if (!p) return p;
+        if (p === "geo") return p;
+        if (!p.startsWith("geo.")) return p;
+        const parts = p.split(".");
+        const currentCountry = parts[1] || "";
+        if (currentCountry && currentCountry !== preferCountry) {
+          // Normalize any mismatched geo.<country>.* to top-level geo.<preferred_country>
+          return `geo.${preferCountry}`;
+        }
+        return p;
+      });
+      // Deduplicate after mapping
+      paths = [...new Set(paths)];
+    }
     if (!paths.length) return;
 
     // Ensure taxonomy contains these paths (and parents)
@@ -336,6 +379,17 @@ async function persistArticleCategories(article, minimal) {
       });
     }
     if (!records.length) return;
+    // If forcing, remove current categories for this article first
+    if (options.force) {
+      try {
+        await supabase
+          .from("article_categories")
+          .delete()
+          .eq("article_id", article.id);
+      } catch (_) {
+        // non-fatal; continue with upsert
+      }
+    }
     // Upsert to avoid duplicate-key races on (article_id, category_id)
     const { error: upErr } = await supabase
       .from("article_categories")
@@ -415,3 +469,46 @@ export const calculateTitleScore = (title) => {
 };
 
 // getArticlesNeedingAI removed — per-article AI queue disabled
+
+// Warm MT cache for article fields using `translations` table.
+async function pretranslateArticleContent(article) {
+  try {
+    const enabled =
+      (process.env.ARTICLE_PRETRANS_ON_INGEST || "true")
+        .toString()
+        .toLowerCase() === "true";
+    if (!enabled) return;
+
+    const targets = String(process.env.ARTICLE_PRETRANS_LANGS || "")
+      .split(",")
+      .map((s) => normalizeBcp47(s))
+      .filter(Boolean);
+    if (!targets.length) return;
+
+    const srcLang = normalizeBcp47(article.language || "auto");
+    const payload = {
+      title: article.title || "",
+      summary: article.snippet || "",
+      details: article.full_text || "",
+    };
+    if (!payload.title && !payload.summary && !payload.details) return;
+
+    await Promise.all(
+      targets
+        .filter((dst) => dst && dst !== srcLang)
+        .map(async (dst) => {
+          try {
+            await translateFields(payload, { srcLang, dstLang: dst });
+          } catch (e) {
+            logger.debug("pretranslate failed for lang", {
+              articleId: article.id,
+              dst,
+              error: e.message,
+            });
+          }
+        })
+    );
+  } catch (_) {
+    // ignore failures; ingestion should not be blocked by MT
+  }
+}

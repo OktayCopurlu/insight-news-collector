@@ -41,7 +41,8 @@
     "lint": "eslint \"src/**/*.js\" \"scripts/**/*.js\" --max-warnings=0",
     "markets:print": "node scripts/print-markets.js",
     "markets:set": "node scripts/set-market-langs.js",
-    "clusters:sample": "node scripts/sample-cluster-ai.js"
+    "clusters:sample": "node scripts/sample-cluster-ai.js",
+    "recategorize:swiss": "node scripts/recategorize-swiss.js"
   },
   "keywords": [
     "news",
