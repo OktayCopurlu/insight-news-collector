@@ -14,12 +14,17 @@ const sb = createClient(
 );
 
 const main = async () => {
-  const { data, error } = await sb
-    .from("app_markets")
-    .select("*")
-    .order("id", { ascending: true });
+  // Some schemas may not have an 'id' column; avoid ordering by it.
+  let q = sb.from("app_markets").select("*");
+  const { data, error } = await q;
   if (error) throw error;
-  console.log(JSON.stringify(data, null, 2));
+  // Try to provide stable order by market_code if present
+  const sorted = [...(data || [])].sort((a, b) => {
+    const am = (a.market_code || a.code || "").toString();
+    const bm = (b.market_code || b.code || "").toString();
+    return am.localeCompare(bm);
+  });
+  console.log(JSON.stringify(sorted, null, 2));
 };
 
 main().catch((e) => {

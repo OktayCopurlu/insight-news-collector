@@ -9,6 +9,37 @@ export const generateContentHash = (title = "", snippet = "") => {
     .substring(0, 16);
 };
 
+// Decode common HTML entities, including numeric (dec and hex)
+export const decodeHtmlEntities = (text) => {
+  if (text == null) return "";
+  let s = String(text);
+  // Numeric hex entities: &#x201C;
+  s = s.replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => {
+    try {
+      return String.fromCodePoint(parseInt(hex, 16));
+    } catch (_) {
+      return _;
+    }
+  });
+  // Numeric decimal entities: &#8217;
+  s = s.replace(/&#([0-9]+);/g, (_, dec) => {
+    try {
+      return String.fromCodePoint(parseInt(dec, 10));
+    } catch (_) {
+      return _;
+    }
+  });
+  // Named entities (common subset)
+  s = s
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+  return s;
+};
+
 // (removed) _generateUUID was unused
 
 export const sanitizeText = (text) => {

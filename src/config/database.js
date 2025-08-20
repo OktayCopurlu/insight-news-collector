@@ -82,6 +82,41 @@ export const insertRecord = async (table, data) => {
   }
 };
 
+// Upsert helper with optional ignoreDuplicates to avoid noisy errors for expected conflicts
+// options:
+// - onConflict: column name(s) to use for conflict target (e.g., "key")
+// - ignoreDuplicates: when true, do not error on conflicts (default true)
+export const upsertRecord = async (table, data, options = {}) => {
+  const { onConflict, ignoreDuplicates = true, returnSingle = false } = options;
+  try {
+    let query = supabase.from(table).upsert(data, {
+      onConflict,
+      ignoreDuplicates,
+    });
+    // Only select when caller expects a row back
+    if (returnSingle) {
+      query = query.select().single();
+    }
+    const { data: result, error } = await query;
+    if (error) throw error;
+    return result ?? null;
+  } catch (error) {
+    // For ignoreDuplicates=true, conflicts should not throw; but if they do, downgrade log
+    const isDuplicate = /duplicate key value|conflict/i.test(
+      error.message || ""
+    );
+    if (isDuplicate && ignoreDuplicates) {
+      logger.debug("Upsert ignored duplicate", { table, onConflict });
+      return null;
+    }
+    logger.error("Failed to upsert record", {
+      table,
+      error: error.message,
+    });
+    throw error;
+  }
+};
+
 export const updateRecord = async (table, id, updates) => {
   try {
     const { data: _data, error } = await supabase

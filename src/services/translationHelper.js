@@ -3,7 +3,7 @@
 
 import crypto from "node:crypto";
 import { createContextLogger } from "../config/logger.js";
-import { selectRecords, insertRecord } from "../config/database.js";
+import { selectRecords, upsertRecord } from "../config/database.js";
 import { normalizeBcp47 } from "../utils/lang.js";
 
 const logger = createContextLogger("TranslationHelper");
@@ -76,7 +76,7 @@ export async function translateText(text, { srcLang, dstLang }) {
       const prompt = `Translate to ${dst}. Keep meaning, names, and terminology consistent.\n\nText:\n${text}`;
       // Keep token budget modest for translation to reduce latency/timeouts
       const out = await generateAIContent(prompt, {
-        maxOutputTokens: 480,
+        maxOutputTokens: 768,
         temperature: 0.2,
         attempts: 2,
       });
@@ -102,12 +102,16 @@ export async function translateText(text, { srcLang, dstLang }) {
   if (translated) {
     setCache(key, translated);
     try {
-      await insertRecord("translations", {
-        key,
-        src_lang: src,
-        dst_lang: dst,
-        text: translated,
-      });
+      await upsertRecord(
+        "translations",
+        {
+          key,
+          src_lang: src,
+          dst_lang: dst,
+          text: translated,
+        },
+        { onConflict: "key", ignoreDuplicates: true }
+      );
     } catch (_) {
       // ignore if table missing or unique conflict
     }
@@ -134,6 +138,79 @@ export async function translateFields(fields, { srcLang = "auto", dstLang }) {
   // Fast path: nothing to translate
   if (!dst || (!title && !summary && !details)) {
     return { title, summary, details };
+  }
+
+  // Config for long-text handling
+  const MT_CHUNK_MAX_CHARS = Math.max(
+    500,
+    parseInt(process.env.MT_CHUNK_MAX_CHARS || "2800", 10)
+  );
+  const MT_MAX_ARTICLE_CHARS = Math.max(
+    5000,
+    parseInt(process.env.MT_MAX_ARTICLE_CHARS || "50000", 10)
+  );
+
+  // Helper: chunk long text by paragraphs into groups not exceeding MT_CHUNK_MAX_CHARS
+  function chunkByParagraphs(text, maxChars) {
+    const paras = String(text || "").split(/\n{2,}/);
+    const chunks = [];
+    let buf = [];
+    let size = 0;
+    for (const p of paras) {
+      const pLen = p.length;
+      if (pLen === 0) continue;
+      if (pLen > maxChars) {
+        // Very long single paragraph: split by sentences/length
+        const parts = p.split(/(?<=[.!?])\s+/);
+        let sb = [];
+        let sl = 0;
+        for (const s of parts) {
+          if (sl + (sl ? 1 : 0) + s.length > maxChars) {
+            if (sb.length) chunks.push(sb.join(" "));
+            sb = [s];
+            sl = s.length;
+          } else {
+            if (sl) sb.push(s);
+            else sb = [s];
+            sl += (sl ? 1 : 0) + s.length;
+          }
+        }
+        if (sb.length) chunks.push(sb.join(" "));
+        continue;
+      }
+      if (size + (size ? 2 : 0) + pLen > maxChars) {
+        if (buf.length) chunks.push(buf.join("\n\n"));
+        buf = [p];
+        size = pLen;
+      } else {
+        if (size) buf.push(p);
+        else buf = [p];
+        size += (size ? 2 : 0) + pLen;
+      }
+    }
+    if (buf.length) chunks.push(buf.join("\n\n"));
+    return chunks;
+  }
+
+  async function translateLongDetails(text, { src, dst }) {
+    const clean = (v) => (v || "").trim();
+    const body = clean(text);
+    if (!body) return "";
+    if (body.length > MT_MAX_ARTICLE_CHARS) {
+      // Too long — skip pretranslation; caller will decide to skip insert
+      return "";
+    }
+    const parts = chunkByParagraphs(body, MT_CHUNK_MAX_CHARS);
+    const out = [];
+    for (const part of parts) {
+      // Use per-string cached translate for each part
+      // If provider missing, this returns null leading to fallback
+      // We keep sequential to respect provider rate limits
+      const t = await translateText(part, { srcLang: src, dstLang: dst });
+      out.push((t || "").trim());
+    }
+    // Join with blank lines to preserve paragraphs
+    return out.filter(Boolean).join("\n\n").trim();
   }
 
   // Try in-memory and DB cache per field
@@ -171,7 +248,24 @@ export async function translateFields(fields, { srcLang = "auto", dstLang }) {
     };
   }
 
-  // Provider single-call path
+  // If details is very long, handle it separately via chunking to avoid model limits
+  const needsChunkedDetails = (details || "").length > MT_CHUNK_MAX_CHARS;
+  if (needsChunkedDetails) {
+    // Translate title/summary via per-string path (fast + cached), and details via chunking
+    const [tt, ss, dd] = await Promise.all([
+      title ? translateText(title, { srcLang: src, dstLang: dst }) : "",
+      summary ? translateText(summary, { srcLang: src, dstLang: dst }) : "",
+      translateLongDetails(details, { src, dst }),
+    ]);
+    // Persist per-field caches are handled inside translateText; for chunked details, each chunk was cached
+    return {
+      title: String(tt || title || "").trim(),
+      summary: String(ss || summary || "").trim(),
+      details: String(dd || "").trim(),
+    };
+  }
+
+  // Provider single-call path (for shorter details)
   try {
     const { generateAIContent } = await import("./gemini.js");
     const instruction = [
@@ -183,7 +277,7 @@ export async function translateFields(fields, { srcLang = "auto", dstLang }) {
       JSON.stringify({ title, summary, details }),
     ].join("\n");
     const raw = await generateAIContent(instruction, {
-      maxOutputTokens: 640,
+      maxOutputTokens: 768,
       temperature: 0.2,
       attempts: 2,
     });
@@ -231,12 +325,16 @@ export async function translateFields(fields, { srcLang = "auto", dstLang }) {
       const k = cacheKey(orig, src, dst);
       setCache(k, translated);
       try {
-        await insertRecord("translations", {
-          key: k,
-          src_lang: src,
-          dst_lang: dst,
-          text: translated,
-        });
+        await upsertRecord(
+          "translations",
+          {
+            key: k,
+            src_lang: src,
+            dst_lang: dst,
+            text: translated,
+          },
+          { onConflict: "key", ignoreDuplicates: true }
+        );
       } catch (_) {
         // ignore unique constraint or missing table
       }

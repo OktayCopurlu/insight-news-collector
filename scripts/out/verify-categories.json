@@ -1,0 +1,57 @@
+{
+  "articles": 10,
+  "articleCategoryLinks": 26,
+  "samples": [
+    {
+      "article_id": "5baf76b1-38ac-4600-b2b3-9b418a88f6fc",
+      "path": "business.investing",
+      "confidence": 0.9
+    },
+    {
+      "article_id": "5baf76b1-38ac-4600-b2b3-9b418a88f6fc",
+      "path": "business.companies.technology",
+      "confidence": 0.8
+    },
+    {
+      "article_id": "5baf76b1-38ac-4600-b2b3-9b418a88f6fc",
+      "path": "geo.us",
+      "confidence": 0.7
+    },
+    {
+      "article_id": "f474aed7-90e6-4ac9-b79d-6bb87614acfa",
+      "path": "business.economy",
+      "confidence": 0.9
+    },
+    {
+      "article_id": "f474aed7-90e6-4ac9-b79d-6bb87614acfa",
+      "path": "geo.ch",
+      "confidence": 0.8
+    },
+    {
+      "article_id": "2c4c7966-0914-45c2-9ae7-de8a27e674f9",
+      "path": "business.insurance",
+      "confidence": 0.9
+    },
+    {
+      "article_id": "2c4c7966-0914-45c2-9ae7-de8a27e674f9",
+      "path": "geo.ch",
+      "confidence": 0.8
+    },
+    {
+      "article_id": "e9ae1a48-f1c4-4f5f-8a39-f4789d905237",
+      "path": "business.investments",
+      "confidence": 0.9
+    },
+    {
+      "article_id": "e9ae1a48-f1c4-4f5f-8a39-f4789d905237",
+      "path": "business.technology",
+      "confidence": 0.8
+    },
+    {
+      "article_id": "e9ae1a48-f1c4-4f5f-8a39-f4789d905237",
+      "path": "geo.us",
+      "confidence": 0.7
+    }
+  ],
+  "generatedAt": "2025-08-19T16:43:59.301Z"
+}
