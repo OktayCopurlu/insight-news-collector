@@ -290,3 +290,74 @@ export async function fetchAndExtract(url) {
     return null;
   }
 }
+
+// Lightweight helper for the content pipeline: prefer structured HTML from Mercury
+// and fall back to raw page HTML when Mercury is unavailable or too short.
+// Returns: { html: string, language: string|null, strategy: 'mercury'|'raw' }
+export async function fetchBestHtml(url) {
+  // 1) Try Mercury content first (HTML)
+  if (
+    (process.env.ENABLE_MERCURY_EXTRACTION || "true").toLowerCase() !== "false"
+  ) {
+    try {
+      const mod = await import("@postlight/mercury-parser");
+      const Mercury = mod?.default || mod;
+      if (Mercury && typeof Mercury.parse === "function") {
+        const r = await Mercury.parse(url);
+        const html = String(r?.content || "").trim();
+        if (html && html.replace(/<[^>]+>/g, " ").trim().length >= 300) {
+          return {
+            html,
+            language: normalizeBcp47(r?.lang || r?.language || "") || null,
+            strategy: "mercury",
+          };
+        }
+      }
+    } catch (e) {
+      logger.warn(
+        "Mercury parse failed in fetchBestHtml; will fallback to raw",
+        {
+          url,
+          error: e?.message || String(e),
+        }
+      );
+    }
+  }
+  // 2) Fallback to raw HTML fetch
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), MAX_FETCH_MS);
+    const resp = await axios.get(url, {
+      timeout: MAX_FETCH_MS,
+      responseType: "text",
+      headers: {
+        "User-Agent":
+          process.env.FEED_USER_AGENT ||
+          "InsightFeeder/1.0 (+https://example.com)",
+        Accept:
+          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+      },
+      signal: controller.signal,
+      maxRedirects: 5,
+      validateStatus: (s) => s >= 200 && s < 400,
+    });
+    clearTimeout(timer);
+    const html = String(resp.data || "");
+    let language = null;
+    try {
+      const dom = new JSDOM(html, { url });
+      language = extractPageLang(dom.window.document);
+      dom.window.close();
+    } catch (_) {
+      /* ignore */
+    }
+    return { html, language, strategy: "raw" };
+  } catch (e) {
+    logger.warn("Raw HTML fetch failed in fetchBestHtml", {
+      url,
+      error: e?.message || String(e),
+    });
+    return { html: "", language: null, strategy: "raw" };
+  }
+}

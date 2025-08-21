@@ -263,7 +263,7 @@ async function generateAndInsertClusterAI(c, lang) {
       });
       const parsed = safeParseJSON(text);
       title = parsed.ai_title || generateTitleFromUpdates(updates);
-      summary = parsed.ai_summary || generateSummaryFromUpdates(updates);
+      summary = generateSummaryFromUpdates(updates);
       details =
         parsed.ai_details ||
         composeNarrativeFromArticleAIs(articleAIs, summary);
@@ -359,9 +359,8 @@ function composeNarrativeFromArticleAIs(articleAIs, fallbackSummary) {
   // Prefer the longest two narratives
   const items = [...articleAIs]
     .map((r) => ({
-      text:
-        (r.ai_details && r.ai_details.trim()) || (r.ai_summary || "").trim(),
-      len: (r.ai_details && r.ai_details.length) || (r.ai_summary || "").length,
+      text: (r.ai_details && r.ai_details.trim()) || "",
+      len: (r.ai_details && r.ai_details.length) || 0,
     }))
     .filter((x) => x.text)
     .sort((a, b) => b.len - a.len)
@@ -478,10 +477,7 @@ function buildClusterSummaryPrompt(
     .slice(0, 3)
     .map(
       (r, idx) =>
-        `-- Narrative ${idx + 1} --\n${trimText(
-          r.ai_details || r.ai_summary || "",
-          1200
-        )}`
+        `-- Narrative ${idx + 1} --\n${trimText(r.ai_details || "", 1200)}`
     )
     .join("\n\n");
   // Add short content excerpts from article bodies to ground the summary without rewriting originals
@@ -499,7 +495,7 @@ function buildClusterSummaryPrompt(
   if (mode === "narrative") {
     return `${base}
 
-Return STRICT JSON only (minified) with these keys: {"ai_title":"...","ai_summary":"...","ai_details":"Paragraph1\\n\\nParagraph2"}
+Return STRICT JSON only (minified) with these keys: {"ai_title":"...","ai_details":"Paragraph1\\n\\nParagraph2"}
 Constraints for ai_details: 3-5 short paragraphs totaling 1000-1600 characters; no list formatting; reference sources implicitly (no links). Prefer the coverage narratives where possible; reconcile differences neutrally.
 
 Updates:\n${upLines}
@@ -513,7 +509,7 @@ Coverage narratives:\n${aiNarratives}`;
   // bullets
   return `${base}
 
-Return STRICT JSON only (minified): {"ai_title":"...","ai_summary":"...","ai_details":"• Bullet 1\n• Bullet 2"}
+Return STRICT JSON only (minified): {"ai_title":"...","ai_details":"• Bullet 1\n• Bullet 2"}
 
 Bullet rules: ${bullets} bullets max, each <= 200 chars, no duplication, no speculation.
 

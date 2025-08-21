@@ -12,6 +12,7 @@ import { optionalAuth } from "./middleware/auth.js";
 import feedsRouter from "./routes/feeds.js";
 import sourcesRouter from "./routes/sources.js";
 import clustersRouter from "./routes/clusters.js";
+import contentRouter from "./routes/content.js";
 import { translationMetrics } from "./services/translationHelper.js";
 import { pretranslateMetrics } from "./services/pretranslator.js";
 
@@ -126,6 +127,7 @@ app.get("/health/db", async (req, res) => {
 app.use("/api/feeds", feedsRouter);
 app.use("/api/sources", sourcesRouter);
 app.use("/api/clusters", clustersRouter);
+app.use("/api/content", contentRouter);
 
 // Root endpoint
 app.get("/", (req, res) => {
@@ -138,6 +140,7 @@ app.get("/", (req, res) => {
       feeds: "/api/feeds",
       sources: "/api/sources",
       clusters: "/api/clusters",
+      content: "/api/content",
     },
     documentation: "https://github.com/your-repo/insight-feeder",
   });
